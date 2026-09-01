@@ -6,6 +6,7 @@ import { FireflyCanvas } from './components/background/FireflyCanvas';
 import { ShootingStar } from './components/background/ShootingStar';
 import { Navbar } from './components/common/Navbar';
 import { HeroSection, MOODS } from './components/sections/HeroSection';
+import { RecommendationSection } from './components/recommendations/RecommendationSection';
 import { ConceptSection } from './components/sections/ConceptSection';
 import { FeaturesSection } from './components/sections/FeaturesSection';
 import { PrivacySection } from './components/sections/PrivacySection';
@@ -16,6 +17,7 @@ import type { MoodType } from './types';
 export const App: React.FC = () => {
   const [isFaceDetectionOpen, setIsFaceDetectionOpen] = useState(false);
   const [activeMood, setActiveMood] = useState<MoodType>('happy');
+  const [activeConfidence, setActiveConfidence] = useState<number>(0.94);
   const [confirmationToast, setConfirmationToast] = useState<{
     mood: MoodType;
     confidence: number;
@@ -23,11 +25,18 @@ export const App: React.FC = () => {
 
   const handleConfirmMood = (mood: MoodType, confidence: number) => {
     setActiveMood(mood);
+    setActiveConfidence(confidence);
     setConfirmationToast({ mood, confidence });
 
     // Smoothly shift sky accent tint
     const moodColor = MOODS[mood].color;
     document.documentElement.style.setProperty('--accent-glow', moodColor);
+
+    // Auto-scroll to recommendation engine
+    setTimeout(() => {
+      const el = document.getElementById('recommendations');
+      el?.scrollIntoView({ behavior: 'smooth' });
+    }, 400);
 
     // Auto-dismiss confirmation banner after 4.5s
     setTimeout(() => {
@@ -116,6 +125,14 @@ export const App: React.FC = () => {
           onSelectMood={(mood) => handleConfirmMood(mood, 0.95)}
           onStartJourney={() => setIsFaceDetectionOpen(true)}
         />
+
+        {/* Phase 3: Mood → Smart Shift Recommendation Engine */}
+        <RecommendationSection
+          mood={activeMood}
+          confidence={activeConfidence}
+          onOpenFaceDetection={() => setIsFaceDetectionOpen(true)}
+        />
+
         <ConceptSection />
         <FeaturesSection />
         <PrivacySection />

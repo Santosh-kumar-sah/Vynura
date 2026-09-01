@@ -21,8 +21,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
 
   const navLinks = [
     { label: 'The Concept', href: '#concept', icon: <Compass className="w-3.5 h-3.5" /> },
-    { label: 'Core Features', href: '#features', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { label: 'Mood Spectrum', href: '#spectrum', icon: <Sparkle className="w-3.5 h-3.5" /> },
+    { label: 'Shift Engine', href: '#recommendations', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { label: 'Core Features', href: '#features', icon: <Sparkle className="w-3.5 h-3.5" /> },
     { label: 'Privacy Sanctuary', href: '#privacy', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
   ];
 
@@ -70,9 +70,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
 
         {/* Action / Badge Group */}
         <div className="hidden sm:flex items-center gap-3">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#6FBFC4]/10 border border-[#6FBFC4]/25 text-[11px] font-medium text-[#6FBFC4]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#6FBFC4] animate-pulse" />
-            <span>Phase 2 · Face Core</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FF9E7D]/10 border border-[#FF9E7D]/25 text-[11px] font-medium text-[#FF9E7D]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF9E7D] animate-pulse" />
+            <span>Phase 3 · Shift Engine</span>
           </div>
           <Button
             size="sm"
