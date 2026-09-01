@@ -7,6 +7,7 @@ import { ShootingStar } from './components/background/ShootingStar';
 import { Navbar } from './components/common/Navbar';
 import { HeroSection, MOODS } from './components/sections/HeroSection';
 import { RecommendationSection } from './components/recommendations/RecommendationSection';
+import { ConstellationHub } from './components/constellation/ConstellationHub';
 import { ConceptSection } from './components/sections/ConceptSection';
 import { FeaturesSection } from './components/sections/FeaturesSection';
 import { PrivacySection } from './components/sections/PrivacySection';
@@ -130,6 +131,12 @@ export const App: React.FC = () => {
         <RecommendationSection
           mood={activeMood}
           confidence={activeConfidence}
+          onOpenFaceDetection={() => setIsFaceDetectionOpen(true)}
+        />
+
+        {/* Phase 4: Mood Journal + Living Constellation Analytics */}
+        <ConstellationHub
+          activeMood={activeMood}
           onOpenFaceDetection={() => setIsFaceDetectionOpen(true)}
         />
 
