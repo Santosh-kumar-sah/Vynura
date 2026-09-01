@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Menu, X, ShieldCheck, Compass, Sparkle } from 'lucide-react';
+import { Sparkles, Menu, X, ShieldCheck, Compass, Sparkle, Camera } from 'lucide-react';
 import { Button } from './Button';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onOpenFaceDetection?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -66,19 +70,19 @@ export const Navbar: React.FC = () => {
 
         {/* Action / Badge Group */}
         <div className="hidden sm:flex items-center gap-3">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FFC978]/10 border border-[#FFC978]/25 text-[11px] font-medium text-[#FFC978]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FFC978] animate-pulse" />
-            <span>Phase 1 · Foundation</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#6FBFC4]/10 border border-[#6FBFC4]/25 text-[11px] font-medium text-[#6FBFC4]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#6FBFC4] animate-pulse" />
+            <span>Phase 2 · Face Core</span>
           </div>
           <Button
             size="sm"
             variant="primary"
+            icon={<Camera className="w-3.5 h-3.5" />}
             onClick={() => {
-              const el = document.getElementById('concept');
-              el?.scrollIntoView({ behavior: 'smooth' });
+              if (onOpenFaceDetection) onOpenFaceDetection();
             }}
           >
-            Explore Vision
+            Looking Glass
           </Button>
         </div>
 
@@ -115,21 +119,17 @@ export const Navbar: React.FC = () => {
                 </a>
               ))}
               <div className="pt-2 border-t border-[#B8B4D9]/15 flex flex-col gap-2.5">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FFC978]/10 text-xs text-[#FFC978] font-medium">
-                  <span className="w-2 h-2 rounded-full bg-[#FFC978] animate-pulse" />
-                  <span>Phase 1 · Brand & Design System</span>
-                </div>
                 <Button
                   size="md"
                   variant="primary"
                   className="w-full"
+                  icon={<Camera className="w-4 h-4" />}
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    const el = document.getElementById('concept');
-                    el?.scrollIntoView({ behavior: 'smooth' });
+                    if (onOpenFaceDetection) onOpenFaceDetection();
                   }}
                 >
-                  Explore Vision ✦
+                  Launch Looking Glass ✦
                 </Button>
               </div>
             </div>

@@ -59,11 +59,23 @@ export const MOODS: Record<MoodType, MoodConfig> = {
 
 interface HeroSectionProps {
   onStartJourney?: () => void;
+  activeMood?: MoodType;
+  onSelectMood?: (mood: MoodType) => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onStartJourney }) => {
-  const [selectedMood, setSelectedMood] = useState<MoodType>('happy');
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  onStartJourney,
+  activeMood = 'happy',
+  onSelectMood,
+}) => {
+  const [internalMood, setInternalMood] = useState<MoodType>(activeMood);
+  const selectedMood = activeMood || internalMood;
   const currentMood = MOODS[selectedMood];
+
+  const handleMoodClick = (mKey: MoodType) => {
+    setInternalMood(mKey);
+    if (onSelectMood) onSelectMood(mKey);
+  };
 
   return (
     <section className="relative min-h-[92vh] flex flex-col justify-center items-center pt-28 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
@@ -194,7 +206,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartJourney }) => {
               return (
                 <button
                   key={mKey}
-                  onClick={() => setSelectedMood(mKey)}
+                  onClick={() => handleMoodClick(mKey)}
                   className={`relative flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
                     isSelected
                       ? 'bg-[#2D2A5C] text-[#F5F2ED] border shadow-glow-sm'
