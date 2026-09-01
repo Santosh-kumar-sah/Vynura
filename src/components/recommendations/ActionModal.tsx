@@ -7,30 +7,55 @@ import {
   Music, 
   Sparkles, 
   CheckCircle2, 
-  Volume2
+  Volume2,
+  Moon,
+  ArrowRight
 } from 'lucide-react';
 import type { RecommendationItem } from '../../types/recommendations';
 import type { MoodType } from '../../types';
 import { Button } from '../common/Button';
+import { saveMoodEntry } from '../../lib/supabase';
 
 interface ActionModalProps {
   item: RecommendationItem | null;
   mood: MoodType;
   isOpen: boolean;
   onClose: () => void;
+  onLaunchBreathing?: (technique: '478' | 'box' | 'calm') => void;
+  onLaunchMeditation?: () => void;
 }
 
 export const ActionModal: React.FC<ActionModalProps> = ({
   item,
-  mood: _mood,
+  mood,
   isOpen,
   onClose,
+  onLaunchBreathing,
+  onLaunchMeditation,
 }) => {
   const [journalText, setJournalText] = useState('');
   const [isSaved, setIsSaved] = useState(false);
-  const [breathingStep, setBreathingStep] = useState<'inhale' | 'hold' | 'exhale'>('inhale');
 
   if (!isOpen || !item) return null;
+
+  const handleSaveJournal = async () => {
+    if (!journalText.trim()) return;
+    try {
+      await saveMoodEntry({
+        mood_category: mood,
+        confidence_score: 0.94,
+        journal_text: `[${item.title}] ${journalText.trim()}`,
+      });
+      setIsSaved(true);
+      setTimeout(() => {
+        onClose();
+        setIsSaved(false);
+        setJournalText('');
+      }, 1200);
+    } catch (e) {
+      console.error('Error saving entry:', e);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B091C]/85 backdrop-blur-lg">
@@ -98,72 +123,65 @@ export const ActionModal: React.FC<ActionModalProps> = ({
 
         {/* Dynamic Action Body based on action type */}
         {item.action.type === 'breathing' && (
-          <div className="text-center py-4 space-y-6">
-            <p className="text-xs text-[#B8B4D9] max-w-sm mx-auto">
-              Follow the celestial breathing pacer. Expand your lungs with firefly light.
-            </p>
-
-            {/* Pacer Sphere Animation */}
-            <div className="relative w-36 h-36 mx-auto flex items-center justify-center">
-              <motion.div
-                animate={{
-                  scale: breathingStep === 'inhale' ? 1.35 : breathingStep === 'hold' ? 1.35 : 0.85,
-                  opacity: breathingStep === 'hold' ? 0.9 : 0.65,
-                }}
-                transition={{
-                  duration: breathingStep === 'inhale' ? 4 : breathingStep === 'hold' ? 4 : 4,
-                  ease: 'easeInOut',
-                }}
-                className="w-28 h-28 rounded-full border-2 flex items-center justify-center relative shadow-lg"
-                style={{
-                  borderColor: item.accentColor,
-                  backgroundColor: `${item.accentColor}18`,
-                  boxShadow: `0 0 35px ${item.accentColor}50`,
-                }}
-              >
-                <span className="text-xs font-heading font-bold text-[#F5F2ED] uppercase tracking-wider">
-                  {breathingStep}
-                </span>
-              </motion.div>
+          <div className="text-center py-3 space-y-5">
+            <div className="p-4 rounded-2xl bg-[#121029]/80 border border-[#6FBFC4]/30 text-left">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#6FBFC4] mb-1.5">
+                <Wind className="w-4 h-4" />
+                <span>Somatic Breath Guidance</span>
+              </div>
+              <p className="text-xs text-[#B8B4D9] leading-relaxed">
+                {item.description}
+              </p>
             </div>
 
-            {/* Pacer Control Buttons */}
-            <div className="flex justify-center gap-2">
-              <button
-                onClick={() => setBreathingStep('inhale')}
-                className={`px-3 py-1 rounded-full text-xs font-medium border cursor-pointer ${
-                  breathingStep === 'inhale' ? 'bg-[#2D2A5C] text-[#F5F2ED] border-[#FFC978]' : 'text-[#B8B4D9] border-transparent'
-                }`}
-              >
-                Inhale (4s)
-              </button>
-              <button
-                onClick={() => setBreathingStep('hold')}
-                className={`px-3 py-1 rounded-full text-xs font-medium border cursor-pointer ${
-                  breathingStep === 'hold' ? 'bg-[#2D2A5C] text-[#F5F2ED] border-[#6FBFC4]' : 'text-[#B8B4D9] border-transparent'
-                }`}
-              >
-                Hold (7s)
-              </button>
-              <button
-                onClick={() => setBreathingStep('exhale')}
-                className={`px-3 py-1 rounded-full text-xs font-medium border cursor-pointer ${
-                  breathingStep === 'exhale' ? 'bg-[#2D2A5C] text-[#F5F2ED] border-[#FF9E7D]' : 'text-[#B8B4D9] border-transparent'
-                }`}
-              >
-                Exhale (8s)
-              </button>
+            <Button
+              size="lg"
+              variant="primary"
+              className="w-full"
+              icon={<ArrowRight className="w-4 h-4" />}
+              onClick={() => {
+                onClose();
+                if (onLaunchBreathing) {
+                  const tech = item.id.includes('box') ? 'box' : item.id.includes('478') ? '478' : 'calm';
+                  onLaunchBreathing(tech);
+                }
+              }}
+            >
+              Open Firefly Particle Pacer Guide ✦
+            </Button>
+          </div>
+        )}
+
+        {item.action.type === 'meditation' && (
+          <div className="text-center py-3 space-y-5">
+            <div className="p-4 rounded-2xl bg-[#121029]/80 border border-[#FFC978]/30 text-left">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#FFC978] mb-1.5">
+                <Moon className="w-4 h-4" />
+                <span>Ambient Night-Sky Meditation</span>
+              </div>
+              <p className="text-xs text-[#B8B4D9] leading-relaxed">
+                {item.description}
+              </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#121029]/80 border border-[#B8B4D9]/15 text-[11px] text-[#B8B4D9]">
-              ✦ Phase 5 Full-Screen Firefly Lung Pacer integrated in upcoming hub.
-            </div>
+            <Button
+              size="lg"
+              variant="primary"
+              className="w-full"
+              icon={<ArrowRight className="w-4 h-4" />}
+              onClick={() => {
+                onClose();
+                if (onLaunchMeditation) onLaunchMeditation();
+              }}
+            >
+              Open Starlight Meditation Timer ✦
+            </Button>
           </div>
         )}
 
         {item.action.type === 'journal' && (
           <div className="space-y-4">
-            <div className="p-3 rounded-xl bg-[#121029]/80 border border-[#FFC978]/30 text-xs text-[#FFF2D6] font-heading italic">
+            <div className="p-3.5 rounded-xl bg-[#121029]/80 border border-[#FFC978]/30 text-xs text-[#FFF2D6] font-heading italic">
               {item.description}
             </div>
 
@@ -172,13 +190,13 @@ export const ActionModal: React.FC<ActionModalProps> = ({
               value={journalText}
               onChange={(e) => setJournalText(e.target.value)}
               placeholder="Inscribe your thoughts under the night sky..."
-              className="w-full rounded-xl bg-[#121029]/90 border border-[#B8B4D9]/25 p-3.5 text-xs text-[#F5F2ED] placeholder:text-[#B8B4D9]/50 focus:outline-none focus:border-[#FFC978] transition-colors resize-none font-body"
+              className="w-full rounded-2xl bg-[#121029]/90 border border-[#B8B4D9]/25 p-3.5 text-xs text-[#F5F2ED] placeholder:text-[#B8B4D9]/50 focus:outline-none focus:border-[#FFC978] transition-colors resize-none font-body leading-relaxed"
             />
 
             {isSaved ? (
               <div className="p-3 rounded-xl bg-[#6FBFC4]/15 border border-[#6FBFC4]/40 text-xs text-[#6FBFC4] flex items-center justify-center gap-2 font-semibold">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Inscription Saved to Local Star Memory</span>
+                <span>Inscription Saved to Personal Constellation ✦</span>
               </div>
             ) : (
               <Button
@@ -186,16 +204,7 @@ export const ActionModal: React.FC<ActionModalProps> = ({
                 variant="primary"
                 className="w-full"
                 icon={<Sparkles className="w-4 h-4" />}
-                onClick={() => {
-                  if (journalText.trim()) {
-                    setIsSaved(true);
-                    setTimeout(() => {
-                      onClose();
-                      setIsSaved(false);
-                      setJournalText('');
-                    }, 1200);
-                  }
-                }}
+                onClick={handleSaveJournal}
               >
                 Inscribe into Constellation
               </Button>
@@ -213,13 +222,13 @@ export const ActionModal: React.FC<ActionModalProps> = ({
               <h4 className="font-heading text-lg font-bold text-[#F5F2ED]">
                 {item.subtitle}
               </h4>
-              <p className="text-xs text-[#B8B4D9] max-w-xs mx-auto mt-1">
+              <p className="text-xs text-[#B8B4D9] max-w-xs mx-auto mt-1 leading-relaxed">
                 {item.description}
               </p>
             </div>
 
             <div className="p-3 rounded-xl bg-[#121029]/80 border border-[#B8B4D9]/15 text-[11px] text-[#FFC978]">
-              🎵 Phase 6 Spotify Ambient Playlist Stream Connected.
+              🎵 Phase 6 Spotify Playlist Stream Connected.
             </div>
 
             <Button
@@ -233,7 +242,7 @@ export const ActionModal: React.FC<ActionModalProps> = ({
           </div>
         )}
 
-        {(item.action.type === 'grounding' || item.action.type === 'reflection' || item.action.type === 'meditation') && (
+        {(item.action.type === 'grounding' || item.action.type === 'reflection') && (
           <div className="space-y-4 py-2">
             <div className="p-4 rounded-xl bg-[#121029]/90 border border-[#B8B4D9]/20 text-xs text-[#F5F2ED] leading-relaxed">
               {item.description}

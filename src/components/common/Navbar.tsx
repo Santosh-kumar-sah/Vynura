@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Menu, X, ShieldCheck, Compass, Sparkle, Camera } from 'lucide-react';
+import { Sparkles, Menu, X, ShieldCheck, Compass, Sparkle, Camera, Wind } from 'lucide-react';
 import { Button } from './Button';
 
 interface NavbarProps {
@@ -23,6 +23,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
     { label: 'The Concept', href: '#concept', icon: <Compass className="w-3.5 h-3.5" /> },
     { label: 'Shift Engine', href: '#recommendations', icon: <Sparkles className="w-3.5 h-3.5" /> },
     { label: 'Constellation', href: '#constellation', icon: <Sparkle className="w-3.5 h-3.5" /> },
+    { label: 'Wellness Hub', href: '#wellness', icon: <Wind className="w-3.5 h-3.5" /> },
     { label: 'Privacy Sanctuary', href: '#privacy', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
   ];
 
@@ -70,9 +71,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
 
         {/* Action / Badge Group */}
         <div className="hidden sm:flex items-center gap-3">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#6FBFC4]/10 border border-[#6FBFC4]/25 text-[11px] font-medium text-[#6FBFC4]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#6FBFC4] animate-pulse" />
-            <span>Phase 4 · Constellation</span>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#C25AE0]/10 border border-[#C25AE0]/25 text-[11px] font-medium text-[#C25AE0]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C25AE0] animate-pulse" />
+            <span>Phase 5 · Wellness Hub</span>
           </div>
           <Button
             size="sm"

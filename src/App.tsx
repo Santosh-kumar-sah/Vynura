@@ -8,6 +8,9 @@ import { Navbar } from './components/common/Navbar';
 import { HeroSection, MOODS } from './components/sections/HeroSection';
 import { RecommendationSection } from './components/recommendations/RecommendationSection';
 import { ConstellationHub } from './components/constellation/ConstellationHub';
+import { WellnessActionsHub } from './components/wellness/WellnessActionsHub';
+import { BreathingGuide } from './components/wellness/BreathingGuide';
+import { MeditationTimer } from './components/wellness/MeditationTimer';
 import { ConceptSection } from './components/sections/ConceptSection';
 import { FeaturesSection } from './components/sections/FeaturesSection';
 import { PrivacySection } from './components/sections/PrivacySection';
@@ -23,6 +26,10 @@ export const App: React.FC = () => {
     mood: MoodType;
     confidence: number;
   } | null>(null);
+
+  // Quick Action Modal states triggered from recommendations
+  const [activeBreathingTech, setActiveBreathingTech] = useState<'478' | 'box' | 'calm' | null>(null);
+  const [isMeditationOpen, setIsMeditationOpen] = useState(false);
 
   const handleConfirmMood = (mood: MoodType, confidence: number) => {
     setActiveMood(mood);
@@ -132,6 +139,8 @@ export const App: React.FC = () => {
           mood={activeMood}
           confidence={activeConfidence}
           onOpenFaceDetection={() => setIsFaceDetectionOpen(true)}
+          onLaunchBreathing={(tech) => setActiveBreathingTech(tech)}
+          onLaunchMeditation={() => setIsMeditationOpen(true)}
         />
 
         {/* Phase 4: Mood Journal + Living Constellation Analytics */}
@@ -139,6 +148,9 @@ export const App: React.FC = () => {
           activeMood={activeMood}
           onOpenFaceDetection={() => setIsFaceDetectionOpen(true)}
         />
+
+        {/* Phase 5: Somatic & Mindful Wellness Actions Sanctuary */}
+        <WellnessActionsHub />
 
         <ConceptSection />
         <FeaturesSection />
@@ -154,6 +166,27 @@ export const App: React.FC = () => {
         onClose={() => setIsFaceDetectionOpen(false)}
         onConfirmMood={handleConfirmMood}
       />
+
+      {/* 8. Full Screen Breathing Guide */}
+      <AnimatePresence>
+        {activeBreathingTech && (
+          <BreathingGuide
+            isOpen={Boolean(activeBreathingTech)}
+            technique={activeBreathingTech}
+            onClose={() => setActiveBreathingTech(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 9. Starlight Meditation Timer */}
+      <AnimatePresence>
+        {isMeditationOpen && (
+          <MeditationTimer
+            isOpen={isMeditationOpen}
+            onClose={() => setIsMeditationOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

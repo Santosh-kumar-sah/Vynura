@@ -13,12 +13,16 @@ interface RecommendationSectionProps {
   mood: MoodType;
   confidence?: number;
   onOpenFaceDetection?: () => void;
+  onLaunchBreathing?: (technique: '478' | 'box' | 'calm') => void;
+  onLaunchMeditation?: () => void;
 }
 
 export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
   mood,
   confidence = 0.9,
   onOpenFaceDetection,
+  onLaunchBreathing,
+  onLaunchMeditation,
 }) => {
   const [selectedActionItem, setSelectedActionItem] = useState<RecommendationItem | null>(null);
   const moodGroup = MOOD_RECOMMENDATIONS[mood] || MOOD_RECOMMENDATIONS.neutral;
@@ -142,6 +146,8 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             mood={mood}
             isOpen={Boolean(selectedActionItem)}
             onClose={() => setSelectedActionItem(null)}
+            onLaunchBreathing={onLaunchBreathing}
+            onLaunchMeditation={onLaunchMeditation}
           />
         )}
       </AnimatePresence>
