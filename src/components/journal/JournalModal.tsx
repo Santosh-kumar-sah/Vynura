@@ -108,8 +108,8 @@ export const JournalModal: React.FC<JournalModalProps> = ({
               >
                 Constellation Inscription
               </span>
-              <span className="text-xs text-[#FFC978] font-heading">
-                {currentMoodData.kanji}
+              <span className="text-xs text-[#FFC978] font-mono">
+                {currentMoodData.sublabel}
               </span>
             </div>
             <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
@@ -133,7 +133,7 @@ export const JournalModal: React.FC<JournalModalProps> = ({
         <div className="space-y-2 mb-6">
           <label className="block text-xs font-semibold text-[#B8B4D9] flex items-center justify-between">
             <span>Reflective Journal Notes (Optional)</span>
-            <span className="text-[10px] text-[#FFC978]/80 font-heading">心のつぶやき</span>
+            <span className="text-[10px] text-[#FFC978]/80 font-mono">Inner Voice</span>
           </label>
           <textarea
             rows={5}

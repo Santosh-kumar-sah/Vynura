@@ -47,7 +47,7 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({
               <span className="text-xs font-mono uppercase tracking-widest text-[#FFC978] font-bold">
                 Private Camera Sanctuary
               </span>
-              <span className="text-xs text-[#FFC978]/80 font-heading">手作り視覚</span>
+              <span className="text-xs text-[#FFC978]/80 font-mono uppercase">Private Vision</span>
             </div>
             <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
               Mirror of the Celestial Sky

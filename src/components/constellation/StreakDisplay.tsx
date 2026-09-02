@@ -31,7 +31,7 @@ export const StreakDisplay: React.FC<StreakDisplayProps> = ({
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FFC978]">
                 Celestial Streak Arc
               </span>
-              <span className="text-xs text-[#FFC978]/90 font-heading">連星の軌跡</span>
+              <span className="text-xs text-[#FFC978]/90 font-mono">Streak Arc</span>
             </div>
             <h4 className="font-heading text-lg font-bold text-[#F5F2ED]">
               {streakCount}-Day Star Chain Ignited
@@ -80,8 +80,8 @@ export const StreakDisplay: React.FC<StreakDisplayProps> = ({
               <span className="text-[10px] font-mono text-[#B8B4D9] font-semibold">
                 Day {idx + 1}
               </span>
-              <span className="text-[9px] font-heading font-bold" style={{ color: moodConfig.color }}>
-                {moodConfig.kanji}
+              <span className="text-[9px] font-mono font-bold" style={{ color: moodConfig.color }}>
+                {moodConfig.sublabel}
               </span>
             </motion.div>
           );

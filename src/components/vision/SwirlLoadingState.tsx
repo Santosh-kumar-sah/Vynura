@@ -123,8 +123,8 @@ export const SwirlLoadingState: React.FC<SwirlLoadingStateProps> = ({
         transition={{ duration: 0.3 }}
         className="space-y-1.5"
       >
-        <span className="text-[11px] font-heading font-bold text-[#FFC978] tracking-widest block uppercase">
-          モデル読込中 · Ghibli Firefly Swirl
+        <span className="text-[11px] font-mono font-bold text-[#FFC978] tracking-widest block uppercase">
+          Neural Loader · Firefly Swirl
         </span>
         <h4 className="font-heading text-lg font-bold text-[#F5F2ED]">
           {progressMessage}

@@ -15,7 +15,7 @@ import {
 export interface StarBadge {
   id: string;
   title: string;
-  kanji: string;
+  tag: string;
   description: string;
   requirement: string;
   icon: React.ReactNode;
@@ -36,8 +36,8 @@ export const StarBadgeGrid: React.FC<StarBadgeGridProps> = ({
   const badges: StarBadge[] = [
     {
       id: 'b1',
-      title: 'First Light · 初光',
-      kanji: '初光',
+      title: 'First Light',
+      tag: 'First Light',
       description: 'Awakened your very first starlight reflection in the looking glass.',
       requirement: 'Complete 1 Biometric Calibration',
       icon: <Star className="w-5 h-5" />,
@@ -47,8 +47,8 @@ export const StarBadgeGrid: React.FC<StarBadgeGridProps> = ({
     },
     {
       id: 'b2',
-      title: 'Orion Weaver · 三連星',
-      kanji: '連星',
+      title: 'Orion Weaver',
+      tag: '3-Day Streak',
       description: 'Sustained emotional continuity for 3 consecutive days.',
       requirement: '3-Day Calibration Streak',
       icon: <Flame className="w-5 h-5" />,
@@ -58,8 +58,8 @@ export const StarBadgeGrid: React.FC<StarBadgeGridProps> = ({
     },
     {
       id: 'b3',
-      title: 'Cassiopeia Crown · 北天冠',
-      kanji: '王冠',
+      title: 'Cassiopeia Crown',
+      tag: '7-Day Crown',
       description: 'Formed a complete 7-day constellation cluster in your night sky.',
       requirement: '7-Day Continuous Streak',
       icon: <Award className="w-5 h-5" />,
@@ -69,8 +69,8 @@ export const StarBadgeGrid: React.FC<StarBadgeGridProps> = ({
     },
     {
       id: 'b4',
-      title: 'Harmonic Alchemist · 五相調和',
-      kanji: '調和',
+      title: 'Harmonic Alchemist',
+      tag: '5 Harmonics',
       description: 'Observed and calibrated across all 5 emotional frequencies.',
       requirement: 'Experience 5 Harmonic Moods',
       icon: <Orbit className="w-5 h-5" />,
@@ -80,8 +80,8 @@ export const StarBadgeGrid: React.FC<StarBadgeGridProps> = ({
     },
     {
       id: 'b5',
-      title: 'Zenith Master · 迷走深呼吸',
-      kanji: '天頂',
+      title: 'Zenith Master',
+      tag: 'Mastery',
       description: 'Completed 10 full somatic firefly particle breathing cycles.',
       requirement: 'Complete 10 Breath Cycles',
       icon: <Moon className="w-5 h-5" />,
@@ -91,8 +91,8 @@ export const StarBadgeGrid: React.FC<StarBadgeGridProps> = ({
     },
     {
       id: 'b6',
-      title: 'Supernova Guardian · 永遠の星',
-      kanji: '守護星',
+      title: 'Supernova Guardian',
+      tag: 'Guardian',
       description: 'Inscribed 30 starlight reflections into your permanent constellation.',
       requirement: '30 Total Inscriptions',
       icon: <Sun className="w-5 h-5" />,
@@ -108,7 +108,7 @@ export const StarBadgeGrid: React.FC<StarBadgeGridProps> = ({
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FFC978] mb-1">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Constellation Milestone Clusters · 称号一覧</span>
+            <span>Constellation Milestone Clusters · Honors</span>
           </div>
           <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
             Unlocked Star Badges & Constellations
@@ -163,8 +163,8 @@ export const StarBadgeGrid: React.FC<StarBadgeGridProps> = ({
                 </div>
 
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-heading font-bold" style={{ color: badge.accentColor }}>
-                    {badge.kanji}
+                  <span className="text-xs font-mono font-bold" style={{ color: badge.accentColor }}>
+                    {badge.tag}
                   </span>
                   {badge.isUnlocked ? (
                     <CheckCircle2 className="w-4 h-4 text-[#6FBFC4]" />

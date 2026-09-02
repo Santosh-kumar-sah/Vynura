@@ -7,21 +7,21 @@ export const PrivacySection: React.FC = () => {
     {
       icon: <EyeOff className="w-5 h-5 text-[#FFC978]" />,
       title: 'Zero Video Uploads',
-      kanji: '映像非送信',
+      tag: 'Private Sandbox',
       description:
         'Your camera stream never leaves your browser sandbox. WebAssembly processes video frames in transient memory and purges them instantly.',
     },
     {
       icon: <Lock className="w-5 h-5 text-[#6FBFC4]" />,
       title: 'No Photos or Biometrics Stored',
-      kanji: '写真非保存',
+      tag: 'Zero Retention',
       description:
         'We never record, save, or construct biometric templates. No facial databases exist; your reflection remains purely your own.',
     },
     {
       icon: <Cpu className="w-5 h-5 text-[#FF9E7D]" />,
       title: '100% On-Device Neural Compute',
-      kanji: '端末内処理',
+      tag: 'Device Hardware',
       description:
         'Powered by local WebGL / WebGPU acceleration. The entire neural face-landmark model runs directly on your device GPU/CPU.',
     },
@@ -33,10 +33,10 @@ export const PrivacySection: React.FC = () => {
         accentColor="#6FBFC4"
         className="p-8 sm:p-12 relative overflow-hidden bg-gradient-to-br from-[#1E1B40]/90 via-[#181636]/95 to-[#121029]/95"
       >
-        {/* Background Crest Watermark */}
+        {/* Background Watermark */}
         <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full border border-[#FFC978]/10 pointer-events-none flex items-center justify-center">
           <div className="w-48 h-48 rounded-full border border-[#6FBFC4]/10 flex items-center justify-center">
-            <span className="text-8xl opacity-5 font-heading text-[#FFC978]">守</span>
+            <span className="text-8xl opacity-5 font-mono text-[#FFC978]">✦</span>
           </div>
         </div>
 
@@ -52,7 +52,7 @@ export const PrivacySection: React.FC = () => {
                   <span className="text-xs font-mono uppercase tracking-widest text-[#6FBFC4] font-bold">
                     Privacy Sanctuary
                   </span>
-                  <span className="text-xs text-[#FFC978] font-heading">プライバシー約束</span>
+                  <span className="text-xs text-[#FFC978] font-mono">100% Client-Side</span>
                 </div>
                 <h3 className="font-heading text-2xl sm:text-3xl font-bold text-[#F5F2ED]">
                   Your face belongs to you. Always.
@@ -86,7 +86,7 @@ export const PrivacySection: React.FC = () => {
                     <h4 className="font-heading text-sm font-bold text-[#F5F2ED]">
                       {pillar.title}
                     </h4>
-                    <span className="text-[10px] text-[#B8B4D9] font-heading">{pillar.kanji}</span>
+                    <span className="text-[10px] text-[#B8B4D9] font-mono">{pillar.tag}</span>
                   </div>
                 </div>
                 <p className="text-xs text-[#B8B4D9] leading-relaxed">

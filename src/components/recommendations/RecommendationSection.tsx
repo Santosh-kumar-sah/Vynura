@@ -55,7 +55,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
         style={{ backgroundColor: moodInfo.color }}
       />
 
-      {/* Header Container with Anime Directional Entry */}
+      {/* Header Container */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div
           key={`header-${mood}`}
@@ -67,7 +67,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             style={{ color: moodInfo.color }}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>02 / 処方箋 · Tailored Emotional Prescription</span>
+            <span>02 / SHIFT ENGINE · Tailored Emotional Prescription</span>
           </div>
 
           <div className="flex items-baseline gap-3 mb-2">
@@ -87,10 +87,10 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             >
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: moodInfo.color }} />
               <span>Current Resonance: {moodInfo.label}</span>
-              <span className="opacity-70 font-heading">({moodInfo.kanji})</span>
+              <span className="opacity-70 font-mono">({moodInfo.sublabel})</span>
             </span>
 
-            <span className="text-xs text-[#B8B4D9] font-heading font-medium">
+            <span className="text-xs text-[#B8B4D9] font-medium">
               {moodGroup.kanjiTheme}
             </span>
           </div>
@@ -114,7 +114,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
         </motion.div>
       </div>
 
-      {/* Dynamic ZenQuotes Wisdom Banner */}
+      {/* Dynamic Quotes Wisdom Banner */}
       {dynamicQuote && (
         <motion.div
           initial={{ opacity: 0, y: 15 }}
@@ -140,11 +140,6 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
               <p className="font-heading text-sm sm:text-base text-[#FFF2D6] italic leading-relaxed">
                 "{dynamicQuote.quote}"
               </p>
-              {dynamicQuote.japaneseTranslation && (
-                <p className="text-xs text-[#B8B4D9] font-heading mt-1 opacity-80">
-                  {dynamicQuote.japaneseTranslation}
-                </p>
-              )}
             </div>
           </div>
 
@@ -152,7 +147,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             <span className="text-xs font-bold font-mono" style={{ color: moodInfo.color }}>
               — {dynamicQuote.author}
             </span>
-            <span className="text-[10px] text-[#B8B4D9] block">ZenQuotes Wisdom Stream</span>
+            <span className="text-[10px] text-[#B8B4D9] block">Wisdom Stream</span>
           </div>
         </motion.div>
       )}

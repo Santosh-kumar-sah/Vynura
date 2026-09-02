@@ -3,7 +3,8 @@ export type MoodType = 'happy' | 'calm' | 'sad' | 'energetic' | 'neutral';
 export interface MoodConfig {
   id: MoodType;
   label: string;
-  kanji: string;
+  sublabel: string;
+  kanji?: string; // backwards compatibility alias for English theme label
   color: string;
   gradient: string;
   quote: string;
@@ -14,7 +15,7 @@ export interface MoodConfig {
 export interface FeatureCardItem {
   id: string;
   title: string;
-  japaneseTitle: string;
+  categoryTag: string;
   subtitle: string;
   description: string;
   accentColor: string;

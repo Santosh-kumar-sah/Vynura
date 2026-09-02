@@ -8,7 +8,8 @@ export const MOODS: Record<MoodType, MoodConfig> = {
   happy: {
     id: 'happy',
     label: 'Joy & Radiance',
-    kanji: '喜び',
+    sublabel: 'Radiance',
+    kanji: 'Joy',
     color: '#FF9E7D',
     gradient: 'from-[#FF9E7D]/20 via-[#FFC978]/10 to-transparent',
     quote: 'Your light is magnetic today. Let us amplify this resonance.',
@@ -18,7 +19,8 @@ export const MOODS: Record<MoodType, MoodConfig> = {
   calm: {
     id: 'calm',
     label: 'Deep Serenity',
-    kanji: '静寂',
+    sublabel: 'Serenity',
+    kanji: 'Calm',
     color: '#6FBFC4',
     gradient: 'from-[#6FBFC4]/20 via-[#4A5B8C]/10 to-transparent',
     quote: 'Still waters reflect the infinite sky. You are grounded in this moment.',
@@ -28,7 +30,8 @@ export const MOODS: Record<MoodType, MoodConfig> = {
   sad: {
     id: 'sad',
     label: 'Gentle Rain',
-    kanji: '哀愁',
+    sublabel: 'Gentle',
+    kanji: 'Reflect',
     color: '#4A5B8C',
     gradient: 'from-[#4A5B8C]/25 via-[#2D2A5C]/20 to-transparent',
     quote: 'Every rain shower cleanses the soil for tomorrow\'s blossoming.',
@@ -38,7 +41,8 @@ export const MOODS: Record<MoodType, MoodConfig> = {
   energetic: {
     id: 'energetic',
     label: 'Starlight Surge',
-    kanji: '情熱',
+    sublabel: 'Surge',
+    kanji: 'Energy',
     color: '#C25AE0',
     gradient: 'from-[#C25AE0]/20 via-[#FFC978]/10 to-transparent',
     quote: 'Raw momentum flows through you. Direct this current with intention.',
@@ -48,7 +52,8 @@ export const MOODS: Record<MoodType, MoodConfig> = {
   neutral: {
     id: 'neutral',
     label: 'Clear Equilibrium',
-    kanji: '調和',
+    sublabel: 'Equilibrium',
+    kanji: 'Balance',
     color: '#8B87B0',
     gradient: 'from-[#8B87B0]/20 via-[#2D2A5C]/15 to-transparent',
     quote: 'A clean slate before the brush touches canvas. Where will you wander?',
@@ -90,7 +95,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       />
 
       <div className="max-w-5xl mx-auto w-full text-center flex flex-col items-center">
-        {/* Anime aesthetic status pill */}
+        {/* Status pill */}
         <motion.div
           initial={{ opacity: 0, y: -16, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -102,7 +107,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             Face-Powered Emotional Sanctuary
           </span>
           <span className="w-1 h-1 rounded-full bg-[#FFC978]/60" />
-          <span className="text-[11px] text-[#FFC978] font-heading font-bold">手作り</span>
+          <span className="text-[11px] text-[#FFC978] font-bold">Real-Time Insight</span>
         </motion.div>
 
         {/* Hero Title with Shinkai Sky Aesthetic */}
@@ -132,7 +137,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <span className="font-heading font-semibold text-[#F5F2ED] italic text-xl sm:text-2xl block mb-1">
             "See it. Feel it. Shift it."
           </span>
-          An intimate web companion inspired by Makoto Shinkai skies & Ghibli firefly warmth.
+          An intimate web companion inspired by twilight skies & warm firefly glows.
           Look into your camera, discover your emotional landscape, and receive instantaneous sonic & somatic shifts.
         </motion.p>
 
@@ -148,8 +153,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             variant="primary"
             icon={<ArrowRight className="w-4 h-4" />}
             onClick={() => {
-              const el = document.getElementById('features');
-              el?.scrollIntoView({ behavior: 'smooth' });
               if (onStartJourney) onStartJourney();
             }}
           >
@@ -193,7 +196,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 Interactive Mood Engine Preview
               </span>
             </div>
-            <span className="text-xs text-[#FFC978]/90 font-heading">
+            <span className="text-xs text-[#FFC978]/90 font-medium">
               Select an emotional frequency to preview recommendations:
             </span>
           </div>
@@ -221,7 +224,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     style={{ backgroundColor: mood.color }}
                   />
                   <span>{mood.label.split(' ')[0]}</span>
-                  <span className="text-[10px] font-heading opacity-70">({mood.kanji})</span>
+                  <span className="text-[10px] opacity-70">({mood.sublabel})</span>
                 </button>
               );
             })}

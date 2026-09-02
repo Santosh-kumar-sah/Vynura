@@ -9,40 +9,40 @@ interface SpotifyPlayerProps {
 }
 
 // Curated Spotify Playlists for each harmonic mood
-const SPOTIFY_PLAYLISTS: Record<MoodType, { id: string; title: string; subtitle: string; kanji: string; themeColor: string }> = {
+const SPOTIFY_PLAYLISTS: Record<MoodType, { id: string; title: string; subtitle: string; tag: string; themeColor: string }> = {
   happy: {
     id: '37i9dQZF1DXdPec7aLTmlC', // Happy Lofi Beats
     title: 'Euphoric Starlight Lofi',
     subtitle: 'Warm Acoustic Kalimba & Summer Vibes',
-    kanji: '喜びの調べ',
+    tag: 'Joy Flow',
     themeColor: '#FF9E7D',
   },
   calm: {
     id: '37i9dQZF1DX4sWSpwq3LiO', // Peaceful Piano
     title: 'Binaural Theta Serenity',
-    subtitle: '432Hz Ambient Waves & Makoto Shinkai Piano',
-    kanji: '静寂の海',
+    subtitle: '432Hz Ambient Waves & Piano Reflections',
+    tag: 'Calm Sea',
     themeColor: '#6FBFC4',
   },
   sad: {
     id: '37i9dQZF1DXbvABifmGZ5j', // Rainy Day Lofi
-    title: 'Midnight Rain & Soft Shinkai Solitude',
+    title: 'Midnight Rain & Solitude Piano',
     subtitle: 'Gentle Piano Raindrops & Emotional Release',
-    kanji: '夜雨の安らぎ',
+    tag: 'Rain Rest',
     themeColor: '#4A5B8C',
   },
   energetic: {
     id: '37i9dQZF1DXdLEN7aqioXM', // Synthwave / Retro electro flow
     title: 'Cosmic Momentum & Starlight Surge',
     subtitle: 'High-Vibe Synth Pulses & Creative Flow',
-    kanji: '情熱の波動',
+    tag: 'Energy Wave',
     themeColor: '#C25AE0',
   },
   neutral: {
     id: '37i9dQZF1DWZeKCadgRdKQ', // Deep Ambient Focus
     title: 'Bamboo Chimes & Mountain Mist',
     subtitle: 'Subtle Equilibrium & Natural Resonance',
-    kanji: '調和の風鈴',
+    tag: 'Balance',
     themeColor: '#8B87B0',
   },
 };
@@ -88,8 +88,8 @@ export const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ mood }) => {
               >
                 Adaptive Sonic Frequency
               </span>
-              <span className="text-xs text-[#FFC978] font-heading font-semibold">
-                {currentPlaylist.kanji}
+              <span className="text-xs text-[#FFC978] font-mono font-semibold">
+                {currentPlaylist.tag}
               </span>
             </div>
             <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">

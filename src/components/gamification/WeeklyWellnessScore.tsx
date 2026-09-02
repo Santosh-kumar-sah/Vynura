@@ -37,7 +37,7 @@ export const WeeklyWellnessScore: React.FC<WeeklyWellnessScoreProps> = ({
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FFC978]">
                 Harmonic Synthesis
               </span>
-              <span className="text-xs text-[#FFC978]/80 font-heading">週間健康指標</span>
+              <span className="text-xs text-[#FFC978]/80 font-mono uppercase">Weekly Metric</span>
             </div>
             <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
               Weekly Celestial Wellness Resonance
@@ -47,7 +47,7 @@ export const WeeklyWellnessScore: React.FC<WeeklyWellnessScoreProps> = ({
 
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#121029]/90 border border-[#6FBFC4]/40 text-xs font-semibold text-[#6FBFC4]">
           <span className="w-2 h-2 rounded-full bg-[#6FBFC4] animate-pulse" />
-          <span>Rank: 天頂 · Zenith Harmonic</span>
+          <span>Rank: Zenith Harmonic</span>
         </div>
       </div>
 

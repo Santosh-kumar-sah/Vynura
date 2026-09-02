@@ -20,7 +20,7 @@ export const GamificationSection: React.FC = () => {
         >
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FFC978] mb-2">
             <Trophy className="w-4 h-4 text-[#FFC978]" />
-            <span>05 / 星間達成 · Gamification & Wellness Index</span>
+            <span>05 / MILESTONES · Gamification & Wellness Index</span>
           </div>
 
           <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-2">

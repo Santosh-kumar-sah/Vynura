@@ -14,7 +14,7 @@ import type { MoodType } from '../../types';
 interface GratitudePrompt {
   id: string;
   theme: string;
-  kanji: string;
+  tag: string;
   prompt: string;
   suggestedMood: MoodType;
   accentColor: string;
@@ -24,7 +24,7 @@ const ROTATING_PROMPTS: GratitudePrompt[] = [
   {
     id: 'p1',
     theme: 'Radiant Glance',
-    kanji: '小さな光',
+    tag: 'Subtle Spark',
     prompt: 'What subtle, unexpected kindness made your spirit soften or smile today?',
     suggestedMood: 'happy',
     accentColor: '#FF9E7D',
@@ -32,7 +32,7 @@ const ROTATING_PROMPTS: GratitudePrompt[] = [
   {
     id: 'p2',
     theme: 'Quiet Grounding',
-    kanji: '静かな錨',
+    tag: 'Calm Anchor',
     prompt: 'Where in your physical body did you experience a sudden moment of peaceful release?',
     suggestedMood: 'calm',
     accentColor: '#6FBFC4',
@@ -40,7 +40,7 @@ const ROTATING_PROMPTS: GratitudePrompt[] = [
   {
     id: 'p3',
     theme: 'Gentle Harbor',
-    kanji: '心の許し',
+    tag: 'Self Forgiveness',
     prompt: 'What heavy expectation can you gently give yourself permission to set down tonight?',
     suggestedMood: 'sad',
     accentColor: '#4A5B8C',
@@ -48,7 +48,7 @@ const ROTATING_PROMPTS: GratitudePrompt[] = [
   {
     id: 'p4',
     theme: 'Starlight Spark',
-    kanji: '情熱の種',
+    tag: 'Passion Seed',
     prompt: 'What bold curiosity or creative idea sparked electrical excitement in your mind today?',
     suggestedMood: 'energetic',
     accentColor: '#C25AE0',
@@ -56,7 +56,7 @@ const ROTATING_PROMPTS: GratitudePrompt[] = [
   {
     id: 'p5',
     theme: 'Pure Horizon',
-    kanji: '中庸の美',
+    tag: 'Horizon',
     prompt: 'Looking out toward the horizon of tomorrow, what single intention brings you ease?',
     suggestedMood: 'neutral',
     accentColor: '#FFC978',
@@ -145,8 +145,8 @@ export const GratitudePromptHub: React.FC<GratitudePromptHubProps> = ({ onSaved 
               >
                 Gratitude & Reflection Deck
               </span>
-              <span className="text-xs text-[#FFC978] font-heading font-semibold">
-                {currentPrompt.kanji}
+              <span className="text-xs text-[#FFC978] font-mono font-semibold">
+                {currentPrompt.tag}
               </span>
             </div>
             <h4 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">

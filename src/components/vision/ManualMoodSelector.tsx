@@ -11,7 +11,7 @@ interface ManualMoodSelectorProps {
 interface MoodOption {
   id: MoodType;
   label: string;
-  kanji: string;
+  tag: string;
   color: string;
   description: string;
 }
@@ -20,35 +20,35 @@ const MOOD_OPTIONS: MoodOption[] = [
   {
     id: 'happy',
     label: 'Joy & Radiance',
-    kanji: '喜び',
+    tag: 'Joy',
     color: '#FF9E7D',
     description: 'Vibrant, open, uplifted',
   },
   {
     id: 'calm',
     label: 'Deep Serenity',
-    kanji: '静寂',
+    tag: 'Calm',
     color: '#6FBFC4',
     description: 'Grounded, peaceful, steady',
   },
   {
     id: 'sad',
     label: 'Gentle Rain',
-    kanji: '哀愁',
+    tag: 'Reflect',
     color: '#4A5B8C',
     description: 'Introspective, heavy, tender',
   },
   {
     id: 'energetic',
     label: 'Starlight Surge',
-    kanji: '情熱',
+    tag: 'Energy',
     color: '#C25AE0',
     description: 'High momentum, passion, intense',
   },
   {
     id: 'neutral',
     label: 'Equilibrium',
-    kanji: '調和',
+    tag: 'Balance',
     color: '#8B87B0',
     description: 'Clear slate, receptive, centered',
   },
@@ -67,7 +67,7 @@ export const ManualMoodSelector: React.FC<ManualMoodSelectorProps> = ({
             Manual Emotional Override
           </span>
         </div>
-        <span className="text-[11px] text-[#FFC978]/90 font-heading">
+        <span className="text-[11px] text-[#FFC978]/90 font-medium">
           Feel something different? Tap to recalibrate:
         </span>
       </div>
@@ -106,8 +106,8 @@ export const ManualMoodSelector: React.FC<ManualMoodSelectorProps> = ({
                     boxShadow: isSelected ? `0 0 8px ${opt.color}` : 'none',
                   }}
                 />
-                <span className="text-[10px] font-heading font-bold text-[#B8B4D9]">
-                  {opt.kanji}
+                <span className="text-[10px] font-mono font-bold text-[#B8B4D9]">
+                  {opt.tag}
                 </span>
               </div>
 

@@ -20,11 +20,11 @@ interface MeditationTimerProps {
 }
 
 const DURATION_OPTIONS = [
-  { label: '1 Min', seconds: 60, kanji: '一分' },
-  { label: '3 Mins', seconds: 180, kanji: '三分' },
-  { label: '5 Mins', seconds: 300, kanji: '五分' },
-  { label: '10 Mins', seconds: 600, kanji: '十分' },
-  { label: '15 Mins', seconds: 900, kanji: '十五分' },
+  { label: '1 Min', seconds: 60, tag: 'Quick' },
+  { label: '3 Mins', seconds: 180, tag: 'Focus' },
+  { label: '5 Mins', seconds: 300, tag: 'Restore' },
+  { label: '10 Mins', seconds: 600, tag: 'Deep' },
+  { label: '15 Mins', seconds: 900, tag: 'Immersion' },
 ];
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({
@@ -119,7 +119,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FFC978]">
                   Night Sanctuary Meditation
                 </span>
-                <span className="text-xs text-[#FFC978]/80 font-heading">星空瞑想</span>
+                <span className="text-xs text-[#FFC978]/80 font-mono">Stillness</span>
               </div>
               <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
                 Ambient Starlight Timer
@@ -136,7 +136,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           </button>
         </div>
 
-        {/* On-Brand Duration Picker Chips (NOT a native number input) */}
+        {/* Duration Picker Chips */}
         <div className="flex items-center justify-center gap-2 mb-8 flex-wrap">
           {DURATION_OPTIONS.map((opt) => {
             const isSelected = selectedDuration === opt.seconds;
@@ -151,7 +151,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
                 }`}
               >
                 <div>{opt.label}</div>
-                <div className="text-[10px] font-heading opacity-70">{opt.kanji}</div>
+                <div className="text-[10px] font-mono opacity-70">{opt.tag}</div>
               </button>
             );
           })}
@@ -249,7 +249,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           <span className="flex items-center gap-1 text-[#FFC978]">
             <Sparkles className="w-3.5 h-3.5" /> Ambient night sky visual continues gently during session
           </span>
-          <span className="font-heading text-[#FFC978]">静寂の深み</span>
+          <span className="font-mono text-[#FFC978]">Deep Rest</span>
         </div>
       </motion.div>
     </div>

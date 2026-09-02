@@ -18,35 +18,35 @@ interface BreathingPhase {
   targetScale: number; // 0.6 = contracted, 1.4 = expanded
 }
 
-const TECHNIQUES: Record<string, { label: string; kanji: string; totalCycles: number; phases: BreathingPhase[] }> = {
+const TECHNIQUES: Record<string, { label: string; tag: string; totalCycles: number; phases: BreathingPhase[] }> = {
   '478': {
     label: '4-7-8 Parasympathetic Downshift',
-    kanji: '安息呼吸',
+    tag: 'Rest Flow',
     totalCycles: 4,
     phases: [
-      { name: 'Inhale', duration: 4, instruction: 'Breathe in firefly starlight through your nose...', cue: '吸気 (Inhale 4s)', targetScale: 1.35 },
-      { name: 'Hold', duration: 7, instruction: 'Hold the breath gently. Feel your heart slow...', cue: '止息 (Hold 7s)', targetScale: 1.35 },
-      { name: 'Exhale', duration: 8, instruction: 'Release all tension with a soft, steady whoosh...', cue: '呼気 (Exhale 8s)', targetScale: 0.7 },
+      { name: 'Inhale', duration: 4, instruction: 'Breathe in firefly starlight through your nose...', cue: 'Inhale (4s)', targetScale: 1.35 },
+      { name: 'Hold', duration: 7, instruction: 'Hold the breath gently. Feel your heart slow...', cue: 'Hold (7s)', targetScale: 1.35 },
+      { name: 'Exhale', duration: 8, instruction: 'Release all tension with a soft, steady whoosh...', cue: 'Exhale (8s)', targetScale: 0.7 },
     ],
   },
   'box': {
     label: '4-4-4-4 Box Breathing Circuit',
-    kanji: '矩形調息',
+    tag: 'Box Flow',
     totalCycles: 4,
     phases: [
-      { name: 'Inhale', duration: 4, instruction: 'Inhale crisp night air evenly...', cue: '吸気 (Inhale 4s)', targetScale: 1.3 },
-      { name: 'Hold', duration: 4, instruction: 'Hold with relaxed chest and shoulders...', cue: '止息 (Hold 4s)', targetScale: 1.3 },
-      { name: 'Exhale', duration: 4, instruction: 'Exhale completely, letting thoughts drift...', cue: '呼気 (Exhale 4s)', targetScale: 0.75 },
-      { name: 'Pause', duration: 4, instruction: 'Rest in pure still equilibrium...', cue: '静止 (Pause 4s)', targetScale: 0.75 },
+      { name: 'Inhale', duration: 4, instruction: 'Inhale crisp night air evenly...', cue: 'Inhale (4s)', targetScale: 1.3 },
+      { name: 'Hold', duration: 4, instruction: 'Hold with relaxed chest and shoulders...', cue: 'Hold (4s)', targetScale: 1.3 },
+      { name: 'Exhale', duration: 4, instruction: 'Exhale completely, letting thoughts drift...', cue: 'Exhale (4s)', targetScale: 0.75 },
+      { name: 'Pause', duration: 4, instruction: 'Rest in pure still equilibrium...', cue: 'Pause (4s)', targetScale: 0.75 },
     ],
   },
   'calm': {
     label: '4-6 Coherent Calming Wave',
-    kanji: '波調呼吸',
+    tag: 'Calm Wave',
     totalCycles: 5,
     phases: [
-      { name: 'Inhale', duration: 4, instruction: 'Expand your belly with warm amber light...', cue: '吸気 (Inhale 4s)', targetScale: 1.25 },
-      { name: 'Exhale', duration: 6, instruction: 'Slowly let go, sinking into tranquility...', cue: '呼気 (Exhale 6s)', targetScale: 0.75 },
+      { name: 'Inhale', duration: 4, instruction: 'Expand your belly with warm amber light...', cue: 'Inhale (4s)', targetScale: 1.25 },
+      { name: 'Exhale', duration: 6, instruction: 'Slowly let go, sinking into tranquility...', cue: 'Exhale (6s)', targetScale: 0.75 },
     ],
   },
 };
@@ -275,8 +275,8 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#6FBFC4]">
                   Somatic Particle Pacer
                 </span>
-                <span className="text-xs text-[#FFC978] font-heading font-semibold">
-                  {activeTechniqueData.kanji}
+                <span className="text-xs text-[#FFC978] font-mono font-semibold">
+                  {activeTechniqueData.tag}
                 </span>
               </div>
               <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
@@ -313,7 +313,7 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
                 }`}
               >
                 <div>{key === '478' ? '4-7-8 Downshift' : key === 'box' ? 'Box Breathing' : '4-6 Calm'}</div>
-                <div className="text-[10px] font-heading opacity-70">{tech.kanji}</div>
+                <div className="text-[10px] font-mono opacity-70">{tech.tag}</div>
               </button>
             );
           })}
@@ -387,7 +387,7 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
           <span className="flex items-center gap-1 text-[#6FBFC4]">
             <Sparkles className="w-3.5 h-3.5" /> Firefly particles pulse organically with your lungs
           </span>
-          <span className="font-heading text-[#FFC978]">迷走神経活性化</span>
+          <span className="font-mono text-[#FFC978]">Vagus Nerve Reset</span>
         </div>
       </motion.div>
     </div>

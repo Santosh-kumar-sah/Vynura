@@ -44,8 +44,8 @@ export const PatternInsights: React.FC<PatternInsightsProps> = ({ insight }) => 
               </span>
             </div>
 
-            <span className="text-xs font-heading text-[#B8B4D9]">
-              {dominantMoodData.kanji}
+            <span className="text-xs font-mono text-[#B8B4D9]">
+              {dominantMoodData.sublabel}
             </span>
           </div>
 
@@ -85,7 +85,7 @@ export const PatternInsights: React.FC<PatternInsightsProps> = ({ insight }) => 
               </span>
             </div>
 
-            <span className="text-xs font-heading text-[#6FBFC4]">調和指数</span>
+            <span className="text-xs font-mono text-[#6FBFC4]">Equilibrium</span>
           </div>
 
           <div className="flex items-baseline gap-2 mb-2">
@@ -125,7 +125,7 @@ export const PatternInsights: React.FC<PatternInsightsProps> = ({ insight }) => 
               </span>
             </div>
 
-            <span className="text-xs font-heading text-[#FFC978]">星間指針</span>
+            <span className="text-xs font-mono text-[#FFC978]">Synthesis</span>
           </div>
 
           <h4 className="font-heading text-sm font-bold text-[#F5F2ED] mb-2">

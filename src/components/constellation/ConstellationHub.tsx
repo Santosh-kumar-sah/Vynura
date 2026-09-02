@@ -69,7 +69,7 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
         >
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#6FBFC4] mb-2">
             <Orbit className="w-4 h-4" />
-            <span>03 / 星座記録 · Living Constellation Analytics</span>
+            <span>03 / CONSTELLATION · Living Mood Map Analytics</span>
           </div>
 
           <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-2">

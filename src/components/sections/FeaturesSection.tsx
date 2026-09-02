@@ -28,7 +28,7 @@ export const FeaturesSection: React.FC = () => {
     {
       id: 'detection',
       badge: 'Local Vision Model',
-      kanji: '表情認識',
+      kanji: 'Vision Core',
       title: 'Neural Expression Detection',
       description:
         'Local, high-speed neural face analysis that maps 68 facial points in real-time. Detects subtle emotional nuances from micro-smiles to eyebrow tension without any latency.',
@@ -70,10 +70,10 @@ export const FeaturesSection: React.FC = () => {
     {
       id: 'shifts',
       badge: 'Adaptive Alchemy',
-      kanji: '気分変換',
+      kanji: 'Alchemy Core',
       title: 'Smart Shift Engine',
       description:
-        'Translates detected state into immediate sensory shifts: ambient Shinkai-esque lofi soundscapes, 4-7-8 breathing guides, and introspective journaling prompts tailored to your exact frequency.',
+        'Translates detected state into immediate sensory shifts: ambient lofi soundscapes, 4-7-8 breathing guides, and introspective journaling prompts tailored to your exact frequency.',
       accentColor: '#FF9E7D',
       icon: <Sparkles className="w-5 h-5" />,
       highlights: [
@@ -109,7 +109,7 @@ export const FeaturesSection: React.FC = () => {
     {
       id: 'constellation',
       badge: 'Visual History',
-      kanji: '星座記録',
+      kanji: 'Starlight Map',
       title: 'Constellation Mood Map',
       description:
         'Forget cold, generic corporate bar charts. Vynura maps your emotional history into a living, interconnected night-sky constellation. High-radiance days shine like Sirius; calm days glow as steady stellar clusters.',
@@ -167,7 +167,7 @@ export const FeaturesSection: React.FC = () => {
     {
       id: 'actions',
       badge: 'Somatic Hub',
-      kanji: '安らぎ',
+      kanji: 'Sanctuary',
       title: 'Wellness Actions Hub',
       description:
         'A dedicated sanctuary for somatic calming: particle-driven breathing lungs, high-focus binaural timers, and micro-gratitude anchors designed to reset your parasympathetic nervous system.',
@@ -215,7 +215,7 @@ export const FeaturesSection: React.FC = () => {
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFC978]/10 border border-[#FFC978]/30 text-xs font-semibold text-[#FFC978] mb-3"
         >
           <Star className="w-3.5 h-3.5" />
-          <span>Crafted Modules · 機能紹介</span>
+          <span>Crafted Modules · Feature Architecture</span>
         </motion.div>
 
         <motion.h2

@@ -7,7 +7,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
     headline: 'Gentle Harbor for Introspective Rain',
     subheadline:
       'Allow yourself to feel softly held. Your nervous system is seeking tenderness, slow rhythmic pacing, and warmth.',
-    kanjiTheme: '慈愛 · Compassionate Sanctuary',
+    kanjiTheme: 'Compassionate Sanctuary',
     recommendations: [
       {
         id: 'sad-breath-478',
@@ -16,7 +16,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Vagus Nerve Reset',
         description:
           'Inhale warm starlight for 4s, gently hold for 7s, and release heavy chest tension on an 8s exhale. Calms cortisol response in under 2 minutes.',
-        kanji: '深呼吸',
+        kanji: 'Breathe',
         tag: 'Somatic Reset',
         durationText: '2 mins',
         accentColor: '#6FBFC4',
@@ -37,7 +37,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Reflective Journaling',
         description:
           'Prompt: "What is one gentle boundary or kindness I can give myself right now?" Write one sentence to anchor your heart.',
-        kanji: '日記',
+        kanji: 'Journal',
         tag: 'Journal Prompt',
         durationText: '3 mins',
         accentColor: '#FFC978',
@@ -54,7 +54,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: '432Hz Healing Frequency',
         description:
           'Warm acoustic piano layered with gentle binaural raindrops designed to cradle heavy emotions into peaceful release.',
-        kanji: '音響',
+        kanji: 'Soundscape',
         tag: 'Soundscape',
         durationText: '5 mins',
         accentColor: '#4A5B8C',
@@ -72,7 +72,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
     headline: 'Channeling The Starlight Surge',
     subheadline:
       'High arousal detected. Direct this vibrant voltage into grounded creative flow or soothe overstimulated circuits.',
-    kanjiTheme: '情熱 · High Resonance',
+    kanjiTheme: 'High Resonance Energy',
     recommendations: [
       {
         id: 'energetic-box-breath',
@@ -81,7 +81,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: '4-4-4-4 Tactical Equilibrium',
         description:
           'Inhale 4s, hold 4s, exhale 4s, pause 4s. Instantly stabilizes adrenaline surges while retaining razor-sharp mental focus.',
-        kanji: '調息',
+        kanji: 'Focus Breath',
         tag: 'Breath Pacing',
         durationText: '2 mins',
         accentColor: '#C25AE0',
@@ -98,7 +98,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: '5-4-3-2-1 Reset',
         description:
           'Step back from screens. Look at the farthest horizon point for 60 seconds to release ocular strain and lower sympathetic tone.',
-        kanji: '遠見',
+        kanji: 'Horizon',
         tag: 'Micro-Break',
         durationText: '1 min',
         accentColor: '#6FBFC4',
@@ -115,7 +115,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Momentum Capture',
         description:
           'Capture your peak inspiration right now. Write down your top 3 high-impact ideas before the energetic crest recedes.',
-        kanji: '集注',
+        kanji: 'Sprint',
         tag: 'Focus Journal',
         durationText: '5 mins',
         accentColor: '#FFC978',
@@ -133,7 +133,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
     headline: 'Radiant Resonance Amplification',
     subheadline:
       'Your emotional frequency is glowing bright. Anchor this luminous joy into a lasting constellation in your memory.',
-    kanjiTheme: '歓喜 · Celestial Radiance',
+    kanjiTheme: 'Celestial Radiance',
     recommendations: [
       {
         id: 'happy-journal-anchor',
@@ -142,7 +142,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Savoring The Spark',
         description:
           'Prompt: "What specific glance, victory, or realization made your spirit glow today?" Anchor this feeling for future rainy days.',
-        kanji: '感謝',
+        kanji: 'Gratitude',
         tag: 'Gratitude Anchor',
         durationText: '3 mins',
         accentColor: '#FF9E7D',
@@ -162,8 +162,8 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         title: 'Summer Fireflies & Euphoric Lofi',
         subtitle: '528Hz Transformation Tone',
         description:
-          'Upbeat Japanese lofi hip-hop infused with warm organic kalimba and glowing campfire crackle to sustain your joyful stride.',
-        kanji: '躍動',
+          'Upbeat lofi hip-hop infused with warm organic kalimba and glowing campfire crackle to sustain your joyful stride.',
+        kanji: 'Uplift',
         tag: 'Upbeat Soundscape',
         durationText: '4 mins',
         accentColor: '#FFC978',
@@ -180,7 +180,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Social Micro-Action',
         description:
           'Send a spontaneous two-word appreciation message to a friend, mentor, or loved one while your energy is overflowing.',
-        kanji: '共鳴',
+        kanji: 'Ripple',
         tag: 'Micro-Action',
         durationText: '1 min',
         accentColor: '#C25AE0',
@@ -198,7 +198,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
     headline: 'Still Waters Under The Infinite Sky',
     subheadline:
       'Grounded equilibrium detected. Deepen your serenity with theta frequencies and contemplative stillness.',
-    kanjiTheme: '静寂 · Deep Stillness',
+    kanjiTheme: 'Deep Stillness',
     recommendations: [
       {
         id: 'calm-sonic-theta',
@@ -207,7 +207,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Subtle Harmonic Drift',
         description:
           'Gentle tide soundscapes interlaced with 6Hz binaural theta pulses to support deep restorative meditation or focused creative writing.',
-        kanji: '波音',
+        kanji: 'Theta Waves',
         tag: 'Binaural Waves',
         durationText: '5 mins',
         accentColor: '#6FBFC4',
@@ -224,7 +224,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Uncluttered Awareness',
         description:
           'Set a soft 3-minute silence timer. Rest your gaze on the drifting fireflies and watch thoughts float like distant comets.',
-        kanji: '瞑想',
+        kanji: 'Meditation',
         tag: 'Meditation',
         durationText: '3 mins',
         accentColor: '#FFC978',
@@ -241,7 +241,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Mindful Observation',
         description:
           'Prompt: "In the stillness of right now, what truth feels simplest and clearest?"',
-        kanji: '省察',
+        kanji: 'Clarity',
         tag: 'Reflection',
         durationText: '2 mins',
         accentColor: '#8B87B0',
@@ -259,7 +259,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
     headline: 'Clear Canvas Before The Stars Awaken',
     subheadline:
       'Equilibrium restored. A peaceful zero-point to consciously choose your direction, tune your senses, or gently explore.',
-    kanjiTheme: '調和 · Pure Balance',
+    kanjiTheme: 'Pure Balance',
     recommendations: [
       {
         id: 'neutral-body-scan',
@@ -268,7 +268,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Posture & Jaw Softening',
         description:
           'Drop your shoulders 2 inches, un-clench your jaw, and let your tongue rest on the roof of your mouth. Feel the effortless weight of gravity.',
-        kanji: '身体',
+        kanji: 'Body Scan',
         tag: 'Somatic Scan',
         durationText: '1 min',
         accentColor: '#8B87B0',
@@ -285,7 +285,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Subtle Natural Harmony',
         description:
           'Delicate high-frequency wind chime tones designed to gently stimulate neural clarity without cognitive fatigue.',
-        kanji: '風鈴',
+        kanji: 'Wind Chimes',
         tag: 'Ambient Audio',
         durationText: '4 mins',
         accentColor: '#6FBFC4',
@@ -302,7 +302,7 @@ export const MOOD_RECOMMENDATIONS: Record<MoodType, MoodRecommendationGroup> = {
         subtitle: 'Intention Setting',
         description:
           'Prompt: "If the next hour had a single theme, what energy would serve me best?"',
-        kanji: '志向',
+        kanji: 'Intention',
         tag: 'Intention Log',
         durationText: '2 mins',
         accentColor: '#FFC978',

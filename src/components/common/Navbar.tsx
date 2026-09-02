@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
               <span className="font-heading font-bold text-2xl tracking-wide text-[#F5F2ED] group-hover:text-[#FFC978] transition-colors">
                 Vynura
               </span>
-              <span className="text-[10px] text-[#FFC978]/80 font-heading">ヴィニュラ</span>
+              <span className="text-[10px] text-[#FFC978]/80 font-mono uppercase tracking-widest">Sanctuary</span>
             </div>
             <span className="text-[9px] uppercase tracking-widest text-[#B8B4D9] font-medium -mt-1 hidden sm:inline">
               Emotion Companion

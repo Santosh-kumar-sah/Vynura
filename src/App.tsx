@@ -116,7 +116,7 @@ export const App: React.FC = () => {
                 </span>
               </div>
               <p className="text-[11px] text-[#B8B4D9] italic">
-                Sky shifted to {MOODS[confirmationToast.mood].kanji} harmonic spectrum.
+                Sky shifted to {MOODS[confirmationToast.mood].sublabel} harmonic spectrum.
               </p>
             </div>
             <Sparkles

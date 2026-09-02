@@ -117,7 +117,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
                 {isSignUp ? 'New Sanctuary' : 'Celestial Login'}
               </span>
-              <span className="text-xs text-[#FFC978]/80 font-heading">星空の鍵</span>
+              <span className="text-xs text-[#FFC978]/80 font-mono">Star Key</span>
             </div>
             <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
               {isSignUp ? 'Awaken Your Star Key' : 'Enter Your Sanctuary'}

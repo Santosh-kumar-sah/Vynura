@@ -15,7 +15,7 @@ export const Footer: React.FC = () => {
                 <span>✦</span>
               </div>
               <span className="font-heading font-bold text-2xl text-[#F5F2ED]">Vynura</span>
-              <span className="text-xs text-[#FFC978] font-heading">ヴィニュラ</span>
+              <span className="text-xs text-[#FFC978] font-mono uppercase tracking-widest">Sanctuary</span>
             </div>
 
             <p className="font-heading italic text-[#FFC978] text-base">
@@ -23,12 +23,12 @@ export const Footer: React.FC = () => {
             </p>
 
             <p className="text-xs text-[#B8B4D9] max-w-sm leading-relaxed">
-              An anime-warmth face-based emotion companion inspired by Makoto Shinkai night skies and Studio Ghibli firefly warmth. Handcrafted for inner peace and grounded clarity.
+              An emotion companion inspired by twilight night skies and firefly warmth. Handcrafted for inner peace and grounded clarity.
             </p>
 
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1836] border border-[#B8B4D9]/20 text-[11px] text-[#B8B4D9]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#6FBFC4]" />
-              <span>Phase 1 Architecture Complete · Phase 2 Vision Next</span>
+              <span>Full System Active · 6 Phases Deployed</span>
             </div>
           </div>
 
@@ -44,13 +44,18 @@ export const Footer: React.FC = () => {
                 </a>
               </li>
               <li>
-                <a href="#features" className="hover:text-[#FFC978] transition-colors">
-                  Core Modules & Shifts
+                <a href="#recommendations" className="hover:text-[#FFC978] transition-colors">
+                  Shift Engine
                 </a>
               </li>
               <li>
-                <a href="#spectrum" className="hover:text-[#FFC978] transition-colors">
-                  Mood Alchemy Preview
+                <a href="#constellation" className="hover:text-[#FFC978] transition-colors">
+                  Constellation Mood Map
+                </a>
+              </li>
+              <li>
+                <a href="#wellness" className="hover:text-[#FFC978] transition-colors">
+                  Wellness Actions Hub
                 </a>
               </li>
               <li>
@@ -61,23 +66,23 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Roadmap Spectrum */}
+          {/* Architecture Modules */}
           <div className="space-y-3">
             <h4 className="font-heading text-sm font-bold text-[#F5F2ED] uppercase tracking-wider">
-              Build Phases
+              Sanctuary Core
             </h4>
             <ul className="space-y-2 text-xs text-[#B8B4D9]">
               <li className="flex items-center gap-1.5 text-[#FFC978] font-semibold">
-                <span className="text-[10px]">●</span> Phase 1: Brand & Night Sky (Done)
+                <span className="text-[10px]">✦</span> Face-API Neural Vision Core
               </li>
-              <li className="flex items-center gap-1.5 opacity-60">
-                <span className="text-[10px]">○</span> Phase 2: Face-API Vision Core
+              <li className="flex items-center gap-1.5 text-[#6FBFC4] font-semibold">
+                <span className="text-[10px]">✦</span> Smart Shift Recommendation
               </li>
-              <li className="flex items-center gap-1.5 opacity-60">
-                <span className="text-[10px]">○</span> Phase 3: Recommendation Engine
+              <li className="flex items-center gap-1.5 text-[#FF9E7D] font-semibold">
+                <span className="text-[10px]">✦</span> Living Constellation History
               </li>
-              <li className="flex items-center gap-1.5 opacity-60">
-                <span className="text-[10px]">○</span> Phase 4: Constellation Map
+              <li className="flex items-center gap-1.5 text-[#C25AE0] font-semibold">
+                <span className="text-[10px]">✦</span> Somatic Firefly Pacer
               </li>
             </ul>
           </div>

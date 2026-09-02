@@ -6,7 +6,7 @@ import { GlowingCard } from '../common/GlowingCard';
 export const ConceptSection: React.FC = () => {
   return (
     <section id="concept" className="relative py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Section Header with Anime Panel Label */}
+      {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -15,7 +15,7 @@ export const ConceptSection: React.FC = () => {
           transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
         >
           <div className="flex items-center gap-2 text-[#FFC978] text-xs font-semibold uppercase tracking-widest mb-2">
-            <span>01 / アーキテクチャ</span>
+            <span>01 / ARCHITECTURE</span>
             <span className="w-1 h-1 rounded-full bg-[#FFC978]" />
             <span>The Concept & Workflow</span>
           </div>
@@ -35,7 +35,7 @@ export const ConceptSection: React.FC = () => {
         </motion.p>
       </div>
 
-      {/* Asymmetric Manga-Panel Composition */}
+      {/* Asymmetric Composition */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Panel 1: The Vision Gaze (Large Left Panel - Span 7 cols) */}
         <div className="lg:col-span-7 flex flex-col">
@@ -51,8 +51,8 @@ export const ConceptSection: React.FC = () => {
                     <ScanFace className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-heading text-[#FFC978] tracking-widest block">
-                      第一章 · STEP 01
+                    <span className="text-[11px] font-mono uppercase text-[#FFC978] tracking-widest block font-bold">
+                      PHASE 01 · STEP 01
                     </span>
                     <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
                       The Look — In-Browser Micro-Expressions
@@ -68,7 +68,7 @@ export const ConceptSection: React.FC = () => {
                 Position your face within the celestial aperture. The neural model maps 68 distinct biometric coordinate nodes across eye openness, brow tension, and mouth curvature.
               </p>
 
-              {/* Simulated Anime Face-Mesh HUD Visualizer */}
+              {/* Simulated Face-Mesh HUD Visualizer */}
               <div className="relative h-48 rounded-xl bg-[#121029] border border-[#B8B4D9]/20 overflow-hidden flex items-center justify-center p-4">
                 {/* Background grid lines */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#2D2A5C_1px,transparent_1px),linear-gradient(to_bottom,#2D2A5C_1px,transparent_1px)] bg-[size:24px_24px] opacity-30" />
@@ -108,7 +108,7 @@ export const ConceptSection: React.FC = () => {
               <span className="flex items-center gap-1.5 text-[#6FBFC4]">
                 <ShieldCheck className="w-4 h-4" /> 100% Client-Side WebAssembly
               </span>
-              <span className="font-heading text-[#FFC978]">プライバシー保護</span>
+              <span className="font-mono text-[#FFC978]">Privacy Secured</span>
             </div>
           </GlowingCard>
         </div>
@@ -126,8 +126,8 @@ export const ConceptSection: React.FC = () => {
                   <Activity className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[11px] font-heading text-[#6FBFC4] tracking-widest block">
-                    第二章 · STEP 02
+                  <span className="text-[11px] font-mono uppercase text-[#6FBFC4] tracking-widest block font-bold">
+                    PHASE 02 · STEP 02
                   </span>
                   <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
                     The Translation — Cosmic Alchemy
@@ -169,7 +169,7 @@ export const ConceptSection: React.FC = () => {
 
             <div className="mt-6 pt-4 border-t border-[#B8B4D9]/15 flex items-center justify-between text-xs text-[#B8B4D9]">
               <span>Dynamic Harmonic Mapping</span>
-              <span className="font-heading text-[#6FBFC4]">感情の波長</span>
+              <span className="font-mono text-[#6FBFC4]">Harmonic Waves</span>
             </div>
           </GlowingCard>
         </div>
@@ -187,8 +187,8 @@ export const ConceptSection: React.FC = () => {
                   <Wind className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[11px] font-heading text-[#FF9E7D] tracking-widest block">
-                    第三章 · STEP 03
+                  <span className="text-[11px] font-mono uppercase text-[#FF9E7D] tracking-widest block font-bold">
+                    PHASE 03 · STEP 03
                   </span>
                   <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
                     The Shift — Sensory & Somatic Intervention
@@ -208,7 +208,7 @@ export const ConceptSection: React.FC = () => {
                   <span>Sonic Frequency Shifts</span>
                 </div>
                 <p className="text-xs text-[#B8B4D9] leading-relaxed">
-                  Binaural audio, Shinkai-esque lofi piano, or 432Hz ambient chimes matched to your emotional resonance.
+                  Binaural audio, ambient lofi piano, or 432Hz calming chimes matched to your emotional resonance.
                 </p>
               </div>
 
@@ -218,7 +218,7 @@ export const ConceptSection: React.FC = () => {
                   <span>Rhythmic Breath Guides</span>
                 </div>
                 <p className="text-xs text-[#B8B4D9] leading-relaxed">
-                  Anime particle lung animations guiding 4-7-8 parasympathetic down-regulation in under 90 seconds.
+                  Firefly particle lung animations guiding 4-7-8 parasympathetic down-regulation in under 90 seconds.
                 </p>
               </div>
 

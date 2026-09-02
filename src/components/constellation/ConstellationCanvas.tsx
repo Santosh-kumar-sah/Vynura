@@ -299,17 +299,17 @@ export const ConstellationCanvas: React.FC<ConstellationCanvasProps> = ({
                   {dateStr}
                 </text>
 
-                {/* Order Index Kanji Marker */}
+                {/* Order Index Sublabel Marker */}
                 <text
                   x={star.x}
                   y={star.y - star.radius - 8}
                   textAnchor="middle"
                   fill={star.color}
                   fontSize="9"
-                  fontFamily="'Klee One', cursive"
+                  fontFamily="'Plus Jakarta Sans', sans-serif"
                   fontWeight="bold"
                 >
-                  {MOODS[star.entry.mood_category]?.kanji || '星'}
+                  {MOODS[star.entry.mood_category]?.sublabel || 'Star'}
                 </text>
               </g>
             );
@@ -344,8 +344,8 @@ export const ConstellationCanvas: React.FC<ConstellationCanvasProps> = ({
                 <span className="font-heading font-bold text-sm text-[#F5F2ED]">
                   {MOODS[selectedStar.mood_category]?.label}
                 </span>
-                <span className="text-xs text-[#FFC978] font-heading">
-                  ({MOODS[selectedStar.mood_category]?.kanji})
+                <span className="text-xs text-[#FFC978] font-mono">
+                  ({MOODS[selectedStar.mood_category]?.sublabel})
                 </span>
               </div>
 

@@ -325,8 +325,8 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
                   Biometric Looking Glass
                 </span>
-                <span className="text-xs text-[#FFC978]/90 font-heading">
-                  {currentMoodData.kanji}
+                <span className="text-xs text-[#FFC978]/90 font-mono">
+                  {currentMoodData.sublabel}
                 </span>
               </div>
               <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
@@ -487,7 +487,7 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
                       {currentMoodData.label}
                     </span>
                     <span className="text-xs text-[#B8B4D9] font-normal">
-                      ({currentMoodData.kanji})
+                      ({currentMoodData.sublabel})
                     </span>
                   </div>
                 </div>

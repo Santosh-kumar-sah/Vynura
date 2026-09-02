@@ -43,7 +43,7 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
         >
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#C25AE0] mb-2">
             <HeartHandshake className="w-4 h-4" />
-            <span>04 / 安息拠点 · Somatic & Mindful Sanctuary</span>
+            <span>04 / SANCTUARY · Somatic & Mindful Hub</span>
           </div>
 
           <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-2">
@@ -79,7 +79,7 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
                   <span className="text-[10px] font-mono uppercase tracking-widest text-[#6FBFC4] font-bold">
                     Somatic Lung Pacer
                   </span>
-                  <span className="text-xs text-[#FFC978] font-heading block">火の粉呼吸</span>
+                  <span className="text-xs text-[#FFC978] font-mono block">Firefly Pulse</span>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full bg-[#2D2A5C] text-[11px] font-mono text-[#6FBFC4] border border-[#6FBFC4]/30">
@@ -146,7 +146,7 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
                   <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
                     Ambient Stillness
                   </span>
-                  <span className="text-xs text-[#FFC978] font-heading block">星空瞑想</span>
+                  <span className="text-xs text-[#FFC978] font-mono block">Starlight Rest</span>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full bg-[#2D2A5C] text-[11px] font-mono text-[#FFC978] border border-[#FFC978]/30">
