@@ -87,7 +87,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B091C]/85 backdrop-blur-lg">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#0B091C]/85 backdrop-blur-lg">
       <motion.div
         initial={{ opacity: 0, scale: 0.94, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

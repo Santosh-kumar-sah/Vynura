@@ -66,6 +66,16 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
+  // Lock body scroll when breathing modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
+
   const activeTechniqueData = TECHNIQUES[selectedTech];
   const activePhase = activeTechniqueData.phases[currentPhaseIdx];
 
@@ -241,36 +251,24 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#090818]/90 backdrop-blur-xl overflow-y-auto">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 bg-[#090818]/95 backdrop-blur-xl overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.93, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative w-full max-w-xl rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border border-[#6FBFC4]/40 p-6 sm:p-8 shadow-[0_25px_80px_rgba(10,8,28,0.95)] overflow-hidden my-auto text-center"
+        className="relative w-full max-w-xl rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border border-[#6FBFC4]/40 p-5 sm:p-7 shadow-[0_25px_80px_rgba(10,8,28,0.95)] overflow-hidden my-auto text-center"
       >
         {/* Top Rim Glow */}
         <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-transparent via-[#6FBFC4] to-transparent" />
 
-        {/* Close Button */}
-        <button
-          onClick={() => {
-            handleReset();
-            onClose();
-          }}
-          className="absolute top-4 right-4 p-2 rounded-xl text-[#B8B4D9] hover:text-[#F5F2ED] hover:bg-[#2D2A5C]/60 transition-colors cursor-pointer z-20"
-          aria-label="Close"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Header */}
-        <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-[#B8B4D9]/15">
-          <div className="flex items-center gap-3 text-left">
-            <div className="w-10 h-10 rounded-xl bg-[#6FBFC4]/15 border border-[#6FBFC4]/40 flex items-center justify-center text-[#6FBFC4] shadow-glow-sm">
+        {/* Header with Properly Aligned Cycle Badge and Close Button */}
+        <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-[#B8B4D9]/15">
+          <div className="flex items-center gap-3 text-left min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-[#6FBFC4]/15 border border-[#6FBFC4]/40 flex items-center justify-center text-[#6FBFC4] shadow-glow-sm shrink-0">
               <Wind className="w-5 h-5" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#6FBFC4]">
                   Somatic Particle Pacer
@@ -279,14 +277,27 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
                   {activeTechniqueData.tag}
                 </span>
               </div>
-              <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
+              <h3 className="font-heading text-base sm:text-xl font-bold text-[#F5F2ED] truncate">
                 {activeTechniqueData.label}
               </h3>
             </div>
           </div>
 
-          <div className="px-3 py-1 rounded-full bg-[#121029]/80 border border-[#FFC978]/30 text-xs font-mono text-[#FFC978]">
-            Cycle {currentCycle} / {activeTechniqueData.totalCycles}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="px-3 py-1.5 rounded-full bg-[#121029]/80 border border-[#FFC978]/30 text-xs font-mono text-[#FFC978] whitespace-nowrap">
+              Cycle {currentCycle} / {activeTechniqueData.totalCycles}
+            </div>
+            <button
+              onClick={() => {
+                handleReset();
+                onClose();
+              }}
+              className="p-2 rounded-xl text-[#B8B4D9] hover:text-[#F5F2ED] hover:bg-[#2D2A5C]/60 border border-[#B8B4D9]/15 hover:border-[#B8B4D9]/35 transition-colors cursor-pointer"
+              aria-label="Close"
+              title="Close Breathing Guide"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
