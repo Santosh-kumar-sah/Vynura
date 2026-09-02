@@ -31,6 +31,7 @@ export const App: React.FC = () => {
   // Quick Action Modal states triggered from recommendations
   const [activeBreathingTech, setActiveBreathingTech] = useState<'478' | 'box' | 'calm' | null>(null);
   const [isMeditationOpen, setIsMeditationOpen] = useState(false);
+  const [activeMeditationCat, setActiveMeditationCat] = useState<import('./types/meditation').MeditationCategoryId>('starlight');
 
   const handleConfirmMood = (mood: MoodType, confidence: number) => {
     setActiveMood(mood);
@@ -141,7 +142,10 @@ export const App: React.FC = () => {
           confidence={activeConfidence}
           onOpenFaceDetection={() => setIsFaceDetectionOpen(true)}
           onLaunchBreathing={(tech) => setActiveBreathingTech(tech)}
-          onLaunchMeditation={() => setIsMeditationOpen(true)}
+          onLaunchMeditation={(cat) => {
+            if (cat) setActiveMeditationCat(cat);
+            setIsMeditationOpen(true);
+          }}
         />
 
         {/* Phase 4: Mood Journal + Living Constellation Analytics */}
@@ -182,11 +186,12 @@ export const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* 9. Starlight Meditation Timer */}
+      {/* 9. Category-Based Immersive Meditation Sanctuary */}
       <AnimatePresence>
         {isMeditationOpen && (
           <MeditationTimer
             isOpen={isMeditationOpen}
+            initialCategory={activeMeditationCat}
             onClose={() => setIsMeditationOpen(false)}
           />
         )}

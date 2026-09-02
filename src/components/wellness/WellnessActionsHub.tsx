@@ -5,12 +5,16 @@ import {
   Wind, 
   Moon, 
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react';
+import type { MeditationCategoryId } from '../../types/meditation';
+import { MEDITATION_CATEGORIES_LIST } from '../../types/meditation';
 import { BreathingGuide } from './BreathingGuide';
 import { MeditationTimer } from './MeditationTimer';
 import { GratitudePromptHub } from './GratitudePromptHub';
 import { GlowingCard } from '../common/GlowingCard';
+import { CATEGORY_ICONS } from './meditation/MeditationCategoryPicker';
 
 interface WellnessActionsHubProps {
   onRefreshConstellation?: () => void;
@@ -22,10 +26,16 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
   const [activeBreathingModal, setActiveBreathingModal] = useState<boolean>(false);
   const [breathingTech, setBreathingTech] = useState<'478' | 'box' | 'calm'>('478');
   const [activeMeditationModal, setActiveMeditationModal] = useState<boolean>(false);
+  const [selectedMeditationCategory, setSelectedMeditationCategory] = useState<MeditationCategoryId>('starlight');
 
   const handleLaunchBreathing = (tech: '478' | 'box' | 'calm') => {
     setBreathingTech(tech);
     setActiveBreathingModal(true);
+  };
+
+  const handleLaunchMeditation = (category: MeditationCategoryId) => {
+    setSelectedMeditationCategory(category);
+    setActiveMeditationModal(true);
   };
 
   return (
@@ -51,7 +61,7 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
           </h2>
 
           <p className="text-sm sm:text-base text-[#B8B4D9] max-w-xl leading-relaxed">
-            Targeted somatic and mindful interventions designed to harmonize your parasympathetic nervous system in real time.
+            Targeted somatic and mindful interventions designed to harmonize your parasympathetic nervous system with 8 distinct immersive meditation realms.
           </p>
         </motion.div>
 
@@ -61,7 +71,7 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
         </div>
       </div>
 
-      {/* 3 Primary Modality Action Panels */}
+      {/* 2 Primary Modality Action Panels */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-10 items-stretch">
         {/* Panel 1: Firefly Breathing Lung Guide */}
         <GlowingCard
@@ -130,7 +140,7 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
           </button>
         </GlowingCard>
 
-        {/* Panel 2: Starlight Meditation Timer */}
+        {/* Panel 2: Immersive Meditation Sanctuary */}
         <GlowingCard
           accentColor="#FFC978"
           interactive
@@ -144,44 +154,59 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
                 </div>
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
-                    Ambient Stillness
+                    8 Distinct Realms
                   </span>
-                  <span className="text-xs text-[#FFC978] font-mono block">Starlight Rest</span>
+                  <span className="text-xs text-[#FFC978] font-mono block">Immersive Visuals</span>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full bg-[#2D2A5C] text-[11px] font-mono text-[#FFC978] border border-[#FFC978]/30">
-                1 to 15 Mins
+                1 to 20 Mins
               </span>
             </div>
 
             <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED] mb-2">
-              Ambient Starlight Meditation
+              Category-Based Immersive Meditation
             </h3>
 
-            <p className="text-xs sm:text-sm text-[#B8B4D9] leading-relaxed mb-6">
-              A minimalist, soothing timer with ambient night-sky visualizers and gentle completion starbursts. Perfect for morning grounding, post-work decompression, or bedtime stillness.
+            <p className="text-xs sm:text-sm text-[#B8B4D9] leading-relaxed mb-4">
+              Step into purpose-built meditative environments featuring distinct procedural animations, synthesized ambient soundscapes, and auto-hiding distraction-free controls.
             </p>
 
-            {/* Quick Duration Badges */}
-            <div className="grid grid-cols-4 gap-2 mb-6">
-              {[1, 3, 5, 10].map((mins) => (
+            {/* Quick 8-Realm Chips Grid */}
+            <div className="grid grid-cols-4 gap-1.5 mb-6">
+              {MEDITATION_CATEGORIES_LIST.map((cat) => (
                 <button
-                  key={mins}
-                  onClick={() => setActiveMeditationModal(true)}
-                  className="p-2 rounded-xl bg-[#1A1836]/70 hover:bg-[#2D2A5C] border border-[#FFC978]/30 text-center text-xs font-semibold text-[#F5F2ED] transition-colors cursor-pointer"
+                  key={cat.id}
+                  onClick={() => handleLaunchMeditation(cat.id)}
+                  className="p-2 rounded-xl bg-[#1A1836]/80 hover:bg-[#2D2A5C] border text-left transition-all cursor-pointer flex flex-col items-center sm:items-start group"
+                  style={{
+                    borderColor: `${cat.colors.primary}30`,
+                  }}
+                  title={`${cat.name} — ${cat.subtitle}`}
                 >
-                  <div className="text-[11px] text-[#FFC978]">{mins}m</div>
-                  <div className="text-[10px] text-[#B8B4D9]">Session</div>
+                  <div
+                    className="w-5 h-5 rounded-md flex items-center justify-center mb-1 group-hover:scale-110 transition-transform"
+                    style={{ color: cat.colors.primary }}
+                  >
+                    {CATEGORY_ICONS[cat.id]}
+                  </div>
+                  <div className="text-[10px] font-bold text-[#F5F2ED] truncate w-full text-center sm:text-left">
+                    {cat.name}
+                  </div>
+                  <div className="text-[8px] font-mono text-[#B8B4D9] truncate w-full text-center sm:text-left hidden sm:block">
+                    {cat.subtitle.split(' ')[0]}
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
           <button
-            onClick={() => setActiveMeditationModal(true)}
+            onClick={() => handleLaunchMeditation('starlight')}
             className="w-full py-3 px-4 rounded-xl bg-[#FFC978] hover:bg-[#FFC978]/90 text-[#1A1836] text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-glow-sm"
           >
-            <span>Open Starlight Meditation Timer</span>
+            <Sparkles className="w-4 h-4" />
+            <span>Enter Immersive Meditation Sanctuary</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </GlowingCard>
@@ -201,11 +226,12 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Starlight Meditation Modal */}
+      {/* Category-Based Immersive Meditation Sanctuary Modal */}
       <AnimatePresence>
         {activeMeditationModal && (
           <MeditationTimer
             isOpen={activeMeditationModal}
+            initialCategory={selectedMeditationCategory}
             onClose={() => setActiveMeditationModal(false)}
           />
         )}

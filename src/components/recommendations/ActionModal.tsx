@@ -7,12 +7,13 @@ import {
   Music, 
   Sparkles, 
   CheckCircle2, 
-  Volume2,
-  Moon,
-  ArrowRight
+  Volume2, 
+  Moon, 
+  ArrowRight 
 } from 'lucide-react';
 import type { RecommendationItem } from '../../types/recommendations';
 import type { MoodType } from '../../types';
+import type { MeditationCategoryId } from '../../types/meditation';
 import { Button } from '../common/Button';
 import { saveMoodEntry } from '../../lib/supabase';
 
@@ -22,7 +23,7 @@ interface ActionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLaunchBreathing?: (technique: '478' | 'box' | 'calm') => void;
-  onLaunchMeditation?: () => void;
+  onLaunchMeditation?: (category?: MeditationCategoryId) => void;
 }
 
 export const ActionModal: React.FC<ActionModalProps> = ({
@@ -54,6 +55,22 @@ export const ActionModal: React.FC<ActionModalProps> = ({
       }, 1200);
     } catch (e) {
       console.error('Error saving entry:', e);
+    }
+  };
+
+  // Determine category mapping based on mood
+  const getCategoryForMood = (): MeditationCategoryId => {
+    switch (mood) {
+      case 'happy':
+        return 'joy';
+      case 'sad':
+        return 'healing';
+      case 'energetic':
+        return 'focus';
+      case 'calm':
+        return 'calm';
+      default:
+        return 'starlight';
     }
   };
 
@@ -157,7 +174,7 @@ export const ActionModal: React.FC<ActionModalProps> = ({
             <div className="p-4 rounded-2xl bg-[#121029]/80 border border-[#FFC978]/30 text-left">
               <div className="flex items-center gap-2 text-xs font-semibold text-[#FFC978] mb-1.5">
                 <Moon className="w-4 h-4" />
-                <span>Ambient Night-Sky Meditation</span>
+                <span>Immersive Meditation Realm</span>
               </div>
               <p className="text-xs text-[#B8B4D9] leading-relaxed">
                 {item.description}
@@ -171,10 +188,10 @@ export const ActionModal: React.FC<ActionModalProps> = ({
               icon={<ArrowRight className="w-4 h-4" />}
               onClick={() => {
                 onClose();
-                if (onLaunchMeditation) onLaunchMeditation();
+                if (onLaunchMeditation) onLaunchMeditation(getCategoryForMood());
               }}
             >
-              Open Starlight Meditation Timer ✦
+              Enter Immersive Meditation Sanctuary ✦
             </Button>
           </div>
         )}

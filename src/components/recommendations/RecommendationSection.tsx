@@ -16,7 +16,7 @@ interface RecommendationSectionProps {
   confidence?: number;
   onOpenFaceDetection?: () => void;
   onLaunchBreathing?: (technique: '478' | 'box' | 'calm') => void;
-  onLaunchMeditation?: () => void;
+  onLaunchMeditation?: (category?: import('../../types/meditation').MeditationCategoryId) => void;
 }
 
 export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
