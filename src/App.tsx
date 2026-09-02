@@ -9,6 +9,7 @@ import { HeroSection, MOODS } from './components/sections/HeroSection';
 import { RecommendationSection } from './components/recommendations/RecommendationSection';
 import { ConstellationHub } from './components/constellation/ConstellationHub';
 import { WellnessActionsHub } from './components/wellness/WellnessActionsHub';
+import { GamificationSection } from './components/gamification/GamificationSection';
 import { BreathingGuide } from './components/wellness/BreathingGuide';
 import { MeditationTimer } from './components/wellness/MeditationTimer';
 import { ConceptSection } from './components/sections/ConceptSection';
@@ -134,7 +135,7 @@ export const App: React.FC = () => {
           onStartJourney={() => setIsFaceDetectionOpen(true)}
         />
 
-        {/* Phase 3: Mood → Smart Shift Recommendation Engine */}
+        {/* Phase 3 & 6: Mood → Smart Shift Recommendation Engine & Spotify Stream */}
         <RecommendationSection
           mood={activeMood}
           confidence={activeConfidence}
@@ -151,6 +152,9 @@ export const App: React.FC = () => {
 
         {/* Phase 5: Somatic & Mindful Wellness Actions Sanctuary */}
         <WellnessActionsHub />
+
+        {/* Phase 6: Gamification Layer & Weekly Wellness Score */}
+        <GamificationSection />
 
         <ConceptSection />
         <FeaturesSection />

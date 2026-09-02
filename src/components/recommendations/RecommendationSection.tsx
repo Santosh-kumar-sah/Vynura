@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Compass, ArrowRight, HeartHandshake } from 'lucide-react';
+import { Sparkles, Compass, ArrowRight, HeartHandshake, Quote } from 'lucide-react';
 import type { MoodType } from '../../types';
 import type { RecommendationItem } from '../../types/recommendations';
 import { MOOD_RECOMMENDATIONS } from '../../data/recommendationRules';
 import { RecommendationCard } from './RecommendationCard';
 import { ActionModal } from './ActionModal';
+import { SpotifyPlayer } from '../music/SpotifyPlayer';
+import { getMoodQuote, type MoodQuote } from '../../services/quotesService';
 import { logRecommendationSession } from '../../utils/recommendationLogger';
 import { MOODS } from '../sections/HeroSection';
 
@@ -25,19 +27,23 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
   onLaunchMeditation,
 }) => {
   const [selectedActionItem, setSelectedActionItem] = useState<RecommendationItem | null>(null);
+  const [dynamicQuote, setDynamicQuote] = useState<MoodQuote | null>(null);
+
   const moodGroup = MOOD_RECOMMENDATIONS[mood] || MOOD_RECOMMENDATIONS.neutral;
   const moodInfo = MOODS[mood] || MOODS.neutral;
 
-  // Log session on mount or mood change
+  // Log session & load dynamic quote on mount or mood change
   useEffect(() => {
     const ids = moodGroup.recommendations.map((r) => r.id);
     logRecommendationSession(mood, confidence, ids);
+
+    getMoodQuote(mood).then((q) => setDynamicQuote(q));
   }, [mood, confidence, moodGroup]);
 
   return (
     <section
       id="recommendations"
-      className="relative py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden"
+      className="relative py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden space-y-10"
     >
       {/* Dynamic Background Light Pool */}
       <motion.div
@@ -50,7 +56,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
       />
 
       {/* Header Container with Anime Directional Entry */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div
           key={`header-${mood}`}
           initial={{ opacity: 0, x: -25 }}
@@ -108,6 +114,49 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
         </motion.div>
       </div>
 
+      {/* Dynamic ZenQuotes Wisdom Banner */}
+      {dynamicQuote && (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#24214A]/70 via-[#1A1836]/90 to-[#121029]/80 border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm"
+          style={{
+            borderColor: `${moodInfo.color}35`,
+          }}
+        >
+          <div className="flex items-start gap-3">
+            <div
+              className="p-2 rounded-xl border mt-0.5"
+              style={{
+                backgroundColor: `${moodInfo.color}20`,
+                borderColor: `${moodInfo.color}50`,
+                color: moodInfo.color,
+              }}
+            >
+              <Quote className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="font-heading text-sm sm:text-base text-[#FFF2D6] italic leading-relaxed">
+                "{dynamicQuote.quote}"
+              </p>
+              {dynamicQuote.japaneseTranslation && (
+                <p className="text-xs text-[#B8B4D9] font-heading mt-1 opacity-80">
+                  {dynamicQuote.japaneseTranslation}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="text-right shrink-0">
+            <span className="text-xs font-bold font-mono" style={{ color: moodInfo.color }}>
+              — {dynamicQuote.author}
+            </span>
+            <span className="text-[10px] text-[#B8B4D9] block">ZenQuotes Wisdom Stream</span>
+          </div>
+        </motion.div>
+      )}
+
       {/* Staggered Recommendation Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
         {moodGroup.recommendations.map((item, idx) => (
@@ -121,17 +170,20 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
         ))}
       </div>
 
+      {/* Spotify On-Brand Web Player Embed */}
+      <SpotifyPlayer mood={mood} />
+
       {/* Subtext Reassurance */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.35, delay: 0.25 }}
-        className="mt-12 p-4 rounded-2xl bg-[#121029]/70 border border-[#B8B4D9]/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#B8B4D9]"
+        className="p-4 rounded-2xl bg-[#121029]/70 border border-[#B8B4D9]/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#B8B4D9]"
       >
         <div className="flex items-center gap-2 text-[#6FBFC4]">
           <HeartHandshake className="w-4 h-4" />
-          <span>Recommendations adaptively re-synthesize with each biometric calibration pass.</span>
+          <span>Recommendations and sonic soundscapes dynamically adapt with each look.</span>
         </div>
         <span className="font-heading italic text-[#FFC978]/90">
           "Each emotion is a passing weather; you are the sky."
