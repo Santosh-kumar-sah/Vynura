@@ -11,6 +11,8 @@ import { MoodView } from './views/MoodView';
 import { JournalView } from './views/JournalView';
 import { ConstellationView } from './views/ConstellationView';
 import { WellnessView } from './views/WellnessView';
+import { BreathingView } from './views/BreathingView';
+import { MeditationView } from './views/MeditationView';
 import { FaceDetectionModal } from './components/vision/FaceDetectionModal';
 import { MOODS } from './components/sections/HeroSection';
 import type { MoodType } from './types';
@@ -149,6 +151,14 @@ const AppContent: React.FC = () => {
           <Route
             path="/wellness"
             element={<WellnessView />}
+          />
+          <Route
+            path="/wellness/breathing"
+            element={<BreathingView />}
+          />
+          <Route
+            path="/wellness/meditate"
+            element={<MeditationView />}
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, Sparkles, CheckCircle2 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { RouteTransition } from '../components/common/RouteTransition';
 import { CloseButton } from '../components/common/CloseButton';
 import { GratitudePromptHub } from '../components/wellness/GratitudePromptHub';
@@ -25,6 +26,22 @@ export const JournalView: React.FC<JournalViewProps> = ({ activeMood }) => {
         confidence_score: 0.95,
         journal_text: journalText.trim(),
       });
+
+      // Signature shooting-star burst upon new star inscription
+      try {
+        confetti({
+          particleCount: 55,
+          spread: 85,
+          origin: { y: 0.55 },
+          colors: [currentMoodData.color, '#FFC978', '#FFFFFF', '#6FBFC4'],
+          disableForReducedMotion: true,
+          ticks: 200,
+          shapes: ['circle'],
+        });
+      } catch {
+        // Fallback
+      }
+
       setIsSaved(true);
       setTimeout(() => {
         setIsSaved(false);

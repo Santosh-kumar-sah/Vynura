@@ -11,6 +11,7 @@ import {
   Moon, 
   ArrowRight 
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import type { RecommendationItem } from '../../types/recommendations';
 import type { MoodType } from '../../types';
 import type { MeditationCategoryId } from '../../types/meditation';
@@ -34,6 +35,7 @@ export const ActionModal: React.FC<ActionModalProps> = ({
   onLaunchBreathing,
   onLaunchMeditation,
 }) => {
+  const navigate = useNavigate();
   const [journalText, setJournalText] = useState('');
   const [isSaved, setIsSaved] = useState(false);
 
@@ -151,21 +153,36 @@ export const ActionModal: React.FC<ActionModalProps> = ({
               </p>
             </div>
 
-            <Button
-              size="lg"
-              variant="primary"
-              className="w-full"
-              icon={<ArrowRight className="w-4 h-4" />}
-              onClick={() => {
-                onClose();
-                if (onLaunchBreathing) {
+            <div className="flex flex-col gap-2">
+              <Button
+                size="lg"
+                variant="primary"
+                className="w-full"
+                icon={<ArrowRight className="w-4 h-4" />}
+                onClick={() => {
+                  onClose();
                   const tech = item.id.includes('box') ? 'box' : item.id.includes('478') ? '478' : 'calm';
-                  onLaunchBreathing(tech);
-                }
-              }}
-            >
-              Open Firefly Particle Pacer Guide ✦
-            </Button>
+                  if (onLaunchBreathing) {
+                    onLaunchBreathing(tech);
+                  } else {
+                    navigate(`/wellness/breathing?tech=${tech}`);
+                  }
+                }}
+              >
+                Launch Firefly Particle Breath Room ✦
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="w-full text-xs text-[#B8B4D9] hover:text-[#F5F2ED]"
+                onClick={() => {
+                  onClose();
+                  navigate('/wellness');
+                }}
+              >
+                Enter Wellness Actions Sanctuary →
+              </Button>
+            </div>
           </div>
         )}
 
@@ -181,18 +198,36 @@ export const ActionModal: React.FC<ActionModalProps> = ({
               </p>
             </div>
 
-            <Button
-              size="lg"
-              variant="primary"
-              className="w-full"
-              icon={<ArrowRight className="w-4 h-4" />}
-              onClick={() => {
-                onClose();
-                if (onLaunchMeditation) onLaunchMeditation(getCategoryForMood());
-              }}
-            >
-              Enter Immersive Meditation Sanctuary ✦
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                size="lg"
+                variant="primary"
+                className="w-full"
+                icon={<ArrowRight className="w-4 h-4" />}
+                onClick={() => {
+                  onClose();
+                  const cat = getCategoryForMood();
+                  if (onLaunchMeditation) {
+                    onLaunchMeditation(cat);
+                  } else {
+                    navigate(`/wellness/meditate?category=${cat}`);
+                  }
+                }}
+              >
+                Enter Immersive Meditation Sanctuary ✦
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="w-full text-xs text-[#B8B4D9] hover:text-[#F5F2ED]"
+                onClick={() => {
+                  onClose();
+                  navigate('/wellness');
+                }}
+              >
+                Explore All 8 Meditation Sanctuaries →
+              </Button>
+            </div>
           </div>
         )}
 
@@ -216,15 +251,28 @@ export const ActionModal: React.FC<ActionModalProps> = ({
                 <span>Inscription Saved to Personal Constellation ✦</span>
               </div>
             ) : (
-              <Button
-                size="md"
-                variant="primary"
-                className="w-full"
-                icon={<Sparkles className="w-4 h-4" />}
-                onClick={handleSaveJournal}
-              >
-                Inscribe into Constellation
-              </Button>
+              <div className="flex flex-col gap-2">
+                <Button
+                  size="md"
+                  variant="primary"
+                  className="w-full"
+                  icon={<Sparkles className="w-4 h-4" />}
+                  onClick={handleSaveJournal}
+                >
+                  Inscribe into Constellation
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="w-full text-xs text-[#B8B4D9] hover:text-[#F5F2ED]"
+                  onClick={() => {
+                    onClose();
+                    navigate('/journal');
+                  }}
+                >
+                  Open Full Journal Room →
+                </Button>
+              </div>
             )}
           </div>
         )}

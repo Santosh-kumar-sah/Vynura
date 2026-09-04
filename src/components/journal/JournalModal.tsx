@@ -7,6 +7,7 @@ import {
   CheckCircle2, 
   Heart 
 } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import type { MoodType } from '../../types';
 import { MOODS } from '../sections/HeroSection';
 import { Button } from '../common/Button';
@@ -43,6 +44,21 @@ export const JournalModal: React.FC<JournalModalProps> = ({
         confidence_score: confidence,
         journal_text: journalText.trim() || undefined,
       });
+
+      // Signature shooting-star firefly burst upon new entry inscription
+      try {
+        confetti({
+          particleCount: 50,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: [currentMoodData.color, '#FFC978', '#FFFFFF', '#6FBFC4'],
+          disableForReducedMotion: true,
+          ticks: 200,
+          shapes: ['circle'],
+        });
+      } catch {
+        // Fallback
+      }
 
       setIsSaved(true);
       setTimeout(() => {

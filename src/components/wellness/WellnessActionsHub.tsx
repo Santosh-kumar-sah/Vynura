@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HeartHandshake, 
@@ -23,6 +24,7 @@ interface WellnessActionsHubProps {
 export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
   onRefreshConstellation,
 }) => {
+  const navigate = useNavigate();
   const [activeBreathingModal, setActiveBreathingModal] = useState<boolean>(false);
   const [breathingTech, setBreathingTech] = useState<'478' | 'box' | 'calm'>('478');
   const [activeMeditationModal, setActiveMeditationModal] = useState<boolean>(false);
@@ -131,13 +133,22 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={() => handleLaunchBreathing('478')}
-            className="w-full py-3 px-4 rounded-xl bg-[#6FBFC4] hover:bg-[#6FBFC4]/90 text-[#1A1836] text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-glow-sm"
-          >
-            <span>Launch Full-Screen Breath Guide</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2 mt-4">
+            <button
+              onClick={() => navigate('/wellness/breathing')}
+              className="flex-1 py-3 px-4 rounded-xl bg-[#6FBFC4] hover:bg-[#6FBFC4]/90 text-[#1A1836] text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-glow-sm"
+            >
+              <span>Launch Breath Chamber</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => handleLaunchBreathing('478')}
+              className="py-3 px-3.5 rounded-xl bg-[#1A1836] hover:bg-[#2D2A5C] border border-[#6FBFC4]/30 text-xs font-semibold text-[#6FBFC4] transition-colors cursor-pointer"
+              title="Quick Breath Overlay"
+            >
+              Overlay
+            </button>
+          </div>
         </GlowingCard>
 
         {/* Panel 2: Immersive Meditation Sanctuary */}
@@ -201,14 +212,23 @@ export const WellnessActionsHub: React.FC<WellnessActionsHubProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={() => handleLaunchMeditation('starlight')}
-            className="w-full py-3 px-4 rounded-xl bg-[#FFC978] hover:bg-[#FFC978]/90 text-[#1A1836] text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-glow-sm"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Enter Immersive Meditation Sanctuary</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2 mt-4">
+            <button
+              onClick={() => navigate('/wellness/meditate')}
+              className="flex-1 py-3 px-4 rounded-xl bg-[#FFC978] hover:bg-[#FFC978]/90 text-[#1A1836] text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-glow-sm"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Enter Meditation Sanctuary</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => handleLaunchMeditation('starlight')}
+              className="py-3 px-3.5 rounded-xl bg-[#1A1836] hover:bg-[#2D2A5C] border border-[#FFC978]/30 text-xs font-semibold text-[#FFC978] transition-colors cursor-pointer"
+              title="Quick Meditation Overlay"
+            >
+              Overlay
+            </button>
+          </div>
         </GlowingCard>
       </div>
 
