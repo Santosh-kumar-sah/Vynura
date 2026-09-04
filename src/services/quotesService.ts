@@ -80,7 +80,7 @@ const CURATED_MOOD_QUOTES: Record<MoodType, MoodQuote[]> = {
 };
 
 /**
- * Fetches dynamic quote for a given mood with API or fallback to curated wisdom
+ * Fetches dynamic quote for a given mood with ZenQuotes API or fallback to curated wisdom
  */
 export async function getMoodQuote(mood: MoodType): Promise<MoodQuote> {
   const fallbacks = CURATED_MOOD_QUOTES[mood] || CURATED_MOOD_QUOTES.neutral;
@@ -88,9 +88,10 @@ export async function getMoodQuote(mood: MoodType): Promise<MoodQuote> {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const timeoutId = setTimeout(() => controller.abort(), 2200);
 
-    const res = await fetch('https://dummyjson.com/quotes/random', {
+    // Try local express server ZenQuotes proxy first
+    const res = await fetch(`http://localhost:3001/api/zenquotes?mood=${mood}`, {
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
@@ -105,7 +106,7 @@ export async function getMoodQuote(mood: MoodType): Promise<MoodQuote> {
       }
     }
   } catch {
-    // Fallback to rich curated quotes
+    // Fallback smoothly to rich mood-matched philosophical quotes
   }
 
   return randomFallback;
