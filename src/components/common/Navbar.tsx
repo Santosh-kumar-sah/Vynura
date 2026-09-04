@@ -12,6 +12,7 @@ import {
   Radio,
   ArrowRight
 } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from './Button';
 
 interface NavbarProps {
@@ -19,6 +20,8 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
@@ -32,13 +35,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
   }, []);
 
   const navLinks = [
-    { label: 'Concept', href: '#concept', icon: <Compass className="w-3.5 h-3.5" /> },
-    { label: 'Shift Engine', href: '#recommendations', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { label: 'Constellation', href: '#constellation', icon: <Sparkle className="w-3.5 h-3.5" /> },
-    { label: 'Sanctuary Hub', href: '#wellness', icon: <Wind className="w-3.5 h-3.5" /> },
-    { label: 'Milestones', href: '#gamification', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { label: 'Privacy', href: '#privacy', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+    { label: 'Concept', to: '/', hash: '#concept', icon: <Compass className="w-3.5 h-3.5" /> },
+    { label: 'Shift Engine', to: '/mood', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { label: 'Constellation', to: '/constellation', icon: <Sparkle className="w-3.5 h-3.5" /> },
+    { label: 'Sanctuary Hub', to: '/wellness', icon: <Wind className="w-3.5 h-3.5" /> },
+    { label: 'Journal', to: '/journal', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { label: 'Privacy', to: '/', hash: '#privacy', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
   ];
+
+  const handleNavClick = (link: { to: string; hash?: string }) => {
+    if (link.hash) {
+      if (location.pathname !== '/') {
+        navigate('/' + link.hash);
+      } else {
+        const el = document.querySelector(link.hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(link.to);
+    }
+  };
 
   return (
     <header
@@ -58,9 +74,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
 
         <div className="flex items-center justify-between gap-4">
           {/* Brand Logo & Emblem */}
-          <a
-            href="#"
-            className="flex items-center gap-3 group focus:outline-none select-none shrink-0"
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-3 group focus:outline-none select-none shrink-0 cursor-pointer text-left bg-transparent border-none p-0"
           >
             <div className="relative">
               {/* Outer soft ambient pulse aura */}
@@ -88,7 +104,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
                 Emotion Companion · v2.0
               </span>
             </div>
-          </a>
+          </button>
 
           {/* Centered Floating Capsule Navigation */}
           <nav
@@ -98,11 +114,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
             {navLinks.map((link) => {
               const isHovered = hoveredNav === link.label;
               return (
-                <a
+                <button
                   key={link.label}
-                  href={link.href}
+                  onClick={() => handleNavClick(link)}
                   onMouseEnter={() => setHoveredNav(link.label)}
-                  className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 z-10 ${
+                  className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 z-10 cursor-pointer bg-transparent border-none ${
                     isHovered ? 'text-[#F5F2ED]' : 'text-[#B8B4D9] hover:text-[#F5F2ED]'
                   }`}
                 >
@@ -123,7 +139,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
                     {link.icon}
                   </span>
                   <span>{link.label}</span>
-                </a>
+                </button>
               );
             })}
           </nav>
@@ -143,7 +159,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
                 variant="primary"
                 icon={<Camera className="w-3.5 h-3.5" />}
                 onClick={() => {
-                  if (onOpenFaceDetection) onOpenFaceDetection();
+                  if (onOpenFaceDetection) {
+                    onOpenFaceDetection();
+                  } else {
+                    navigate('/mood');
+                  }
                 }}
                 className="shadow-glow-sm hover:shadow-glow-md px-4 py-2 text-xs"
               >
@@ -185,15 +205,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
             {/* Navigation Grid */}
             <div className="grid grid-cols-2 gap-2 mb-4">
               {navLinks.map((link) => (
-                <a
+                <button
                   key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 p-3 rounded-2xl bg-[#181538]/70 hover:bg-[#2D2A5C] border border-[#B8B4D9]/10 hover:border-[#FFC978]/40 text-xs font-semibold text-[#F5F2ED] transition-all"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleNavClick(link);
+                  }}
+                  className="flex items-center gap-2.5 p-3 rounded-2xl bg-[#181538]/70 hover:bg-[#2D2A5C] border border-[#B8B4D9]/10 hover:border-[#FFC978]/40 text-xs font-semibold text-[#F5F2ED] transition-all cursor-pointer text-left"
                 >
                   <span className="text-[#FFC978]">{link.icon}</span>
                   <span>{link.label}</span>
-                </a>
+                </button>
               ))}
             </div>
 
@@ -206,7 +228,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
                 icon={<ArrowRight className="w-4 h-4" />}
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  if (onOpenFaceDetection) onOpenFaceDetection();
+                  if (onOpenFaceDetection) {
+                    onOpenFaceDetection();
+                  } else {
+                    navigate('/mood');
+                  }
                 }}
               >
                 <Camera className="w-4 h-4 mr-1" />

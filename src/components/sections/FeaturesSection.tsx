@@ -6,13 +6,15 @@ import {
   Orbit, 
   HeartHandshake, 
   Check, 
-  ChevronRight, 
-  Star 
+  Star,
+  ArrowRight
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { GlowingCard } from '../common/GlowingCard';
 
 interface FeatureCardData {
   id: string;
+  route: string;
   badge: string;
   kanji: string;
   title: string;
@@ -24,9 +26,11 @@ interface FeatureCardData {
 }
 
 export const FeaturesSection: React.FC = () => {
+  const navigate = useNavigate();
   const features: FeatureCardData[] = [
     {
       id: 'detection',
+      route: '/mood',
       badge: 'Local Vision Model',
       kanji: 'Vision Core',
       title: 'Neural Expression Detection',
@@ -69,6 +73,7 @@ export const FeaturesSection: React.FC = () => {
     },
     {
       id: 'shifts',
+      route: '/mood',
       badge: 'Adaptive Alchemy',
       kanji: 'Alchemy Core',
       title: 'Smart Shift Engine',
@@ -108,6 +113,7 @@ export const FeaturesSection: React.FC = () => {
     },
     {
       id: 'constellation',
+      route: '/constellation',
       badge: 'Visual History',
       kanji: 'Starlight Map',
       title: 'Constellation Mood Map',
@@ -166,6 +172,7 @@ export const FeaturesSection: React.FC = () => {
     },
     {
       id: 'actions',
+      route: '/wellness',
       badge: 'Somatic Hub',
       kanji: 'Sanctuary',
       title: 'Wellness Actions Hub',
@@ -247,7 +254,8 @@ export const FeaturesSection: React.FC = () => {
             accentColor={feature.accentColor}
             delay={idx * 0.1}
             interactive
-            className="flex flex-col justify-between h-full"
+            onClick={() => navigate(feature.route)}
+            className="flex flex-col justify-between h-full cursor-pointer group hover:scale-[1.01] transition-transform duration-200"
           >
             <div>
               {/* Header Badge & Kanji */}
@@ -284,7 +292,7 @@ export const FeaturesSection: React.FC = () => {
               </div>
 
               {/* Title & Description */}
-              <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED] mb-3">
+              <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED] mb-3 group-hover:text-[#FFC978] transition-colors">
                 {feature.title}
               </h3>
               <p className="text-sm text-[#B8B4D9] leading-relaxed mb-6">
@@ -315,13 +323,13 @@ export const FeaturesSection: React.FC = () => {
 
             {/* Bottom Card Footer */}
             <div className="pt-4 border-t border-[#B8B4D9]/15 flex items-center justify-between text-xs">
-              <span className="text-[#B8B4D9] font-medium">Architecture Phase 1 Preview</span>
+              <span className="text-[#B8B4D9] font-medium font-mono text-[11px]">Room Entry · Fast Transition</span>
               <span
-                className="font-bold flex items-center gap-1 hover:underline cursor-pointer"
+                className="font-bold flex items-center gap-1.5 transition-transform duration-200 group-hover:translate-x-1"
                 style={{ color: feature.accentColor }}
               >
-                <span>Inspect Spec</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <span>Enter Realm</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </span>
             </div>
           </GlowingCard>

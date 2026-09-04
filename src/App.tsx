@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 import { StarfieldBackdrop } from './components/background/StarfieldBackdrop';
 import { FireflyCanvas } from './components/background/FireflyCanvas';
 import { ShootingStar } from './components/background/ShootingStar';
 import { Navbar } from './components/common/Navbar';
-import { HeroSection, MOODS } from './components/sections/HeroSection';
-import { RecommendationSection } from './components/recommendations/RecommendationSection';
-import { ConstellationHub } from './components/constellation/ConstellationHub';
-import { WellnessActionsHub } from './components/wellness/WellnessActionsHub';
-import { GamificationSection } from './components/gamification/GamificationSection';
-import { BreathingGuide } from './components/wellness/BreathingGuide';
-import { MeditationTimer } from './components/wellness/MeditationTimer';
-import { ConceptSection } from './components/sections/ConceptSection';
-import { FeaturesSection } from './components/sections/FeaturesSection';
-import { PrivacySection } from './components/sections/PrivacySection';
-import { Footer } from './components/sections/Footer';
+import { HomeView } from './views/HomeView';
+import { MoodView } from './views/MoodView';
+import { JournalView } from './views/JournalView';
+import { ConstellationView } from './views/ConstellationView';
+import { WellnessView } from './views/WellnessView';
 import { FaceDetectionModal } from './components/vision/FaceDetectionModal';
+import { MOODS } from './components/sections/HeroSection';
 import type { MoodType } from './types';
 
-export const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const location = useLocation();
   const [isFaceDetectionOpen, setIsFaceDetectionOpen] = useState(false);
   const [activeMood, setActiveMood] = useState<MoodType>('happy');
   const [activeConfidence, setActiveConfidence] = useState<number>(0.94);
@@ -27,11 +24,6 @@ export const App: React.FC = () => {
     mood: MoodType;
     confidence: number;
   } | null>(null);
-
-  // Quick Action Modal states triggered from recommendations
-  const [activeBreathingTech, setActiveBreathingTech] = useState<'478' | 'box' | 'calm' | null>(null);
-  const [isMeditationOpen, setIsMeditationOpen] = useState(false);
-  const [activeMeditationCat, setActiveMeditationCat] = useState<import('./types/meditation').MeditationCategoryId>('starlight');
 
   const handleConfirmMood = (mood: MoodType, confidence: number) => {
     setActiveMood(mood);
@@ -41,12 +33,6 @@ export const App: React.FC = () => {
     // Smoothly shift sky accent tint
     const moodColor = MOODS[mood].color;
     document.documentElement.style.setProperty('--accent-glow', moodColor);
-
-    // Auto-scroll to recommendation engine
-    setTimeout(() => {
-      const el = document.getElementById('recommendations');
-      el?.scrollIntoView({ behavior: 'smooth' });
-    }, 400);
 
     // Auto-dismiss confirmation banner after 4.5s
     setTimeout(() => {
@@ -59,9 +45,6 @@ export const App: React.FC = () => {
   return (
     <div
       className="relative min-h-screen bg-[#1A1836] text-[#F5F2ED] selection:bg-[#FFC978]/30 selection:text-[#FFF2D6] overflow-x-hidden font-body transition-colors duration-700"
-      style={{
-        backgroundColor: '#1A1836',
-      }}
     >
       {/* Dynamic Sky Atmospheric Tint Filter */}
       <div
@@ -71,10 +54,10 @@ export const App: React.FC = () => {
         }}
       />
 
-      {/* 1. Starfield Layer (Stars, Twinkles & Ambient Horizon) */}
+      {/* 1. Starfield Layer (Persistent Stars, Twinkles & Ambient Horizon) */}
       <StarfieldBackdrop />
 
-      {/* 2. Signature Firefly Particle System with Cursor Parallax */}
+      {/* 2. Signature Firefly Particle System with Cursor Parallax (Persists smoothly across routes) */}
       <FireflyCanvas />
 
       {/* 3. Signature Load-In & Ambient Shooting Star Streaks */}
@@ -128,75 +111,64 @@ export const App: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* 5. Main Content Assembly */}
-      <main className="relative z-10">
-        <HeroSection
-          activeMood={activeMood}
-          onSelectMood={(mood) => handleConfirmMood(mood, 0.95)}
-          onStartJourney={() => setIsFaceDetectionOpen(true)}
-        />
+      {/* 5. Animated Route Switcher (Camera Push-in/Push-out between rooms) */}
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <HomeView
+                activeMood={activeMood}
+                onSelectMood={(mood) => handleConfirmMood(mood, 0.95)}
+              />
+            }
+          />
+          <Route
+            path="/mood"
+            element={
+              <MoodView
+                activeMood={activeMood}
+                confidence={activeConfidence}
+                onConfirmMood={handleConfirmMood}
+              />
+            }
+          />
+          <Route
+            path="/journal"
+            element={<JournalView activeMood={activeMood} />}
+          />
+          <Route
+            path="/constellation"
+            element={
+              <ConstellationView
+                activeMood={activeMood}
+                onConfirmMood={handleConfirmMood}
+              />
+            }
+          />
+          <Route
+            path="/wellness"
+            element={<WellnessView />}
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AnimatePresence>
 
-        {/* Phase 3 & 6: Mood → Smart Shift Recommendation Engine & Spotify Stream */}
-        <RecommendationSection
-          mood={activeMood}
-          confidence={activeConfidence}
-          onOpenFaceDetection={() => setIsFaceDetectionOpen(true)}
-          onLaunchBreathing={(tech) => setActiveBreathingTech(tech)}
-          onLaunchMeditation={(cat) => {
-            if (cat) setActiveMeditationCat(cat);
-            setIsMeditationOpen(true);
-          }}
-        />
-
-        {/* Phase 4: Mood Journal + Living Constellation Analytics */}
-        <ConstellationHub
-          activeMood={activeMood}
-          onOpenFaceDetection={() => setIsFaceDetectionOpen(true)}
-        />
-
-        {/* Phase 5: Somatic & Mindful Wellness Actions Sanctuary */}
-        <WellnessActionsHub />
-
-        {/* Phase 6: Gamification Layer & Weekly Wellness Score */}
-        <GamificationSection />
-
-        <ConceptSection />
-        <FeaturesSection />
-        <PrivacySection />
-      </main>
-
-      {/* 6. Celestial Footer */}
-      <Footer />
-
-      {/* 7. Face Detection & Calibration Modal (Phase 2 Core) */}
+      {/* 6. Face Detection & Calibration Modal (Direct Global Trigger) */}
       <FaceDetectionModal
         isOpen={isFaceDetectionOpen}
         onClose={() => setIsFaceDetectionOpen(false)}
         onConfirmMood={handleConfirmMood}
       />
-
-      {/* 8. Full Screen Breathing Guide */}
-      <AnimatePresence>
-        {activeBreathingTech && (
-          <BreathingGuide
-            isOpen={Boolean(activeBreathingTech)}
-            technique={activeBreathingTech}
-            onClose={() => setActiveBreathingTech(null)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* 9. Category-Based Immersive Meditation Sanctuary */}
-      <AnimatePresence>
-        {isMeditationOpen && (
-          <MeditationTimer
-            isOpen={isMeditationOpen}
-            initialCategory={activeMeditationCat}
-            onClose={() => setIsMeditationOpen(false)}
-          />
-        )}
-      </AnimatePresence>
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 };
 
