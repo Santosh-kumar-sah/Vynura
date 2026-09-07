@@ -132,7 +132,6 @@ export const ActionModal: React.FC<ActionModalProps> = ({
               >
                 {item.tag} · {item.durationText}
               </span>
-              <span className="text-xs text-[#FFC978] font-heading">{item.kanji}</span>
             </div>
             <h3 className="font-heading text-xl font-bold text-[#F5F2ED]">
               {item.title}

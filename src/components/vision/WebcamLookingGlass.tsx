@@ -15,6 +15,8 @@ import {
   Cpu,
   ShieldCheck,
   VideoOff,
+  ArrowDown,
+  Lock,
 } from 'lucide-react';
 import { SwirlLoadingState } from './SwirlLoadingState';
 import { FaceCanvasOverlay } from './FaceCanvasOverlay';
@@ -44,6 +46,7 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
   const [modelError, setModelError] = useState<string | null>(null);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
+  const [isLockedSnapshot, setIsLockedSnapshot] = useState<boolean>(false);
 
   // Live detection feedback state
   const [detectedMood, setDetectedMood] = useState<MoodType>(currentMood);
@@ -64,6 +67,7 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const detectionIntervalRef = useRef<number | null>(null);
+  const isCameraDisabledRef = useRef<boolean>(false);
 
   // 1. Load face-api.js Models Client-Side from /public/models
   useEffect(() => {
@@ -100,9 +104,34 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
     };
   }, []);
 
-  // 2. Start Video Camera Stream
+  // 2. Stop camera helper - shuts down all media tracks immediately
+  const stopCamera = useCallback(() => {
+    if (detectionIntervalRef.current) {
+      clearInterval(detectionIntervalRef.current);
+      detectionIntervalRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => {
+        t.stop();
+      });
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      try {
+        videoRef.current.pause();
+        videoRef.current.srcObject = null;
+      } catch {
+        // ignore
+      }
+    }
+    setIsCameraActive(false);
+  }, []);
+
+  // 3. Start Video Camera Stream
   const startCamera = useCallback(async () => {
+    if (isCameraDisabledRef.current) return;
     setCameraError(null);
+    setIsLockedSnapshot(false);
     try {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop());
@@ -116,6 +145,11 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
         },
         audio: false,
       });
+
+      if (isCameraDisabledRef.current) {
+        stream.getTracks().forEach((t) => t.stop());
+        return;
+      }
 
       streamRef.current = stream;
 
@@ -142,25 +176,12 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
     }
   }, []);
 
-  // Stop camera helper
-  const stopCamera = useCallback(() => {
-    if (detectionIntervalRef.current) {
-      clearInterval(detectionIntervalRef.current);
-      detectionIntervalRef.current = null;
-    }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    }
-    setIsCameraActive(false);
-  }, []);
-
   // Auto-start camera when consented and models loaded
   useEffect(() => {
-    if (hasConsented && !isModelsLoading && !isCameraActive && autoStart && !cameraError) {
+    if (hasConsented && !isModelsLoading && !isCameraActive && autoStart && !cameraError && !isCameraDisabledRef.current && !isLockedSnapshot) {
       startCamera();
     }
-  }, [hasConsented, isModelsLoading, isCameraActive, autoStart, cameraError, startCamera]);
+  }, [hasConsented, isModelsLoading, isCameraActive, autoStart, cameraError, isLockedSnapshot, startCamera]);
 
   // Clean up on unmount
   useEffect(() => {
@@ -169,19 +190,17 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
     };
   }, [stopCamera]);
 
-  // 3. Real-Time Neural Detection Loop (every 600ms)
+  // 4. Real-Time Neural Detection Loop (every 500ms)
   useEffect(() => {
-    if (!isCameraActive || isModelsLoading) return;
+    if (!isCameraActive || isModelsLoading || isLockedSnapshot) return;
 
     const runDetection = async () => {
       if (!videoRef.current || videoRef.current.paused || videoRef.current.ended) return;
 
       try {
-        // Evaluate lighting conditions
         const lightCheck = analyzeLighting(videoRef.current);
         setLightingWarning(lightCheck.warning || null);
 
-        // Run client-side inference using TinyFaceDetector
         const options = new faceapi.TinyFaceDetectorOptions({
           inputSize: 224,
           scoreThreshold: 0.35,
@@ -195,7 +214,6 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
         if (detection) {
           setNoFaceDetected(false);
 
-          // Update bounding box
           const box = detection.detection.box;
           setFaceBox({
             x: box.x,
@@ -204,11 +222,9 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
             height: box.height,
           });
 
-          // Update landmark points
           const positions = detection.landmarks.positions;
           setLandmarks(positions.map((p) => ({ x: p.x, y: p.y })));
 
-          // Map 7 raw expression scores to Vynura's 5 mood states
           if (detection.expressions) {
             const mapped = mapExpressionsToVynuraMood(detection.expressions);
             setDetectedMood(mapped.mood);
@@ -226,7 +242,7 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
     };
 
     runDetection();
-    detectionIntervalRef.current = window.setInterval(runDetection, 600);
+    detectionIntervalRef.current = window.setInterval(runDetection, 500);
 
     return () => {
       if (detectionIntervalRef.current) {
@@ -234,14 +250,19 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
         detectionIntervalRef.current = null;
       }
     };
-  }, [isCameraActive, isModelsLoading]);
+  }, [isCameraActive, isModelsLoading, isLockedSnapshot]);
 
-  // 4. Mood Confirmation Moment (Signature Firefly Confetti + Sky Tint Shift)
+  // 5. Mood Confirmation Moment (Camera Turns Off immediately + Confetti + Auto-Scroll)
   const handleConfirm = (moodToConfirm: MoodType, confScore: number) => {
     setIsConfirmed(true);
+    setIsLockedSnapshot(true);
+    isCameraDisabledRef.current = true;
     const moodData = MOODS[moodToConfirm];
 
-    // Trigger signature firefly shooting-star burst
+    // Immediately stop the camera hardware stream so camera light turns off
+    stopCamera();
+
+    // Trigger celebratory firefly confetti burst
     try {
       confetti({
         particleCount: 65,
@@ -261,10 +282,16 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
     document.documentElement.style.setProperty('--accent-glow', moodData.color);
 
     // Call parent confirm callback
+    onConfirmMood(moodToConfirm, confScore);
+
+    // Smoothly scroll down to recommendations
     setTimeout(() => {
-      onConfirmMood(moodToConfirm, confScore);
       setIsConfirmed(false);
-    }, 450);
+      const recElem = document.getElementById('recommendations');
+      if (recElem) {
+        recElem.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 500);
   };
 
   const handleManualSelect = (mood: MoodType) => {
@@ -277,9 +304,20 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
     handleConfirm(mood, 0.95);
   };
 
+  const handleToggleCamera = () => {
+    if (isCameraActive) {
+      isCameraDisabledRef.current = true;
+      stopCamera();
+    } else {
+      isCameraDisabledRef.current = false;
+      setIsLockedSnapshot(false);
+      startCamera();
+    }
+  };
+
   const activeMoodData = MOODS[detectedMood];
 
-  // If user hasn't granted camera consent, display on-brand consent banner
+  // Consent Banner
   if (!hasConsented) {
     return (
       <div className="w-full rounded-3xl bg-gradient-to-b from-[#24214A]/90 via-[#1A1836] to-[#14122C] border border-[#FFC978]/35 p-6 sm:p-8 shadow-[0_20px_60px_-15px_rgba(10,8,28,0.95)] overflow-hidden text-center relative">
@@ -323,13 +361,13 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="w-4 h-4 text-[#FF9E7D] mt-0.5 shrink-0" />
               <div>
-                <div className="text-xs font-bold text-[#F5F2ED]">Label Only</div>
-                <div className="text-[11px] text-[#B8B4D9]">Only mood state persists</div>
+                <div className="text-xs font-bold text-[#F5F2ED]">Auto-Turns Off</div>
+                <div className="text-[11px] text-[#B8B4D9]">Camera stops right after capture</div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Button
               size="lg"
               variant="primary"
@@ -337,20 +375,10 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
               onClick={() => {
                 sessionStorage.setItem('vynura_camera_consented', 'true');
                 setHasConsented(true);
-                startCamera();
               }}
-              className="px-8 shadow-glow-md"
             >
-              Enter The Mirror ✦
+              Allow Camera & Enter Mirror
             </Button>
-          </div>
-
-          <div className="pt-4 border-t border-[#B8B4D9]/15">
-            <span className="text-xs text-[#B8B4D9] block mb-2">Or select your resonance manually:</span>
-            <ManualMoodSelector
-              currentMood={detectedMood}
-              onSelectMood={handleManualSelect}
-            />
           </div>
         </div>
       </div>
@@ -358,234 +386,302 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
   }
 
   return (
-    <div className="w-full rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border border-[#FFC978]/35 p-5 sm:p-8 shadow-[0_25px_70px_-15px_rgba(10,8,28,0.95)] overflow-hidden relative">
-      {/* Dynamic Glowing Mood Halo Top Rim */}
+    <div className="w-full space-y-6">
       <div
-        className="absolute top-0 left-0 right-0 h-[2.5px] transition-colors duration-500"
+        className="relative rounded-3xl bg-gradient-to-b from-[#24214A]/90 via-[#1A1836]/95 to-[#121029]/95 border p-5 sm:p-7 shadow-[0_20px_60px_-15px_rgba(10,8,28,0.9)] overflow-hidden transition-all duration-500 backdrop-blur-xl"
         style={{
-          background: `linear-gradient(90deg, transparent, ${activeMoodData.color}, transparent)`,
+          borderColor: `${activeMoodData.color}45`,
+          boxShadow: `0 20px 60px -15px ${activeMoodData.color}25, 0 0 0 1px ${activeMoodData.color}30`,
         }}
-      />
+      >
+        {/* Dynamic Top Rim Light Accent */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2.5px] transition-colors duration-500"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${activeMoodData.color}, transparent)`,
+          }}
+        />
 
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-[#B8B4D9]/15">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center border shadow-glow-sm transition-colors duration-300"
-            style={{
-              backgroundColor: `${activeMoodData.color}20`,
-              borderColor: `${activeMoodData.color}60`,
-              color: activeMoodData.color,
-            }}
-          >
-            <Camera className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
-                Biometric Looking Glass
-              </span>
-              <span className="text-xs text-[#FFC978]/90 font-mono">
-                {activeMoodData.sublabel}
-              </span>
+        {/* Top Control Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-[#B8B4D9]/15">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center border shadow-glow-sm transition-colors duration-300"
+              style={{
+                backgroundColor: `${activeMoodData.color}20`,
+                borderColor: `${activeMoodData.color}60`,
+                color: activeMoodData.color,
+              }}
+            >
+              <Camera className="w-5 h-5" />
             </div>
-            <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
-              Real-Time Expression Calibration
-            </h3>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
+                  Looking Glass Feed
+                </span>
+                <span className="text-xs text-[#FFC978]/90 font-mono">
+                  {activeMoodData.sublabel}
+                </span>
+              </div>
+              <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
+                Biometric Emotional Scanner
+              </h3>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Camera On/Off Toggle Button */}
+            <button
+              onClick={handleToggleCamera}
+              className="px-3.5 py-1.5 rounded-xl bg-[#121029]/80 hover:bg-[#2D2A5C] border border-[#B8B4D9]/25 text-xs font-semibold text-[#F5F2ED] transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              {isCameraActive ? (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-[#6FBFC4] animate-pulse" />
+                  <span>Camera Live</span>
+                </>
+              ) : (
+                <>
+                  <VideoOff className="w-3.5 h-3.5 text-[#FF9E7D]" />
+                  <span>Camera Off</span>
+                </>
+              )}
+            </button>
+
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#121029]/80 border border-[#6FBFC4]/30 text-xs text-[#6FBFC4]">
+              <Shield className="w-3.5 h-3.5" />
+              <span>Local Wasm Neural</span>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#121029]/80 border border-[#6FBFC4]/30 text-[11px] text-[#6FBFC4]">
-            <Shield className="w-3.5 h-3.5" />
-            <span>Private Wasm Runtime</span>
+        {/* Center Container: Camera Video or Loading */}
+        {isModelsLoading ? (
+          <SwirlLoadingState progressMessage="Loading face-api neural weights..." />
+        ) : modelError ? (
+          <div className="p-8 text-center space-y-4">
+            <AlertTriangle className="w-10 h-10 text-[#FF9E7D] mx-auto" />
+            <div className="text-sm text-[#F5F2ED] font-semibold">{modelError}</div>
+            <Button size="sm" variant="secondary" onClick={() => window.location.reload()}>
+              Retry Initialization
+            </Button>
           </div>
-          {isCameraActive && (
-            <button
-              onClick={stopCamera}
-              className="p-2 rounded-xl bg-[#1A1836] border border-[#B8B4D9]/20 hover:border-[#FF9E7D]/50 text-[#B8B4D9] hover:text-[#FF9E7D] transition-colors cursor-pointer text-xs flex items-center gap-1"
-              title="Pause Camera"
+        ) : (
+          <div className="space-y-5">
+            {/* Live Camera Feed Container */}
+            <div
+              className="relative mx-auto w-full max-w-lg aspect-[4/3] rounded-2xl bg-[#0E0C20] border-2 overflow-hidden flex items-center justify-center transition-all duration-500 shadow-xl"
+              style={{
+                borderColor: activeMoodData.color,
+                boxShadow: `0 0 35px -5px ${activeMoodData.color}35`,
+              }}
             >
-              <VideoOff className="w-4 h-4" />
-              <span className="hidden sm:inline">Pause</span>
-            </button>
-          )}
-          {!isCameraActive && !isModelsLoading && (
-            <button
-              onClick={startCamera}
-              className="p-2 rounded-xl bg-[#2D2A5C] border border-[#FFC978]/40 text-[#FFC978] hover:bg-[#383372] transition-colors cursor-pointer text-xs flex items-center gap-1"
-              title="Resume Camera"
-            >
-              <Camera className="w-4 h-4" />
-              <span className="hidden sm:inline">Resume</span>
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Main Detector Body */}
-      {isModelsLoading ? (
-        <SwirlLoadingState progressMessage="Awakening Neural Landmark Tensor Network..." />
-      ) : modelError ? (
-        <div className="p-8 text-center space-y-4">
-          <AlertTriangle className="w-10 h-10 text-[#FF9E7D] mx-auto" />
-          <div className="text-sm text-[#F5F2ED] font-semibold">{modelError}</div>
-          <Button size="sm" variant="secondary" onClick={() => window.location.reload()}>
-            Retry Initialization
-          </Button>
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {/* Webcam Live Feed Container with On-Brand Glowing Organic Aperture */}
-          <div
-            className="relative mx-auto w-72 h-72 sm:w-80 sm:h-80 rounded-[2.5rem] bg-[#0F0D24] border-2 overflow-hidden flex items-center justify-center transition-all duration-500 shadow-2xl"
-            style={{
-              borderColor: activeMoodData.color,
-              boxShadow: `0 0 35px -5px ${activeMoodData.color}40`,
-            }}
-          >
-            {/* Video Element */}
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              className={`w-full h-full object-cover transform -scale-x-100 ${
-                isCameraActive ? 'opacity-100' : 'opacity-0'
-              } transition-opacity duration-300`}
-            />
-
-            {/* Facial Bounding & Landmark Overlay (Organic Reticle) */}
-            {isCameraActive && (
-              <FaceCanvasOverlay
-                box={faceBox}
-                landmarks={landmarks}
-                mood={detectedMood}
-                moodColor={activeMoodData.color}
-                confidence={confidence}
-                videoWidth={videoRef.current?.videoWidth || 640}
-                videoHeight={videoRef.current?.videoHeight || 480}
+              {/* HTML5 Video Element */}
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className={`w-full h-full object-cover transform -scale-x-100 ${
+                  isCameraActive ? 'opacity-100' : 'opacity-0'
+                } transition-opacity duration-300`}
               />
-            )}
 
-            {/* Camera Error or Off State */}
-            {!isCameraActive && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#121029]/95 z-20 space-y-3">
-                <Camera className="w-10 h-10 text-[#FFC978]/60" />
-                <p className="text-xs text-[#B8B4D9] max-w-xs leading-relaxed">
-                  {cameraError || 'Camera paused. Click resume or calibrate your frequency manually.'}
-                </p>
-                {cameraError && (
+              {/* Facial Bounding & Landmark Overlay */}
+              {isCameraActive && (
+                <FaceCanvasOverlay
+                  box={faceBox}
+                  landmarks={landmarks}
+                  mood={detectedMood}
+                  moodColor={activeMoodData.color}
+                  confidence={confidence}
+                  videoWidth={videoRef.current?.videoWidth || 640}
+                  videoHeight={videoRef.current?.videoHeight || 480}
+                />
+              )}
+
+              {/* Snapshot Locked Overlay */}
+              {isLockedSnapshot && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#121029]/95 z-30 space-y-3">
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center border shadow-glow-sm"
+                    style={{
+                      backgroundColor: `${activeMoodData.color}25`,
+                      borderColor: activeMoodData.color,
+                      color: activeMoodData.color,
+                    }}
+                  >
+                    <CheckCircle2 className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-mono uppercase tracking-widest text-[#6FBFC4] font-bold block mb-1">
+                      Camera Safely Turned Off
+                    </span>
+                    <h4 className="font-heading text-xl font-bold text-[#F5F2ED]">
+                      Captured: {activeMoodData.label} ({activeMoodData.sublabel})
+                    </h4>
+                    <p className="text-xs text-[#B8B4D9] mt-1">
+                      Personalized mood-shift suggestions have been generated below.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      icon={<ArrowDown className="w-4 h-4" />}
+                      onClick={() => {
+                        const recElem = document.getElementById('recommendations');
+                        recElem?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      View Suggested Shift Actions
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      icon={<RefreshCw className="w-3.5 h-3.5" />}
+                      onClick={() => {
+                        isCameraDisabledRef.current = false;
+                        setIsLockedSnapshot(false);
+                        startCamera();
+                      }}
+                    >
+                      Scan Again
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Camera Paused / Error Overlay */}
+              {!isCameraActive && !isLockedSnapshot && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#121029]/95 z-20 space-y-3">
+                  <VideoOff className="w-12 h-12 text-[#B8B4D9]/50" />
+                  <p className="text-xs text-[#B8B4D9] max-w-xs leading-relaxed">
+                    {cameraError || 'Camera stream is currently off to preserve privacy and battery.'}
+                  </p>
                   <Button
                     size="sm"
                     variant="primary"
                     icon={<RefreshCw className="w-3.5 h-3.5" />}
-                    onClick={startCamera}
+                    onClick={() => {
+                      isCameraDisabledRef.current = false;
+                      startCamera();
+                    }}
                   >
-                    Retry Camera
+                    Turn Camera On
                   </Button>
+                </div>
+              )}
+
+              {/* No Face Warning */}
+              <AnimatePresence>
+                {isCameraActive && noFaceDetected && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3.5 py-1.5 rounded-full bg-[#121029]/90 border border-[#FF9E7D]/40 text-xs font-semibold text-[#FF9E7D] shadow-md flex items-center gap-1.5 z-20 pointer-events-none"
+                  >
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    <span>Please position your face clearly in frame</span>
+                  </motion.div>
                 )}
-              </div>
-            )}
+              </AnimatePresence>
 
-            {/* No Face Detected Overlay Pill */}
-            <AnimatePresence>
-              {isCameraActive && noFaceDetected && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-[#121029]/90 border border-[#FF9E7D]/40 text-xs font-semibold text-[#FF9E7D] shadow-md flex items-center gap-1.5 z-20 pointer-events-none whitespace-nowrap"
-                >
-                  <AlertTriangle className="w-3.5 h-3.5" />
-                  <span>Center your face within the frame</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Lighting Warning Banner */}
-            <AnimatePresence>
-              {isCameraActive && lightingWarning && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-3 left-3 right-3 px-3 py-1 rounded-xl bg-[#2D2A5C]/90 border border-[#FFC978]/40 text-[11px] text-[#FFC978] shadow-md flex items-center gap-2 z-20 pointer-events-none"
-                >
-                  <Sun className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">{lightingWarning}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Live Frequency Resonance Telemetry Bar */}
-          <div className="bg-[#121029]/80 p-4 rounded-2xl border border-[#B8B4D9]/15 max-w-xl mx-auto">
-            <div className="flex items-center justify-between text-xs mb-2.5">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#FFC978]" />
-                <span className="font-semibold text-[#F5F2ED]">Harmonic Resonance Spectrum</span>
-              </div>
-              <span className="font-mono text-[11px] text-[#FFC978]">
-                {Math.round(confidence * 100)}% Coherence
-              </span>
+              {/* Lighting Warning Banner */}
+              <AnimatePresence>
+                {isCameraActive && lightingWarning && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute top-3 left-3 right-3 px-3 py-1 rounded-xl bg-[#2D2A5C]/90 border border-[#FFC978]/40 text-[11px] text-[#FFC978] shadow-md flex items-center gap-2 z-20 pointer-events-none"
+                  >
+                    <Sun className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">{lightingWarning}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* 5 Mood Category Progress Gauges */}
-            <div className="grid grid-cols-5 gap-2 text-center">
-              {(['happy', 'calm', 'sad', 'energetic', 'neutral'] as MoodType[]).map((mKey) => {
-                const isDominant = detectedMood === mKey;
-                const score = breakdown[mKey] || 0;
-                const mData = MOODS[mKey];
+            {/* Live 5-Channel Mood Spectrum Telemetry */}
+            <div className="grid grid-cols-5 gap-2 px-1">
+              {(Object.keys(MOODS) as MoodType[]).map((mKey) => {
+                const val = Math.round((breakdown[mKey] || 0.1) * 100);
+                const isWinner = detectedMood === mKey;
                 return (
-                  <div key={mKey} className="space-y-1">
-                    <div className="text-[10px] font-mono text-[#B8B4D9] uppercase truncate">
-                      {mData.sublabel}
+                  <div key={mKey} className="text-center space-y-1">
+                    <div className="flex justify-between items-center text-[10px] text-[#B8B4D9] font-mono px-1">
+                      <span className={isWinner ? 'text-[#F5F2ED] font-bold' : ''}>
+                        {mKey.slice(0, 3)}
+                      </span>
+                      <span>{val}%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-[#1A1836] rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full rounded-full"
-                        style={{ backgroundColor: mData.color }}
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.round(score * 100)}%` }}
-                        transition={{ duration: 0.3 }}
+                    <div className="h-1.5 w-full bg-[#1A1836] rounded-full overflow-hidden border border-[#B8B4D9]/15">
+                      <div
+                        className="h-full rounded-full transition-all duration-300"
+                        style={{
+                          width: `${val}%`,
+                          backgroundColor: MOODS[mKey].color,
+                        }}
                       />
-                    </div>
-                    <div
-                      className={`text-[10px] font-mono ${
-                        isDominant ? 'font-bold text-[#F5F2ED]' : 'text-[#B8B4D9]/60'
-                      }`}
-                    >
-                      {Math.round(score * 100)}%
                     </div>
                   </div>
                 );
               })}
             </div>
-          </div>
 
-          {/* Confirmation Action Button */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button
-              size="lg"
-              variant="primary"
-              className="w-full sm:w-auto px-8 shadow-glow-md"
-              icon={isConfirmed ? <CheckCircle2 className="w-4 h-4" /> : <Sparkles className="w-4 h-4" />}
-              onClick={() => handleConfirm(detectedMood, confidence)}
-            >
-              {isConfirmed
-                ? 'Resonance Locked ✦'
-                : `Confirm ${activeMoodData.label} (${Math.round(confidence * 100)}%)`}
-            </Button>
-          </div>
+            {/* Bottom Confirmation Bar */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#1A1836]/90 border border-[#B8B4D9]/20">
+              <div className="flex items-center gap-3 text-left w-full sm:w-auto">
+                <div
+                  className="w-4 h-4 rounded-full animate-pulse shrink-0"
+                  style={{
+                    backgroundColor: activeMoodData.color,
+                    boxShadow: `0 0 12px ${activeMoodData.color}`,
+                  }}
+                />
+                <div>
+                  <div className="text-xs text-[#B8B4D9] flex items-center gap-1.5">
+                    <Activity className="w-3.5 h-3.5 text-[#FFC978]" />
+                    <span>Real-Time Biometric Match:</span>
+                    <span className="font-mono font-bold text-[#F5F2ED]">
+                      {Math.round(confidence * 100)}%
+                    </span>
+                  </div>
+                  <div className="font-heading text-lg font-bold text-[#F5F2ED] flex items-center gap-2">
+                    <span style={{ color: activeMoodData.color }}>
+                      {activeMoodData.label}
+                    </span>
+                    <span className="text-xs text-[#B8B4D9] font-normal">
+                      ({activeMoodData.sublabel})
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-          {/* Manual Mood Override Selector */}
-          <ManualMoodSelector
-            currentMood={detectedMood}
-            onSelectMood={handleManualSelect}
-          />
-        </div>
-      )}
+              {/* Primary Capture Action Button */}
+              <Button
+                size="md"
+                variant="primary"
+                className="w-full sm:w-auto shadow-glow-sm cursor-pointer"
+                icon={isConfirmed ? <CheckCircle2 className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                onClick={() => handleConfirm(detectedMood, confidence)}
+              >
+                {isConfirmed ? 'Calibrating...' : 'Capture & Get Suggested Actions'}
+              </Button>
+            </div>
+
+            {/* Manual Mood Recalibration Override */}
+            <ManualMoodSelector
+              currentMood={detectedMood}
+              onSelectMood={handleManualSelect}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

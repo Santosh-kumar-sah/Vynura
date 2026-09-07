@@ -95,9 +95,6 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
               >
                 {item.tag}
               </span>
-              <span className="text-xs text-[#B8B4D9] font-heading font-semibold">
-                {item.kanji}
-              </span>
             </div>
           </div>
 

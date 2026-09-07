@@ -11,6 +11,7 @@ import {
   Sun,
   Shield,
   Activity,
+  VideoOff,
 } from 'lucide-react';
 import { ConsentModal } from './ConsentModal';
 import { SwirlLoadingState } from './SwirlLoadingState';
@@ -38,6 +39,7 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
   const [modelError, setModelError] = useState<string | null>(null);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
+  const [isCapturing, setIsCapturing] = useState<boolean>(false);
 
   // Detection feedback state
   const [detectedMood, setDetectedMood] = useState<MoodType>('neutral');
@@ -53,11 +55,11 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
   const [landmarks, setLandmarks] = useState<{ x: number; y: number }[]>([]);
   const [noFaceDetected, setNoFaceDetected] = useState<boolean>(false);
   const [lightingWarning, setLightingWarning] = useState<string | null>(null);
-  const [, setIsConfirmed] = useState<boolean>(false);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const detectionIntervalRef = useRef<number | null>(null);
+  const isTerminatedRef = useRef<boolean>(false);
 
   // 1. Load face-api.js Models Client-Side
   useEffect(() => {
@@ -81,13 +83,14 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
       } catch (err: unknown) {
         console.error('Error loading face-api models:', err);
         if (isMounted) {
-          setModelError('Failed to load neural models locally. Please check connectivity or refresh.');
+          setModelError('Failed to load neural vision models. Please refresh to try again.');
           setIsModelsLoading(false);
         }
       }
     }
 
     if (isOpen) {
+      isTerminatedRef.current = false;
       loadModels();
     }
 
@@ -96,8 +99,33 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
     };
   }, [isOpen]);
 
-  // 2. Start Video Camera Stream
+  // 2. Stop Camera Streams immediately and release hardware locks
+  const stopCamera = useCallback(() => {
+    isTerminatedRef.current = true;
+    if (detectionIntervalRef.current) {
+      clearInterval(detectionIntervalRef.current);
+      detectionIntervalRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      try {
+        videoRef.current.pause();
+        videoRef.current.srcObject = null;
+      } catch {
+        // ignore
+      }
+    }
+    setIsCameraActive(false);
+  }, []);
+
+  // 3. Start Video Camera Stream
   const startCamera = useCallback(async () => {
+    if (isTerminatedRef.current) return;
     setCameraError(null);
     try {
       if (streamRef.current) {
@@ -113,13 +141,21 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
         audio: false,
       });
 
+      if (isTerminatedRef.current) {
+        stream.getTracks().forEach((t) => t.stop());
+        return;
+      }
+
       streamRef.current = stream;
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.onloadedmetadata = () => {
-          videoRef.current?.play();
-          setIsCameraActive(true);
+          videoRef.current?.play().then(() => {
+            setIsCameraActive(true);
+          }).catch(() => {
+            setIsCameraActive(true);
+          });
         };
       }
     } catch (err: unknown) {
@@ -129,34 +165,22 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
     }
   }, []);
 
-  // 3. Stop Stream on Unmount/Close
-  const stopCamera = useCallback(() => {
-    if (detectionIntervalRef.current) {
-      clearInterval(detectionIntervalRef.current);
-      detectionIntervalRef.current = null;
-    }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
-    }
-    setIsCameraActive(false);
-  }, []);
-
   useEffect(() => {
-    if (isOpen && hasConsented && !isModelsLoading && !isCameraActive && !cameraError) {
+    if (isOpen && hasConsented && !isModelsLoading && !isCameraActive && !cameraError && !isTerminatedRef.current) {
       startCamera();
     }
   }, [isOpen, hasConsented, isModelsLoading, isCameraActive, cameraError, startCamera]);
 
+  // Clean up on unmount
   useEffect(() => {
     return () => {
       stopCamera();
     };
   }, [stopCamera]);
 
-  // 4. Real-Time Detection Loop (Interval ~600ms)
+  // 4. Real-Time Detection Loop (Interval ~500ms)
   useEffect(() => {
-    if (!isCameraActive || isModelsLoading) {
+    if (!isCameraActive || isModelsLoading || isCapturing) {
       if (detectionIntervalRef.current) {
         clearInterval(detectionIntervalRef.current);
         detectionIntervalRef.current = null;
@@ -169,12 +193,11 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
       if (!video || video.paused || video.ended || video.readyState < 2) return;
 
       try {
-        // Lighting check
         const lightResult = analyzeLighting(video);
         setLightingWarning(lightResult.isGood ? null : (lightResult.warning || null));
 
         const detection = await faceapi
-          .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.45 }))
+          .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.4 }))
           .withFaceLandmarks(true)
           .withFaceExpressions();
 
@@ -209,9 +232,8 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
       }
     };
 
-    // Run first pass immediately, then on 600ms interval
     runDetection();
-    detectionIntervalRef.current = window.setInterval(runDetection, 600);
+    detectionIntervalRef.current = window.setInterval(runDetection, 500);
 
     return () => {
       if (detectionIntervalRef.current) {
@@ -219,14 +241,19 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
         detectionIntervalRef.current = null;
       }
     };
-  }, [isCameraActive, isModelsLoading]);
+  }, [isCameraActive, isModelsLoading, isCapturing]);
 
   // 5. Signature Mood Confirmation Trigger
   const handleConfirm = () => {
-    setIsConfirmed(true);
-    const activeMoodData = MOODS[detectedMood];
+    setIsCapturing(true);
+    const chosenMood = detectedMood;
+    const chosenConfidence = confidence;
+    const activeMoodData = MOODS[chosenMood];
 
-    // Trigger signature firefly shooting star burst
+    // 1. Immediately terminate camera hardware stream so webcam light goes OFF
+    stopCamera();
+
+    // 2. Confetti burst
     try {
       confetti({
         particleCount: 50,
@@ -242,16 +269,13 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
       // Fallback
     }
 
-    // Sky tint shift transition
+    // 3. Shift atmospheric sky tint
     document.documentElement.style.setProperty('--accent-glow', activeMoodData.color);
 
-    // Call parent handler with confirmed mood
-    setTimeout(() => {
-      onConfirmMood(detectedMood, confidence);
-      stopCamera();
-      onClose();
-      setIsConfirmed(false);
-    }, 600);
+    // 4. Pass confirmed mood and close modal
+    onConfirmMood(chosenMood, chosenConfidence);
+    onClose();
+    setIsCapturing(false);
   };
 
   const handleManualSelect = (mood: MoodType) => {
@@ -263,6 +287,11 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
     }));
   };
 
+  const handleCloseModal = () => {
+    stopCamera();
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   // Show Consent Modal first if not yet consented
@@ -271,7 +300,7 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
       <ConsentModal
         isOpen={isOpen}
         onGrantAccess={() => setHasConsented(true)}
-        onClose={onClose}
+        onClose={handleCloseModal}
       />
     );
   }
@@ -279,13 +308,17 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
   const currentMoodData = MOODS[detectedMood];
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 bg-[#0B091C]/85 backdrop-blur-lg overflow-y-auto">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 bg-[#0B091C]/90 backdrop-blur-xl overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.94, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.94, y: 15 }}
         transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border border-[#FFC978]/35 p-5 sm:p-7 shadow-[0_25px_70px_-15px_rgba(10,8,28,0.95)] overflow-hidden my-auto"
+        className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border p-5 sm:p-7 shadow-[0_25px_80px_rgba(10,8,28,0.95)] overflow-hidden my-auto"
+        style={{
+          borderColor: `${currentMoodData.color}45`,
+          boxShadow: `0 20px 60px -15px ${currentMoodData.color}25, 0 0 0 1px ${currentMoodData.color}30`,
+        }}
       >
         {/* Dynamic Glowing Mood Halo Top Rim */}
         <div
@@ -297,10 +330,7 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
 
         {/* Modal Close Button */}
         <button
-          onClick={() => {
-            stopCamera();
-            onClose();
-          }}
+          onClick={handleCloseModal}
           className="absolute top-4 right-4 p-2 rounded-xl text-[#B8B4D9] hover:text-[#F5F2ED] hover:bg-[#2D2A5C]/60 transition-colors z-20 cursor-pointer"
           aria-label="Close"
         >
@@ -335,15 +365,17 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
             </div>
           </div>
 
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#121029]/80 border border-[#6FBFC4]/30 text-[11px] text-[#6FBFC4]">
-            <Shield className="w-3.5 h-3.5" />
-            <span>Private Wasm Runtime</span>
+          <div className="hidden sm:flex items-center gap-2">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#121029]/80 border border-[#6FBFC4]/30 text-[11px] text-[#6FBFC4]">
+              <Shield className="w-3.5 h-3.5" />
+              <span>100% Private On-Device</span>
+            </div>
           </div>
         </div>
 
         {/* Main Body State */}
         {isModelsLoading ? (
-          <SwirlLoadingState progressMessage="Awakening Face Landmark Tensor Network..." />
+          <SwirlLoadingState progressMessage="Loading neural vision tensors..." />
         ) : modelError ? (
           <div className="p-6 text-center space-y-4">
             <AlertTriangle className="w-10 h-10 text-[#FF9E7D] mx-auto" />
@@ -386,23 +418,24 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
                 />
               )}
 
-              {/* Camera Error or Off State */}
+              {/* Camera Off / Paused Overlay */}
               {!isCameraActive && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#121029]/95 z-20 space-y-3">
-                  <Camera className="w-10 h-10 text-[#FFC978]/60" />
+                  <VideoOff className="w-10 h-10 text-[#B8B4D9]/50" />
                   <p className="text-xs text-[#B8B4D9] max-w-xs leading-relaxed">
-                    {cameraError || 'Camera initializing... You can also choose your mood manually below.'}
+                    {cameraError || 'Camera stream paused. You can restart the camera or choose your mood manually below.'}
                   </p>
-                  {cameraError && (
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      icon={<RefreshCw className="w-3.5 h-3.5" />}
-                      onClick={startCamera}
-                    >
-                      Retry Camera
-                    </Button>
-                  )}
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    icon={<RefreshCw className="w-3.5 h-3.5" />}
+                    onClick={() => {
+                      isTerminatedRef.current = false;
+                      startCamera();
+                    }}
+                  >
+                    Start Camera
+                  </Button>
                 </div>
               )}
 
@@ -468,7 +501,7 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#1A1836]/90 border border-[#B8B4D9]/20">
               <div className="flex items-center gap-3 text-left w-full sm:w-auto">
                 <div
-                  className="w-3.5 h-3.5 rounded-full animate-pulse"
+                  className="w-3.5 h-3.5 rounded-full animate-pulse shrink-0"
                   style={{
                     backgroundColor: currentMoodData.color,
                     boxShadow: `0 0 10px ${currentMoodData.color}`,
@@ -477,7 +510,7 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
                 <div>
                   <div className="text-xs text-[#B8B4D9] flex items-center gap-1.5">
                     <Activity className="w-3 h-3 text-[#FFC978]" />
-                    <span>Dominant Harmonic:</span>
+                    <span>Dominant State:</span>
                     <span className="font-mono font-bold text-[#F5F2ED]">
                       {Math.round(confidence * 100)}% Match
                     </span>
@@ -497,11 +530,11 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
               <Button
                 size="md"
                 variant="primary"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto shadow-glow-sm"
                 icon={<CheckCircle2 className="w-4 h-4" />}
                 onClick={handleConfirm}
               >
-                Confirm Emotional State
+                Capture & View Mood Shifts
               </Button>
             </div>
 

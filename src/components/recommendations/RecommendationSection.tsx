@@ -90,8 +90,8 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
               <span className="opacity-70 font-mono">({moodInfo.sublabel})</span>
             </span>
 
-            <span className="text-xs text-[#B8B4D9] font-medium">
-              {moodGroup.kanjiTheme}
+            <span className="text-xs text-[#B8B4D9] font-medium hidden sm:inline-block">
+              {moodGroup.subheadline}
             </span>
           </div>
         </motion.div>

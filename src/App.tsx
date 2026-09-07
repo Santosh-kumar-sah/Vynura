@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, CheckCircle2 } from 'lucide-react';
+import { Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
 import { StarfieldBackdrop } from './components/background/StarfieldBackdrop';
 import { FireflyCanvas } from './components/background/FireflyCanvas';
 import { ShootingStar } from './components/background/ShootingStar';
@@ -19,6 +19,7 @@ import type { MoodType } from './types';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isFaceDetectionOpen, setIsFaceDetectionOpen] = useState(false);
   const [activeMood, setActiveMood] = useState<MoodType>('happy');
   const [activeConfidence, setActiveConfidence] = useState<number>(0.94);
@@ -36,10 +37,23 @@ const AppContent: React.FC = () => {
     const moodColor = MOODS[mood].color;
     document.documentElement.style.setProperty('--accent-glow', moodColor);
 
-    // Auto-dismiss confirmation banner after 4.5s
+    // If currently on HomeView, navigate to MoodView so the user sees their recommendations
+    if (location.pathname === '/') {
+      navigate('/mood');
+    }
+
+    // Scroll to recommendations
+    setTimeout(() => {
+      const recElem = document.getElementById('recommendations');
+      if (recElem) {
+        recElem.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 450);
+
+    // Auto-dismiss confirmation banner after 5s
     setTimeout(() => {
       setConfirmationToast(null);
-    }, 4500);
+    }, 5000);
   };
 
   const currentMoodData = MOODS[activeMood];
@@ -76,37 +90,60 @@ const AppContent: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-40 px-5 py-3 rounded-2xl bg-[#1A1836]/95 border shadow-[0_15px_40px_rgba(10,8,28,0.9)] backdrop-blur-xl flex items-center gap-3 text-sm text-[#F5F2ED]"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-[#1A1836]/95 border shadow-[0_15px_40px_rgba(10,8,28,0.9)] backdrop-blur-xl flex flex-col sm:flex-row items-center gap-3 text-sm text-[#F5F2ED]"
             style={{
               borderColor: MOODS[confirmationToast.mood].color,
               boxShadow: `0 0 25px -4px ${MOODS[confirmationToast.mood].color}50`,
             }}
           >
-            <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center border"
+            <div className="flex items-center gap-3">
+              <div
+                className="w-8 h-8 rounded-xl flex items-center justify-center border shrink-0"
+                style={{
+                  backgroundColor: `${MOODS[confirmationToast.mood].color}25`,
+                  borderColor: `${MOODS[confirmationToast.mood].color}60`,
+                  color: MOODS[confirmationToast.mood].color,
+                }}
+              >
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5 text-xs font-semibold">
+                  <span style={{ color: MOODS[confirmationToast.mood].color }}>
+                    Calibrated: {MOODS[confirmationToast.mood].label}
+                  </span>
+                  <span className="text-[10px] text-[#B8B4D9]">
+                    ({Math.round(confirmationToast.confidence * 100)}% Match)
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#B8B4D9]">
+                  Suggestions updated for your emotional frequency.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                if (location.pathname !== '/mood') {
+                  navigate('/mood');
+                }
+                setTimeout(() => {
+                  const recElem = document.getElementById('recommendations');
+                  recElem?.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+                setConfirmationToast(null);
+              }}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-glow-sm"
               style={{
-                backgroundColor: `${MOODS[confirmationToast.mood].color}25`,
-                borderColor: `${MOODS[confirmationToast.mood].color}60`,
-                color: MOODS[confirmationToast.mood].color,
+                backgroundColor: MOODS[confirmationToast.mood].color,
+                color: '#1A1836',
               }}
             >
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold">
-                <span style={{ color: MOODS[confirmationToast.mood].color }}>
-                  Resonance Calibrated: {MOODS[confirmationToast.mood].label}
-                </span>
-                <span className="text-[10px] text-[#B8B4D9]">
-                  ({Math.round(confirmationToast.confidence * 100)}% Confidence)
-                </span>
-              </div>
-              <p className="text-[11px] text-[#B8B4D9] italic">
-                Sky shifted to {MOODS[confirmationToast.mood].sublabel} harmonic spectrum.
-              </p>
-            </div>
+              <span>View Shift Suggestions</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
             <Sparkles
-              className="w-4 h-4 animate-spin"
+              className="w-4 h-4 animate-spin hidden sm:block"
               style={{ color: MOODS[confirmationToast.mood].color, animationDuration: '6s' }}
             />
           </motion.div>
