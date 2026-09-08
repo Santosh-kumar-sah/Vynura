@@ -40,7 +40,7 @@
   - [Environment Configuration](#environment-configuration)
   - [Development & Build](#development--build)
 - [Privacy & Local-First Guarantees](#-privacy--local-first-guarantees)
-- [License](#-license)
+
 
 ---
 
@@ -217,9 +217,7 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ---
 
-## 📄 License
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
 
 <div align="center">
   <sub>Crafted with stillness and care for your mind.</sub>
