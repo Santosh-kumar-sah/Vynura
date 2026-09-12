@@ -12,6 +12,9 @@ import {
   TrendingDown,
   Minus,
   LifeBuoy,
+  ThumbsUp,
+  ThumbsDown,
+  Check,
 } from 'lucide-react';
 import type { MoodType } from '../../types';
 import type { RecommendationItem } from '../../types/recommendations';
@@ -21,7 +24,11 @@ import { RecommendationCard } from './RecommendationCard';
 import { ActionModal } from './ActionModal';
 import { SpotifyPlayer } from '../music/SpotifyPlayer';
 import { getMoodQuote, type MoodQuote } from '../../services/quotesService';
-import { logRecommendationSession } from '../../utils/recommendationLogger';
+import {
+  logRecommendationSession,
+  logRecommendationFeedback,
+  logActionCompleted,
+} from '../../utils/recommendationLogger';
 import { getRecentMoodTrend, type RecentMoodTrend } from '../../lib/supabase';
 import { MOODS } from '../sections/HeroSection';
 
@@ -45,6 +52,9 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
   const [selectedActionItem, setSelectedActionItem] = useState<RecommendationItem | null>(null);
   const [dynamicQuote, setDynamicQuote] = useState<MoodQuote | null>(null);
   const [trendData, setTrendData] = useState<RecentMoodTrend | null>(null);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [userFeedback, setUserFeedback] = useState<boolean | null>(null);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState<boolean>(false);
 
   // Fetch recent mood trend on mount and whenever mood updates
   useEffect(() => {
@@ -66,11 +76,43 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 
   // Log session & load dynamic quote on mount or mood/prescription change
   useEffect(() => {
+    let isMounted = true;
     const ids = prescription.actions.map((r) => r.id);
-    logRecommendationSession(mood, confidence, ids);
 
-    getMoodQuote(mood).then((q) => setDynamicQuote(q));
+    logRecommendationSession({
+      mood,
+      confidence,
+      valence: prescription.valence,
+      arousal: prescription.arousal,
+      mode: prescription.mode,
+      tier: prescription.tier,
+      trajectory: prescription.trend?.trajectory,
+      isEscalated: prescription.trend?.isEscalated,
+      recommendationIds: ids,
+    }).then((session) => {
+      if (isMounted) {
+        setActiveSessionId(session.id);
+        setUserFeedback(null);
+        setFeedbackSubmitted(false);
+      }
+    });
+
+    getMoodQuote(mood).then((q) => {
+      if (isMounted) setDynamicQuote(q);
+    });
+
+    return () => {
+      isMounted = false;
+    };
   }, [mood, confidence, prescription]);
+
+  const handleFeedback = (helpful: boolean) => {
+    setUserFeedback(helpful);
+    setFeedbackSubmitted(true);
+    if (activeSessionId) {
+      logRecommendationFeedback(activeSessionId, helpful);
+    }
+  };
 
   return (
     <section
@@ -280,10 +322,74 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             item={item}
             mood={mood}
             delay={idx * 0.08}
-            onTriggerAction={(clickedItem) => setSelectedActionItem(clickedItem)}
+            onTriggerAction={(clickedItem) => {
+              if (activeSessionId) {
+                logActionCompleted(activeSessionId, clickedItem.id);
+              }
+              setSelectedActionItem(clickedItem);
+            }}
           />
         ))}
       </div>
+
+      {/* Interactive Recommendation Feedback Attunement */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.35, delay: 0.15 }}
+        className="p-5 rounded-2xl bg-gradient-to-r from-[#24214A]/80 via-[#1A1836]/90 to-[#121029]/80 border border-[#B8B4D9]/20 flex flex-col sm:flex-row items-center justify-between gap-4"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-[#FFC978]/15 border border-[#FFC978]/30 flex items-center justify-center text-[#FFC978] shrink-0">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="text-xs font-semibold text-[#F5F2ED]">
+              Did this shift prescription feel aligned with your energy?
+            </div>
+            <p className="text-[11px] text-[#B8B4D9]">
+              Your response fine-tunes your future valence-arousal prescriptions.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => handleFeedback(true)}
+            disabled={feedbackSubmitted}
+            className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer border ${
+              userFeedback === true
+                ? 'bg-[#6FBFC4]/25 border-[#6FBFC4] text-[#6FBFC4] shadow-glow-sm'
+                : 'bg-[#121029]/80 border-[#B8B4D9]/20 text-[#F5F2ED] hover:border-[#6FBFC4]/60 hover:text-[#6FBFC4]'
+            }`}
+          >
+            {userFeedback === true ? (
+              <Check className="w-3.5 h-3.5" />
+            ) : (
+              <ThumbsUp className="w-3.5 h-3.5" />
+            )}
+            <span>Resonated</span>
+          </button>
+
+          <button
+            onClick={() => handleFeedback(false)}
+            disabled={feedbackSubmitted}
+            className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer border ${
+              userFeedback === false
+                ? 'bg-[#FF9EAA]/25 border-[#FF9EAA] text-[#FF9EAA] shadow-glow-sm'
+                : 'bg-[#121029]/80 border-[#B8B4D9]/20 text-[#F5F2ED] hover:border-[#FF9EAA]/60 hover:text-[#FF9EAA]'
+            }`}
+          >
+            {userFeedback === false ? (
+              <Check className="w-3.5 h-3.5" />
+            ) : (
+              <ThumbsDown className="w-3.5 h-3.5" />
+            )}
+            <span>Needs Adjustment</span>
+          </button>
+        </div>
+      </motion.div>
 
       {/* Spotify On-Brand Web Player Embed */}
       <SpotifyPlayer mood={mood} />
