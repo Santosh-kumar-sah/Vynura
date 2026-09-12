@@ -9,17 +9,24 @@ import { BreathingGuide } from '../components/wellness/BreathingGuide';
 import { MeditationTimer } from '../components/wellness/MeditationTimer';
 import type { MoodType } from '../types';
 import type { MeditationCategoryId } from '../types/meditation';
+import type { RawExpressions } from '../utils/expressionMapper';
 import { MOODS } from '../components/sections/HeroSection';
 
 interface MoodViewProps {
   activeMood: MoodType;
   confidence: number;
-  onConfirmMood: (mood: MoodType, confidence: number) => void;
+  rawExpressions?: RawExpressions | null;
+  onConfirmMood: (
+    mood: MoodType,
+    confidence: number,
+    rawExpressions?: RawExpressions | null
+  ) => void;
 }
 
 export const MoodView: React.FC<MoodViewProps> = ({
   activeMood,
   confidence,
+  rawExpressions,
   onConfirmMood,
 }) => {
   const [activeBreathingTech, setActiveBreathingTech] = useState<'478' | 'box' | 'calm' | null>(null);
@@ -85,6 +92,7 @@ export const MoodView: React.FC<MoodViewProps> = ({
         <RecommendationSection
           mood={activeMood}
           confidence={confidence}
+          rawExpressions={rawExpressions}
           onOpenFaceDetection={() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}

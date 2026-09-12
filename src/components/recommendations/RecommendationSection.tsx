@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Compass, ArrowRight, HeartHandshake, Quote } from 'lucide-react';
+import { Sparkles, Compass, ArrowRight, HeartHandshake, Quote, Activity, ShieldCheck } from 'lucide-react';
 import type { MoodType } from '../../types';
 import type { RecommendationItem } from '../../types/recommendations';
-import { MOOD_RECOMMENDATIONS } from '../../data/recommendationRules';
+import type { RawExpressions } from '../../utils/expressionMapper';
+import { generateRecommendations } from '../../utils/recommendationEngine';
 import { RecommendationCard } from './RecommendationCard';
 import { ActionModal } from './ActionModal';
 import { SpotifyPlayer } from '../music/SpotifyPlayer';
@@ -14,6 +15,7 @@ import { MOODS } from '../sections/HeroSection';
 interface RecommendationSectionProps {
   mood: MoodType;
   confidence?: number;
+  rawExpressions?: RawExpressions | null;
   onOpenFaceDetection?: () => void;
   onLaunchBreathing?: (technique: '478' | 'box' | 'calm') => void;
   onLaunchMeditation?: (category?: import('../../types/meditation').MeditationCategoryId) => void;
@@ -22,6 +24,7 @@ interface RecommendationSectionProps {
 export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
   mood,
   confidence = 0.9,
+  rawExpressions,
   onOpenFaceDetection,
   onLaunchBreathing,
   onLaunchMeditation,
@@ -29,16 +32,20 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
   const [selectedActionItem, setSelectedActionItem] = useState<RecommendationItem | null>(null);
   const [dynamicQuote, setDynamicQuote] = useState<MoodQuote | null>(null);
 
-  const moodGroup = MOOD_RECOMMENDATIONS[mood] || MOOD_RECOMMENDATIONS.neutral;
+  // Compute multi-tier recommendations via the new Valence-Arousal Engine
+  const prescription = useMemo(() => {
+    return generateRecommendations(rawExpressions, confidence, mood);
+  }, [rawExpressions, confidence, mood]);
+
   const moodInfo = MOODS[mood] || MOODS.neutral;
 
-  // Log session & load dynamic quote on mount or mood change
+  // Log session & load dynamic quote on mount or mood/prescription change
   useEffect(() => {
-    const ids = moodGroup.recommendations.map((r) => r.id);
+    const ids = prescription.actions.map((r) => r.id);
     logRecommendationSession(mood, confidence, ids);
 
     getMoodQuote(mood).then((q) => setDynamicQuote(q));
-  }, [mood, confidence, moodGroup]);
+  }, [mood, confidence, prescription]);
 
   return (
     <section
@@ -47,36 +54,37 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
     >
       {/* Dynamic Background Light Pool */}
       <motion.div
-        key={mood}
+        key={`${mood}-${prescription.mode}`}
         initial={{ opacity: 0, scale: 0.85 }}
         animate={{ opacity: 0.22, scale: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full blur-[140px] pointer-events-none -z-10"
-        style={{ backgroundColor: moodInfo.color }}
+        style={{ backgroundColor: prescription.accentColor || moodInfo.color }}
       />
 
       {/* Header Container */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div
-          key={`header-${mood}`}
+          key={`header-${mood}-${prescription.mode}-${prescription.tier}`}
           initial={{ opacity: 0, x: -25 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
         >
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-2"
-            style={{ color: moodInfo.color }}
+          <div
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-2"
+            style={{ color: prescription.accentColor || moodInfo.color }}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>02 / SHIFT ENGINE · Tailored Emotional Prescription</span>
+            <span>02 / SHIFT ENGINE · Valence-Arousal Prescription</span>
           </div>
 
           <div className="flex items-baseline gap-3 mb-2">
             <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#F5F2ED] tracking-tight">
-              {moodGroup.headline}
+              {prescription.headline}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span
               className="px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5"
               style={{
@@ -86,12 +94,27 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
               }}
             >
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: moodInfo.color }} />
-              <span>Current Resonance: {moodInfo.label}</span>
+              <span>Resonance: {moodInfo.label}</span>
               <span className="opacity-70 font-mono">({moodInfo.sublabel})</span>
             </span>
 
+            {/* Mode & Tier Badge */}
+            <span
+              className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold border flex items-center gap-1"
+              style={{
+                backgroundColor: `${prescription.accentColor}18`,
+                borderColor: `${prescription.accentColor}40`,
+                color: prescription.accentColor,
+              }}
+            >
+              <Activity className="w-3 h-3" />
+              <span>Mode: {prescription.mode.toUpperCase()}</span>
+              <span className="opacity-60">•</span>
+              <span>Tier: {prescription.tier.toUpperCase()}</span>
+            </span>
+
             <span className="text-xs text-[#B8B4D9] font-medium hidden sm:inline-block">
-              {moodGroup.subheadline}
+              {prescription.subheadline}
             </span>
           </div>
         </motion.div>
@@ -122,16 +145,16 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
           transition={{ duration: 0.35 }}
           className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#24214A]/70 via-[#1A1836]/90 to-[#121029]/80 border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm"
           style={{
-            borderColor: `${moodInfo.color}35`,
+            borderColor: `${prescription.accentColor || moodInfo.color}35`,
           }}
         >
           <div className="flex items-start gap-3">
             <div
               className="p-2 rounded-xl border mt-0.5"
               style={{
-                backgroundColor: `${moodInfo.color}20`,
-                borderColor: `${moodInfo.color}50`,
-                color: moodInfo.color,
+                backgroundColor: `${prescription.accentColor || moodInfo.color}20`,
+                borderColor: `${prescription.accentColor || moodInfo.color}50`,
+                color: prescription.accentColor || moodInfo.color,
               }}
             >
               <Quote className="w-4 h-4" />
@@ -144,7 +167,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
           </div>
 
           <div className="text-right shrink-0">
-            <span className="text-xs font-bold font-mono" style={{ color: moodInfo.color }}>
+            <span className="text-xs font-bold font-mono" style={{ color: prescription.accentColor || moodInfo.color }}>
               — {dynamicQuote.author}
             </span>
             <span className="text-[10px] text-[#B8B4D9] block">Wisdom Stream</span>
@@ -154,9 +177,9 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 
       {/* Staggered Recommendation Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-        {moodGroup.recommendations.map((item, idx) => (
+        {prescription.actions.map((item, idx) => (
           <RecommendationCard
-            key={`${mood}-${item.id}`}
+            key={`${prescription.mode}-${prescription.tier}-${item.id}`}
             item={item}
             mood={mood}
             delay={idx * 0.08}
@@ -178,11 +201,12 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
       >
         <div className="flex items-center gap-2 text-[#6FBFC4]">
           <HeartHandshake className="w-4 h-4" />
-          <span>Recommendations and sonic soundscapes dynamically adapt with each look.</span>
+          <span>Recommendations dynamically adapt to valence-arousal frequency and intensity tiers.</span>
         </div>
-        <span className="font-heading italic text-[#FFC978]/90">
-          "Each emotion is a passing weather; you are the sky."
-        </span>
+        <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#B8B4D9]">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#FFC978]" />
+          <span>Valence: {prescription.valence.toFixed(2)} | Arousal: {prescription.arousal.toFixed(2)}</span>
+        </div>
       </motion.div>
 
       {/* Action Preview Modal */}

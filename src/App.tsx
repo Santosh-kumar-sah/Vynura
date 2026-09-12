@@ -16,6 +16,7 @@ import { MeditationView } from './views/MeditationView';
 import { FaceDetectionModal } from './components/vision/FaceDetectionModal';
 import { MOODS } from './components/sections/HeroSection';
 import type { MoodType } from './types';
+import type { RawExpressions } from './utils/expressionMapper';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -23,14 +24,20 @@ const AppContent: React.FC = () => {
   const [isFaceDetectionOpen, setIsFaceDetectionOpen] = useState(false);
   const [activeMood, setActiveMood] = useState<MoodType>('happy');
   const [activeConfidence, setActiveConfidence] = useState<number>(0.94);
+  const [activeRawExpressions, setActiveRawExpressions] = useState<RawExpressions | null>(null);
   const [confirmationToast, setConfirmationToast] = useState<{
     mood: MoodType;
     confidence: number;
   } | null>(null);
 
-  const handleConfirmMood = (mood: MoodType, confidence: number) => {
+  const handleConfirmMood = (
+    mood: MoodType,
+    confidence: number,
+    rawExpressions?: RawExpressions | null
+  ) => {
     setActiveMood(mood);
     setActiveConfidence(confidence);
+    setActiveRawExpressions(rawExpressions || null);
     setConfirmationToast({ mood, confidence });
 
     // Smoothly shift sky accent tint
@@ -168,6 +175,7 @@ const AppContent: React.FC = () => {
               <MoodView
                 activeMood={activeMood}
                 confidence={activeConfidence}
+                rawExpressions={activeRawExpressions}
                 onConfirmMood={handleConfirmMood}
               />
             }

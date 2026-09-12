@@ -25,7 +25,11 @@ import { MOODS } from '../sections/HeroSection';
 interface FaceDetectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirmMood: (mood: MoodType, confidence: number) => void;
+  onConfirmMood: (
+    mood: MoodType,
+    confidence: number,
+    rawExpressions?: RawExpressions | null
+  ) => void;
 }
 
 export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
@@ -60,6 +64,7 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
   const streamRef = useRef<MediaStream | null>(null);
   const detectionIntervalRef = useRef<number | null>(null);
   const isTerminatedRef = useRef<boolean>(false);
+  const latestRawExpressionsRef = useRef<RawExpressions | null>(null);
 
   // 1. Load face-api.js Models Client-Side
   useEffect(() => {
@@ -217,6 +222,7 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
 
           if (detection.expressions) {
             const raw = detection.expressions as RawExpressions;
+            latestRawExpressionsRef.current = raw;
             const mapped = mapExpressionsToVynuraMood(raw);
             setDetectedMood(mapped.mood);
             setConfidence(mapped.confidence);
@@ -272,8 +278,8 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
     // 3. Shift atmospheric sky tint
     document.documentElement.style.setProperty('--accent-glow', activeMoodData.color);
 
-    // 4. Pass confirmed mood and close modal
-    onConfirmMood(chosenMood, chosenConfidence);
+    // 4. Pass confirmed mood and raw expressions, and close modal
+    onConfirmMood(chosenMood, chosenConfidence, latestRawExpressionsRef.current);
     onClose();
     setIsCapturing(false);
   };

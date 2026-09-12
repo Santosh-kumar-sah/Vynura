@@ -29,7 +29,11 @@ import { MOODS } from '../sections/HeroSection';
 interface WebcamLookingGlassProps {
   currentMood: MoodType;
   currentConfidence: number;
-  onConfirmMood: (mood: MoodType, confidence: number) => void;
+  onConfirmMood: (
+    mood: MoodType,
+    confidence: number,
+    rawExpressions?: import('../../utils/expressionMapper').RawExpressions | null
+  ) => void;
   autoStart?: boolean;
 }
 
@@ -68,6 +72,7 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
   const streamRef = useRef<MediaStream | null>(null);
   const detectionIntervalRef = useRef<number | null>(null);
   const isCameraDisabledRef = useRef<boolean>(false);
+  const latestRawExpressionsRef = useRef<import('../../utils/expressionMapper').RawExpressions | null>(null);
 
   // 1. Load face-api.js Models Client-Side from /public/models
   useEffect(() => {
@@ -226,6 +231,7 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
           setLandmarks(positions.map((p) => ({ x: p.x, y: p.y })));
 
           if (detection.expressions) {
+            latestRawExpressionsRef.current = detection.expressions;
             const mapped = mapExpressionsToVynuraMood(detection.expressions);
             setDetectedMood(mapped.mood);
             setConfidence(mapped.confidence);
@@ -281,8 +287,8 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
     // Sky tint transition via CSS variable
     document.documentElement.style.setProperty('--accent-glow', moodData.color);
 
-    // Call parent confirm callback
-    onConfirmMood(moodToConfirm, confScore);
+    // Call parent confirm callback with raw expressions
+    onConfirmMood(moodToConfirm, confScore, latestRawExpressionsRef.current);
 
     // Smoothly scroll down to recommendations
     setTimeout(() => {

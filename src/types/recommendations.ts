@@ -1,4 +1,5 @@
 import type { MoodType } from './index';
+import type { RecommendationMode } from '../utils/valenceArousal';
 
 export type RecommendationActionType =
   | 'breathing'
@@ -7,6 +8,8 @@ export type RecommendationActionType =
   | 'soundscape'
   | 'grounding'
   | 'reflection';
+
+export type IntensityTier = 'low' | 'med' | 'high';
 
 export interface RecommendationAction {
   label: string;
@@ -21,7 +24,7 @@ export interface RecommendationItem {
   title: string;
   subtitle: string;
   description: string;
-  kanji: string;
+  kanji?: string;
   tag: string;
   durationText: string;
   accentColor: string;
@@ -32,6 +35,26 @@ export interface RecommendationItem {
   };
   audioPreviewUrl?: string;
   spotifyPlaylistId?: string;
+}
+
+export interface ModeMetadata {
+  mode: RecommendationMode;
+  headline: string;
+  subheadline: string;
+  themeTag: string;
+  accentColor: string;
+}
+
+export interface RecommendationEngineOutput {
+  mode: RecommendationMode;
+  tier: IntensityTier;
+  valence: number;
+  arousal: number;
+  headline: string;
+  subheadline: string;
+  themeTag: string;
+  accentColor: string;
+  actions: RecommendationItem[];
 }
 
 export interface MoodRecommendationGroup {
