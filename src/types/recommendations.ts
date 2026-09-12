@@ -11,6 +11,16 @@ export type RecommendationActionType =
 
 export type IntensityTier = 'low' | 'med' | 'high';
 
+export type MoodTrajectory = 'improving' | 'declining' | 'stable';
+
+export interface MoodTrendContext {
+  consecutiveLowCount: number;
+  trajectory: MoodTrajectory;
+  trajectoryLabel: string;
+  trendSummary?: string;
+  isEscalated: boolean;
+}
+
 export interface RecommendationAction {
   label: string;
   type: RecommendationActionType;
@@ -55,6 +65,7 @@ export interface RecommendationEngineOutput {
   themeTag: string;
   accentColor: string;
   actions: RecommendationItem[];
+  trend?: MoodTrendContext;
 }
 
 export interface MoodRecommendationGroup {

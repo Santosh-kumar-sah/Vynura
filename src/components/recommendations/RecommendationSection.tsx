@@ -1,6 +1,18 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Compass, ArrowRight, HeartHandshake, Quote, Activity, ShieldCheck } from 'lucide-react';
+import {
+  Sparkles,
+  Compass,
+  ArrowRight,
+  HeartHandshake,
+  Quote,
+  Activity,
+  ShieldCheck,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  LifeBuoy,
+} from 'lucide-react';
 import type { MoodType } from '../../types';
 import type { RecommendationItem } from '../../types/recommendations';
 import type { RawExpressions } from '../../utils/expressionMapper';
@@ -10,6 +22,7 @@ import { ActionModal } from './ActionModal';
 import { SpotifyPlayer } from '../music/SpotifyPlayer';
 import { getMoodQuote, type MoodQuote } from '../../services/quotesService';
 import { logRecommendationSession } from '../../utils/recommendationLogger';
+import { getRecentMoodTrend, type RecentMoodTrend } from '../../lib/supabase';
 import { MOODS } from '../sections/HeroSection';
 
 interface RecommendationSectionProps {
@@ -31,11 +44,23 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 }) => {
   const [selectedActionItem, setSelectedActionItem] = useState<RecommendationItem | null>(null);
   const [dynamicQuote, setDynamicQuote] = useState<MoodQuote | null>(null);
+  const [trendData, setTrendData] = useState<RecentMoodTrend | null>(null);
 
-  // Compute multi-tier recommendations via the new Valence-Arousal Engine
+  // Fetch recent mood trend on mount and whenever mood updates
+  useEffect(() => {
+    let isMounted = true;
+    getRecentMoodTrend().then((trend) => {
+      if (isMounted) setTrendData(trend);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [mood]);
+
+  // Compute multi-tier recommendations via the Valence-Arousal & Trend Engine
   const prescription = useMemo(() => {
-    return generateRecommendations(rawExpressions, confidence, mood);
-  }, [rawExpressions, confidence, mood]);
+    return generateRecommendations(rawExpressions, confidence, mood, trendData);
+  }, [rawExpressions, confidence, mood, trendData]);
 
   const moodInfo = MOODS[mood] || MOODS.neutral;
 
@@ -113,6 +138,45 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
               <span>Tier: {prescription.tier.toUpperCase()}</span>
             </span>
 
+            {/* Trajectory Indicator Badge */}
+            {prescription.trend && (
+              <span
+                className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold border flex items-center gap-1.5"
+                style={{
+                  backgroundColor:
+                    prescription.trend.trajectory === 'improving'
+                      ? 'rgba(111, 191, 196, 0.15)'
+                      : prescription.trend.trajectory === 'declining'
+                      ? 'rgba(255, 158, 170, 0.15)'
+                      : 'rgba(184, 180, 217, 0.15)',
+                  borderColor:
+                    prescription.trend.trajectory === 'improving'
+                      ? 'rgba(111, 191, 196, 0.4)'
+                      : prescription.trend.trajectory === 'declining'
+                      ? 'rgba(255, 158, 170, 0.4)'
+                      : 'rgba(184, 180, 217, 0.3)',
+                  color:
+                    prescription.trend.trajectory === 'improving'
+                      ? '#6FBFC4'
+                      : prescription.trend.trajectory === 'declining'
+                      ? '#FF9EAA'
+                      : '#B8B4D9',
+                }}
+                title={prescription.trend.trendSummary}
+              >
+                {prescription.trend.trajectory === 'improving' && (
+                  <TrendingUp className="w-3 h-3 text-[#6FBFC4]" />
+                )}
+                {prescription.trend.trajectory === 'declining' && (
+                  <TrendingDown className="w-3 h-3 text-[#FF9EAA]" />
+                )}
+                {prescription.trend.trajectory === 'stable' && (
+                  <Minus className="w-3 h-3 text-[#B8B4D9]" />
+                )}
+                <span>Trajectory: {prescription.trend.trajectoryLabel}</span>
+              </span>
+            )}
+
             <span className="text-xs text-[#B8B4D9] font-medium hidden sm:inline-block">
               {prescription.subheadline}
             </span>
@@ -136,6 +200,39 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
           </button>
         </motion.div>
       </div>
+
+      {/* Trend-Aware Gentle Escalation Care Banner */}
+      {prescription.trend?.isEscalated && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#2E1A29]/90 via-[#1F1834]/95 to-[#121029]/90 border border-[#FF9EAA]/40 shadow-[0_10px_35px_rgba(255,158,170,0.15)] backdrop-blur-xl space-y-3"
+        >
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 text-[#FF9EAA]">
+              <LifeBuoy className="w-5 h-5 animate-pulse" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider">
+                Continuous Care Sanctuary · Gentle Support Active
+              </span>
+            </div>
+            <span className="text-[11px] font-mono px-3 py-1 rounded-full bg-[#FF9EAA]/15 text-[#FF9EAA] border border-[#FF9EAA]/30">
+              {prescription.trend.consecutiveLowCount}+ consecutive heavy check-ins detected
+            </span>
+          </div>
+
+          <p className="text-sm text-[#F5F2ED] leading-relaxed">
+            Your nervous system has carried a lot of heavy weather recently. In this space, there is no need to perform, achieve, or fix anything. We have prepared restorative, low-effort nurturing paths below.
+          </p>
+
+          <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-[#B8B4D9]">
+            <span className="font-semibold text-[#FFC978]">Need human support?</span>
+            <span>988 Suicide & Crisis Lifeline: <strong className="text-[#F5F2ED]">Call or Text 988</strong></span>
+            <span>•</span>
+            <span>Crisis Text Line: <strong className="text-[#F5F2ED]">Text HOME to 741741</strong></span>
+          </div>
+        </motion.div>
+      )}
 
       {/* Dynamic Quotes Wisdom Banner */}
       {dynamicQuote && (

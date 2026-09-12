@@ -260,3 +260,129 @@ export function generatePatternInsights(entries: MoodEntry[]): PatternInsight {
     recommendationNote: noteMap[dominantMood],
   };
 }
+
+export interface RecentMoodTrend {
+  entries: MoodEntry[];
+  consecutiveLowCount: number;
+  trajectory: 'improving' | 'declining' | 'stable';
+  trajectoryLabel: string;
+  trendSummary: string;
+  isEscalated: boolean;
+  averageValence: number;
+}
+
+/**
+ * Estimates valence score from a MoodEntry.
+ */
+function getEntryValence(entry: MoodEntry): number {
+  if (entry.metadata && typeof entry.metadata.valence === 'number') {
+    return entry.metadata.valence;
+  }
+  switch (entry.mood_category) {
+    case 'happy':
+      return 0.8;
+    case 'energetic':
+      return 0.6;
+    case 'calm':
+      return 0.5;
+    case 'neutral':
+      return 0.0;
+    case 'sad':
+      return -0.7;
+    default:
+      return 0.0;
+  }
+}
+
+/**
+ * Retrieves recent mood logs and computes trajectory & escalation metrics.
+ *
+ * @param userId Optional user id if querying specific profile
+ * @param limit Number of recent entries to consider (default: 5)
+ */
+export async function getRecentMoodTrend(userId?: string, limit: number = 5): Promise<RecentMoodTrend> {
+  let entries: MoodEntry[] = [];
+
+  if (supabase && userId) {
+    try {
+      const { data, error } = await supabase
+        .from('mood_entries')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (!error && data) {
+        entries = data as MoodEntry[];
+      }
+    } catch (e) {
+      console.warn('Supabase getRecentMoodTrend failed, falling back to local memory:', e);
+    }
+  }
+
+  if (!entries.length) {
+    const all = await fetchMoodEntries();
+    // Sort descending by date
+    entries = [...all]
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .slice(0, limit);
+  }
+
+  if (!entries.length) {
+    return {
+      entries: [],
+      consecutiveLowCount: 0,
+      trajectory: 'stable',
+      trajectoryLabel: 'Equilibrium Baseline',
+      trendSummary: 'Fresh observation space ready for new resonance check-ins.',
+      isEscalated: false,
+      averageValence: 0,
+    };
+  }
+
+  // Calculate consecutive low count (recent entries in descending order)
+  let consecutiveLowCount = 0;
+  for (const entry of entries) {
+    const val = getEntryValence(entry);
+    if (val < -0.15 || entry.mood_category === 'sad') {
+      consecutiveLowCount += 1;
+    } else {
+      break;
+    }
+  }
+
+  // Trajectory calculation (chronological order: oldest to newest)
+  const chrono = [...entries].reverse();
+  const valences = chrono.map(getEntryValence);
+  const averageValence = valences.reduce((acc, v) => acc + v, 0) / valences.length;
+
+  let trajectory: 'improving' | 'declining' | 'stable' = 'stable';
+  let trajectoryLabel = 'Equilibrium Steady →';
+  let trendSummary = 'Your emotional resonance is maintaining a steady baseline.';
+
+  if (valences.length >= 2) {
+    const delta = valences[valences.length - 1] - valences[0];
+    if (delta >= 0.25) {
+      trajectory = 'improving';
+      trajectoryLabel = 'Resonance Uplifting ↗';
+      trendSummary = 'Your emotional frequency has been steadily rising across recent sessions.';
+    } else if (delta <= -0.25) {
+      trajectory = 'declining';
+      trajectoryLabel = 'Gentle Descent ↘';
+      trendSummary = 'Recent observations reflect heavier resonance; gentle grounding is recommended.';
+    }
+  }
+
+  const isEscalated = consecutiveLowCount >= 3;
+
+  return {
+    entries,
+    consecutiveLowCount,
+    trajectory,
+    trajectoryLabel,
+    trendSummary,
+    isEscalated,
+    averageValence,
+  };
+}
+
