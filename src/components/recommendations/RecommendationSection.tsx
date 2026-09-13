@@ -30,6 +30,9 @@ import {
   logActionCompleted,
 } from '../../utils/recommendationLogger';
 import { getRecentMoodTrend, type RecentMoodTrend } from '../../lib/supabase';
+import { getTodaysSpark } from '../../utils/sparkSelector';
+import type { SparkActivity } from '../../types/sparks';
+import { QuickSparkCard } from '../gamification/QuickSparkCard';
 import { MOODS } from '../sections/HeroSection';
 
 interface RecommendationSectionProps {
@@ -55,6 +58,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [userFeedback, setUserFeedback] = useState<boolean | null>(null);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState<boolean>(false);
+  const [todaysSpark, setTodaysSpark] = useState<SparkActivity | null>(null);
 
   // Fetch recent mood trend on mount and whenever mood updates
   useEffect(() => {
@@ -71,6 +75,21 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
   const prescription = useMemo(() => {
     return generateRecommendations(rawExpressions, confidence, mood, trendData);
   }, [rawExpressions, confidence, mood, trendData]);
+
+  // Fetch today's Quick Spark only when in amplify mode
+  useEffect(() => {
+    let isMounted = true;
+    if (prescription.mode === 'amplify') {
+      getTodaysSpark().then((spark) => {
+        if (isMounted) setTodaysSpark(spark);
+      });
+    } else {
+      setTodaysSpark(null);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [prescription.mode]);
 
   const moodInfo = MOODS[mood] || MOODS.neutral;
 
@@ -312,6 +331,18 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
             <span className="text-[10px] text-[#B8B4D9] block">Wisdom Stream</span>
           </div>
         </motion.div>
+      )}
+
+      {/* Amplify Mode Special: Daily Quick Spark Micro-Activity Card */}
+      {prescription.mode === 'amplify' && todaysSpark && (
+        <QuickSparkCard
+          activity={todaysSpark}
+          onCompleted={(act) => {
+            if (activeSessionId) {
+              logActionCompleted(activeSessionId, act.id);
+            }
+          }}
+        />
       )}
 
       {/* Staggered Recommendation Cards Grid */}

@@ -1,0 +1,178 @@
+import type { SparkActivity } from '../types/sparks';
+
+export const SPARK_ACTIVITIES: SparkActivity[] = [
+  // 1. Creative
+  {
+    id: 'spark_doodle_mood',
+    title: 'Doodle Your Mood as a Shape',
+    category: 'creative',
+    durationSeconds: 45,
+    instructions: 'Grab any paper or finger-draw on a surface: sketch whatever shape or creature represents your emotional frequency right now without overthinking.',
+    iconName: 'PenTool',
+    accentColor: '#FFC978',
+    promptExample: 'A starburst with rounded edges, or a bubbling cloud?',
+  },
+  {
+    id: 'spark_haiku_flash',
+    title: 'One-Breath Mini Haiku',
+    category: 'creative',
+    durationSeconds: 60,
+    instructions: 'Whisper or type a 3-line poem about one object in front of you (5-7-5 syllables). Keep it light and playful.',
+    iconName: 'Sparkles',
+    accentColor: '#FFD88A',
+    promptExample: 'Warm tea on the desk / Sunlight across wooden floor / Soft sigh in the room',
+  },
+  {
+    id: 'spark_color_hunter',
+    title: 'Find Your Signature Color',
+    category: 'creative',
+    durationSeconds: 30,
+    instructions: 'Look around your room and spot the single most vibrant color. Give it an imaginary celestial paint name.',
+    iconName: 'Palette',
+    accentColor: '#FFAE68',
+    promptExample: 'E.g., "Midnight Apricot" or "Electric Stardust Gold"',
+  },
+  {
+    id: 'spark_rename_object',
+    title: 'Mythic Object Renaming',
+    category: 'creative',
+    durationSeconds: 45,
+    instructions: 'Pick an ordinary item nearby (mug, pen, lamp) and give it a magical Ghibli artifact name and one imaginary special power.',
+    iconName: 'Wand2',
+    accentColor: '#FFC978',
+    promptExample: 'The Chalice of Morning Focus (+10 mental clarity)',
+  },
+
+  // 2. Movement
+  {
+    id: 'spark_starlight_stretch',
+    title: 'Reach for the Sky Stretch',
+    category: 'movement',
+    durationSeconds: 30,
+    instructions: 'Stand or sit tall. Interlace your fingers, press your palms up toward the ceiling, and stretch your spine as high as you can for 3 deep breaths.',
+    iconName: 'Activity',
+    accentColor: '#78FFD6',
+    promptExample: 'Feel the stretch down the sides of your ribs.',
+  },
+  {
+    id: 'spark_shakeout_energy',
+    title: '60-Second Full Body Shakeout',
+    category: 'movement',
+    durationSeconds: 60,
+    instructions: 'Shake your hands, shake your wrists, bounce on your heels, and let your shoulders drop loose. Release all accumulated static energy.',
+    iconName: 'Zap',
+    accentColor: '#FF9EAA',
+    promptExample: 'Let your jaw relax as you shake your hands.',
+  },
+  {
+    id: 'spark_shoulder_rolls',
+    title: 'Slow Celestial Shoulder Orbit',
+    category: 'movement',
+    durationSeconds: 45,
+    instructions: 'Roll your shoulders in 5 slow, wide backward circles, then 5 forward circles. Inhale as they rise, exhale as they sink.',
+    iconName: 'RotateCw',
+    accentColor: '#6FBFC4',
+    promptExample: 'Unburden the weight from the base of your neck.',
+  },
+  {
+    id: 'spark_victory_pose',
+    title: 'The High-Starlight Power Stance',
+    category: 'movement',
+    durationSeconds: 30,
+    instructions: 'Throw both hands up in a victory "V", lift your chin slightly, smile wide, and take one victorious breath of pure life.',
+    iconName: 'Flame',
+    accentColor: '#FFC978',
+    promptExample: 'Claim this moment of radiant momentum.',
+  },
+
+  // 3. Sensory
+  {
+    id: 'spark_54321_flash',
+    title: '3-Sensory Horizon Check',
+    category: 'sensory',
+    durationSeconds: 45,
+    instructions: 'Without moving, identify 3 distinct sounds in your background, 2 physical textures you can feel right now, and 1 subtle scent.',
+    iconName: 'Compass',
+    accentColor: '#A78BFA',
+    promptExample: 'The fan hum, the keycaps under fingers, cool room air.',
+  },
+  {
+    id: 'spark_cool_water_reset',
+    title: 'Cold Water Sensory Splash',
+    category: 'sensory',
+    durationSeconds: 60,
+    instructions: 'Go to a sink or grab a cool bottle: splash your face or run cold water over your wrists for 15 seconds. Notice the tingling clarity.',
+    iconName: 'Droplets',
+    accentColor: '#78A6FF',
+    promptExample: 'Instantly resets the nervous system via mammalian dive reflex.',
+  },
+  {
+    id: 'spark_window_gaze',
+    title: 'Horizon Eye Drift',
+    category: 'sensory',
+    durationSeconds: 60,
+    instructions: 'Look out the nearest window or at the furthest point in the room. Let your eye focus soften and track a moving cloud, tree branch, or light shadow.',
+    iconName: 'Eye',
+    accentColor: '#6FBFC4',
+    promptExample: 'Relax the ciliary muscles from digital screen strain.',
+  },
+  {
+    id: 'spark_ambient_micro_listen',
+    title: 'Sound Horizon Tracking',
+    category: 'sensory',
+    durationSeconds: 45,
+    instructions: 'Close your eyes. Listen for the absolute furthest sound you can detect in the distance — outside birds, traffic hum, or distant wind.',
+    iconName: 'Volume2',
+    accentColor: '#B8B4D9',
+    promptExample: 'Expand your auditory awareness beyond the four walls.',
+  },
+
+  // 4. Social
+  {
+    id: 'spark_gratitude_text',
+    title: 'One-Sentence Appreciation Ping',
+    category: 'social',
+    durationSeconds: 60,
+    instructions: 'Send a quick text to a friend or family member mentioning one specific little thing you appreciate about them.',
+    iconName: 'Send',
+    accentColor: '#FF9EAA',
+    promptExample: '"Hey! Just thought of you and wanted to say I appreciate your laugh."',
+  },
+  {
+    id: 'spark_voice_note_cheer',
+    title: '30-Second Warmth Voice Note',
+    category: 'social',
+    durationSeconds: 45,
+    instructions: 'Record a 20-30 second casual voice message to someone sharing a fun thought, sunset view, or positive vibe.',
+    iconName: 'Mic',
+    accentColor: '#FFC978',
+    promptExample: 'Voice energy transmits warm emotional resonance 5x faster than text.',
+  },
+  {
+    id: 'spark_mental_blessing',
+    title: 'Secret Starlight Blessing',
+    category: 'social',
+    durationSeconds: 30,
+    instructions: 'Think of the next person you will see or talk to today. Silently wish them unexpected good luck and ease for the rest of their afternoon.',
+    iconName: 'HeartHandshake',
+    accentColor: '#FFAE68',
+    promptExample: 'May their path be smooth and their load be light.',
+  },
+  {
+    id: 'spark_shared_meme_or_song',
+    title: 'Send a Starlight Track',
+    category: 'social',
+    durationSeconds: 60,
+    instructions: 'Share one song, photo, or cozy artwork with someone who could use an uplifting spark right now.',
+    iconName: 'Music',
+    accentColor: '#78FFD6',
+    promptExample: 'A small bridge of connection across the day.',
+  },
+];
+
+/**
+ * Lookup helper to retrieve a spark activity by ID
+ */
+export function getSparkById(id: string): SparkActivity | undefined {
+  return SPARK_ACTIVITIES.find((item) => item.id === id);
+}
