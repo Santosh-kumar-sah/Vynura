@@ -21,6 +21,7 @@ export interface RecommendationSessionLog {
   tier: IntensityTier;
   trajectory?: MoodTrajectory;
   isEscalated?: boolean;
+  supportBannerShown?: boolean;
   recommendationIds: string[];
   completedActions: string[];
   helpful?: boolean;
@@ -37,6 +38,7 @@ export interface LogSessionParams {
   tier: IntensityTier;
   trajectory?: MoodTrajectory;
   isEscalated?: boolean;
+  supportBannerShown?: boolean;
   recommendationIds: string[];
 }
 
@@ -56,6 +58,7 @@ export async function logRecommendationSession(
     tier: params.tier,
     trajectory: params.trajectory,
     isEscalated: params.isEscalated,
+    supportBannerShown: params.supportBannerShown,
     recommendationIds: params.recommendationIds,
     completedActions: [],
     timestamp: Date.now(),

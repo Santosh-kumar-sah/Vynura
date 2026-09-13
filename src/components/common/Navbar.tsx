@@ -10,7 +10,8 @@ import {
   Camera, 
   Wind,
   Radio,
-  ArrowRight
+  ArrowRight,
+  HeartHandshake,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from './Button';
@@ -145,7 +146,28 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
           </nav>
 
           {/* Right Group: Live Resonance Status & Primary Action CTA */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Persistent Support Helplines Link */}
+            <button
+              onClick={() => {
+                if (location.pathname === '/mood') {
+                  const el = document.getElementById('support-helplines');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                  navigate('/mood');
+                  setTimeout(() => {
+                    const el = document.getElementById('support-helplines');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }, 400);
+                }
+              }}
+              className="px-2.5 py-1.5 rounded-full bg-[#FF9EAA]/15 hover:bg-[#FF9EAA]/25 border border-[#FF9EAA]/30 hover:border-[#FF9EAA]/50 text-xs font-mono text-[#FF9EAA] transition-all flex items-center gap-1.5 cursor-pointer"
+              title="Need someone to talk to? Verified 24/7 Helplines"
+            >
+              <HeartHandshake className="w-3.5 h-3.5 text-[#FF9EAA]" />
+              <span className="hidden md:inline">Need to talk?</span>
+            </button>
+
             {/* Live System Status Pill */}
             <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#120F2A]/90 border border-[#6FBFC4]/30 text-xs font-mono text-[#B8B4D9] shadow-inner">
               <Radio className="w-3.5 h-3.5 text-[#6FBFC4] animate-pulse" />

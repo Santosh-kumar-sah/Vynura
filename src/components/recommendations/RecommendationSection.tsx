@@ -11,7 +11,6 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
-  LifeBuoy,
   ThumbsUp,
   ThumbsDown,
   Check,
@@ -33,6 +32,7 @@ import { getRecentMoodTrend, type RecentMoodTrend } from '../../lib/supabase';
 import { getTodaysSpark } from '../../utils/sparkSelector';
 import type { SparkActivity } from '../../types/sparks';
 import { QuickSparkCard } from '../gamification/QuickSparkCard';
+import { SupportBanner } from '../wellness/SupportBanner';
 import { MOODS } from '../sections/HeroSection';
 
 interface RecommendationSectionProps {
@@ -98,6 +98,11 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
     let isMounted = true;
     const ids = prescription.actions.map((r) => r.id);
 
+    const shouldShowProminent =
+      (prescription.mode === 'support' && confidence > 0.85) ||
+      Boolean(prescription.trend?.consecutiveLowCount && prescription.trend.consecutiveLowCount >= 3) ||
+      Boolean(prescription.trend?.isEscalated);
+
     logRecommendationSession({
       mood,
       confidence,
@@ -107,6 +112,7 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
       tier: prescription.tier,
       trajectory: prescription.trend?.trajectory,
       isEscalated: prescription.trend?.isEscalated,
+      supportBannerShown: shouldShowProminent,
       recommendationIds: ids,
     }).then((session) => {
       if (isMounted) {
@@ -262,38 +268,16 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
         </motion.div>
       </div>
 
-      {/* Trend-Aware Gentle Escalation Care Banner */}
-      {prescription.trend?.isEscalated && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#2E1A29]/90 via-[#1F1834]/95 to-[#121029]/90 border border-[#FF9EAA]/40 shadow-[0_10px_35px_rgba(255,158,170,0.15)] backdrop-blur-xl space-y-3"
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5 text-[#FF9EAA]">
-              <LifeBuoy className="w-5 h-5 animate-pulse" />
-              <span className="text-xs font-mono font-bold uppercase tracking-wider">
-                Continuous Care Sanctuary · Gentle Support Active
-              </span>
-            </div>
-            <span className="text-[11px] font-mono px-3 py-1 rounded-full bg-[#FF9EAA]/15 text-[#FF9EAA] border border-[#FF9EAA]/30">
-              {prescription.trend.consecutiveLowCount}+ consecutive heavy check-ins detected
-            </span>
-          </div>
-
-          <p className="text-sm text-[#F5F2ED] leading-relaxed">
-            Your nervous system has carried a lot of heavy weather recently. In this space, there is no need to perform, achieve, or fix anything. We have prepared restorative, low-effort nurturing paths below.
-          </p>
-
-          <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-[#B8B4D9]">
-            <span className="font-semibold text-[#FFC978]">Need human support?</span>
-            <span>988 Suicide & Crisis Lifeline: <strong className="text-[#F5F2ED]">Call or Text 988</strong></span>
-            <span>•</span>
-            <span>Crisis Text Line: <strong className="text-[#F5F2ED]">Text HOME to 741741</strong></span>
-          </div>
-        </motion.div>
-      )}
+      {/* Verified India Mental Health & Crisis Support Banner */}
+      <div id="support-helplines">
+        <SupportBanner
+          isProminent={
+            (prescription.mode === 'support' && confidence > 0.85) ||
+            Boolean(prescription.trend?.consecutiveLowCount && prescription.trend.consecutiveLowCount >= 3) ||
+            Boolean(prescription.trend?.isEscalated)
+          }
+        />
+      </div>
 
       {/* Dynamic Quotes Wisdom Banner */}
       {dynamicQuote && (
