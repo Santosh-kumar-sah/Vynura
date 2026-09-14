@@ -19,6 +19,7 @@ import type { MoodType } from '../../types';
 import type { RecommendationItem } from '../../types/recommendations';
 import type { RawExpressions } from '../../utils/expressionMapper';
 import { generateRecommendations } from '../../utils/recommendationEngine';
+import { getBlendLabel } from '../../utils/valenceArousal';
 import { RecommendationCard } from './RecommendationCard';
 import { ActionModal } from './ActionModal';
 import { SpotifyPlayer } from '../music/SpotifyPlayer';
@@ -93,6 +94,10 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
   }, [prescription.mode]);
 
   const moodInfo = MOODS[mood] || MOODS.neutral;
+  const blendInfo = useMemo(
+    () => (rawExpressions ? getBlendLabel(rawExpressions) : null),
+    [rawExpressions]
+  );
 
   // Log session & load dynamic quote on mount or mood/prescription change
   useEffect(() => {
@@ -187,8 +192,13 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
               }}
             >
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: moodInfo.color }} />
-              <span>Resonance: {moodInfo.label}</span>
-              <span className="opacity-70 font-mono">({moodInfo.sublabel})</span>
+              <span>Resonance: {blendInfo?.isBlend ? blendInfo.blendLabel : moodInfo.label}</span>
+              {!blendInfo?.isBlend && <span className="opacity-70 font-mono">({moodInfo.sublabel})</span>}
+              {blendInfo?.isBlend && (
+                <span className="opacity-80 font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#FFC978]/20 text-[#FFC978]">
+                  Dual-Harmonic
+                </span>
+              )}
             </span>
 
             {/* Mode & Tier Badge */}

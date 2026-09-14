@@ -10,6 +10,7 @@ import { MeditationTimer } from '../components/wellness/MeditationTimer';
 import type { MoodType } from '../types';
 import type { MeditationCategoryId } from '../types/meditation';
 import type { RawExpressions } from '../utils/expressionMapper';
+import { getBlendLabel } from '../utils/valenceArousal';
 import { MOODS } from '../components/sections/HeroSection';
 
 interface MoodViewProps {
@@ -34,6 +35,7 @@ export const MoodView: React.FC<MoodViewProps> = ({
   const [meditationCategory, setMeditationCategory] = useState<MeditationCategoryId>('starlight');
 
   const currentMoodData = MOODS[activeMood];
+  const blendInfo = rawExpressions ? getBlendLabel(rawExpressions) : null;
 
   return (
     <RouteTransition>
@@ -71,11 +73,20 @@ export const MoodView: React.FC<MoodViewProps> = ({
           }}
         >
           <div>
-            <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#B8B4D9] mb-1">
-              Active Emotional Calibration
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B8B4D9]">
+                Active Emotional Calibration
+              </span>
+              {blendInfo?.isBlend && (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#FFC978]/20 border border-[#FFC978]/40 text-[#FFC978]">
+                  ✦ Dual-Harmonic Blend
+                </span>
+              )}
             </div>
             <div className="font-heading text-2xl font-bold text-[#F5F2ED] mb-1">
-              {currentMoodData.label} · {currentMoodData.sublabel}
+              {blendInfo?.isBlend
+                ? blendInfo.blendLabel
+                : `${currentMoodData.label} · ${currentMoodData.sublabel}`}
             </div>
             <p className="text-xs text-[#B8B4D9] italic font-heading max-w-xl">
               "{currentMoodData.quote}"

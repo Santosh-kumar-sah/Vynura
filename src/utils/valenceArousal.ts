@@ -1,4 +1,6 @@
 import type { RawExpressions } from './expressionMapper';
+import { mapExpressionsToVynuraMood } from './expressionMapper';
+import type { MoodType } from '../types';
 
 export type RecommendationMode = 'amplify' | 'sustain' | 'regulate' | 'support';
 
@@ -11,6 +13,15 @@ export interface ValenceArousalAnalysis {
   valence: number;
   arousal: number;
   mode: RecommendationMode;
+}
+
+export interface DualHarmonicBlend {
+  isBlend: boolean;
+  primaryMood: MoodType;
+  secondaryMood?: MoodType;
+  blendLabel: string;
+  primaryScore: number;
+  secondaryScore?: number;
 }
 
 /**
@@ -161,6 +172,91 @@ export function runValenceArousalSanityChecks(): boolean {
   return true;
 }
 
+const BLEND_PHRASE_TEMPLATES: Record<string, string> = {
+  'happy-energetic': 'Happy with a spark of Energy',
+  'happy-calm': 'Radiant Joy, wrapped in Peace',
+  'happy-neutral': 'Gentle Warmth in Equilibrium',
+  'happy-sad': 'Bittersweet, with glowing Hope',
+  'energetic-happy': 'High Energy with Radiant Joy',
+  'energetic-calm': 'Dynamic Focus in Serenity',
+  'energetic-neutral': 'Alert Momentum in Steady Balance',
+  'energetic-sad': 'Restless Surge asking for Release',
+  'calm-happy': 'Deep Serenity with warm Contentment',
+  'calm-energetic': 'Quiet Presence with subtle Momentum',
+  'calm-neutral': 'Tranquil Stillness in Centered Balance',
+  'calm-sad': 'Calm, tinged with Gentle Rain',
+  'sad-calm': 'Soft Melancholy seeking Sanctuary',
+  'sad-neutral': 'Quiet Introspection in Gray Skies',
+  'sad-energetic': 'Tense Turbulence needing Grounding',
+  'sad-happy': 'Tender Nostalgia with soft Light',
+  'neutral-calm': 'Pure Equilibrium in Still Waters',
+  'neutral-happy': 'Clear Canvas with gentle Warmth',
+  'neutral-energetic': 'Focused Readiness waiting to Ignite',
+  'neutral-sad': 'Quiet Emptiness asking for Care',
+};
+
+const SINGLE_MOOD_LABELS: Record<MoodType, string> = {
+  happy: 'Radiant Joy',
+  energetic: 'Starlight Surge',
+  calm: 'Deep Serenity',
+  sad: 'Gentle Rain',
+  neutral: 'Clear Equilibrium',
+};
+
+/**
+ * Identifies dual-harmonic emotional blend when the second-highest mood
+ * score is within 15% of the primary score.
+ */
+export function getBlendLabel(rawExpressions?: RawExpressions | null): DualHarmonicBlend {
+  if (!rawExpressions) {
+    return {
+      isBlend: false,
+      primaryMood: 'neutral',
+      blendLabel: SINGLE_MOOD_LABELS.neutral,
+      primaryScore: 1,
+    };
+  }
+
+  const mapped = mapExpressionsToVynuraMood(rawExpressions);
+  const breakdown = mapped.breakdown;
+
+  const sorted = (Object.entries(breakdown) as [MoodType, number][]).sort(
+    ([, a], [, b]) => b - a
+  );
+
+  const [topMood, topScore] = sorted[0];
+  const [secondMood, secondScore] = sorted[1];
+
+  // If the second-highest score is within 15% of the top score
+  const isWithin15Percent =
+    topScore > 0.15 &&
+    secondScore > 0.15 &&
+    topScore - secondScore <= 0.15;
+
+  if (isWithin15Percent && topMood !== secondMood) {
+    const pairKey = `${topMood}-${secondMood}`;
+    const blendLabel =
+      BLEND_PHRASE_TEMPLATES[pairKey] ||
+      `${SINGLE_MOOD_LABELS[topMood]} with a touch of ${SINGLE_MOOD_LABELS[secondMood]}`;
+
+    return {
+      isBlend: true,
+      primaryMood: topMood,
+      secondaryMood: secondMood,
+      blendLabel,
+      primaryScore: topScore,
+      secondaryScore: secondScore,
+    };
+  }
+
+  return {
+    isBlend: false,
+    primaryMood: topMood,
+    blendLabel: SINGLE_MOOD_LABELS[topMood] || SINGLE_MOOD_LABELS.neutral,
+    primaryScore: topScore,
+  };
+}
+
 // Run sanity checks in dev mode
 if (import.meta.env?.DEV) {
   try {
@@ -169,3 +265,4 @@ if (import.meta.env?.DEV) {
     // ignore in testing environments
   }
 }
+
