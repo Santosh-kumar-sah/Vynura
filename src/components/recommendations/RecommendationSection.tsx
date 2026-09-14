@@ -33,6 +33,7 @@ import { getTodaysSpark } from '../../utils/sparkSelector';
 import type { SparkActivity } from '../../types/sparks';
 import { QuickSparkCard } from '../gamification/QuickSparkCard';
 import { SupportBanner } from '../wellness/SupportBanner';
+import { CaptureCard } from './CaptureCard';
 import { MOODS } from '../sections/HeroSection';
 
 interface RecommendationSectionProps {
@@ -317,35 +318,47 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
         </motion.div>
       )}
 
-      {/* Amplify Mode Special: Daily Quick Spark Micro-Activity Card */}
-      {prescription.mode === 'amplify' && todaysSpark && (
-        <QuickSparkCard
-          activity={todaysSpark}
-          onCompleted={(act) => {
-            if (activeSessionId) {
-              logActionCompleted(activeSessionId, act.id);
-            }
-          }}
+      {/* Capture-First Flow for High-Tier Good States (Amplify / Sustain at High Tier) */}
+      {(prescription.mode === 'amplify' || prescription.mode === 'sustain') &&
+      prescription.tier === 'high' ? (
+        <CaptureCard
+          mood={mood}
+          confidence={confidence}
+          prescription={prescription}
         />
-      )}
+      ) : (
+        <>
+          {/* Amplify Mode Special: Daily Quick Spark Micro-Activity Card */}
+          {prescription.mode === 'amplify' && todaysSpark && (
+            <QuickSparkCard
+              activity={todaysSpark}
+              onCompleted={(act) => {
+                if (activeSessionId) {
+                  logActionCompleted(activeSessionId, act.id);
+                }
+              }}
+            />
+          )}
 
-      {/* Staggered Recommendation Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-        {prescription.actions.map((item, idx) => (
-          <RecommendationCard
-            key={`${prescription.mode}-${prescription.tier}-${item.id}`}
-            item={item}
-            mood={mood}
-            delay={idx * 0.08}
-            onTriggerAction={(clickedItem) => {
-              if (activeSessionId) {
-                logActionCompleted(activeSessionId, clickedItem.id);
-              }
-              setSelectedActionItem(clickedItem);
-            }}
-          />
-        ))}
-      </div>
+          {/* Staggered Recommendation Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+            {prescription.actions.map((item, idx) => (
+              <RecommendationCard
+                key={`${prescription.mode}-${prescription.tier}-${item.id}`}
+                item={item}
+                mood={mood}
+                delay={idx * 0.08}
+                onTriggerAction={(clickedItem) => {
+                  if (activeSessionId) {
+                    logActionCompleted(activeSessionId, clickedItem.id);
+                  }
+                  setSelectedActionItem(clickedItem);
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
 
       {/* Interactive Recommendation Feedback Attunement */}
       <motion.div
