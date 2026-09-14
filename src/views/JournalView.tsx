@@ -6,6 +6,9 @@ import { CloseButton } from '../components/common/CloseButton';
 import { GratitudePromptHub } from '../components/wellness/GratitudePromptHub';
 import { Button } from '../components/common/Button';
 import { saveMoodEntry } from '../lib/supabase';
+import { MonthlyRecapModal } from '../components/gamification/MonthlyRecapModal';
+import { generateMonthlyRecap } from '../utils/monthlyRecap';
+import type { MonthlyRecapData } from '../types/recap';
 import type { MoodType } from '../types';
 import { MOODS } from '../components/sections/HeroSection';
 
@@ -16,7 +19,19 @@ interface JournalViewProps {
 export const JournalView: React.FC<JournalViewProps> = ({ activeMood }) => {
   const [journalText, setJournalText] = useState('');
   const [isSaved, setIsSaved] = useState(false);
+  const [isRecapOpen, setIsRecapOpen] = useState(false);
+  const [recapData, setRecapData] = useState<MonthlyRecapData | null>(null);
   const currentMoodData = MOODS[activeMood];
+
+  const handleOpenRecap = async () => {
+    try {
+      const data = await generateMonthlyRecap();
+      setRecapData(data);
+      setIsRecapOpen(true);
+    } catch (e) {
+      console.error('Error generating monthly recap:', e);
+    }
+  };
 
   const handleSave = async () => {
     if (!journalText.trim()) return;
@@ -59,17 +74,29 @@ export const JournalView: React.FC<JournalViewProps> = ({ activeMood }) => {
 
       <div className="relative min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto z-10 space-y-10">
         {/* Room Header */}
-        <div className="border-b border-[#B8B4D9]/15 pb-8">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FFC978] mb-2">
-            <BookOpen className="w-4 h-4" />
-            <span>Room 03 / Mindful Micro-Journaling</span>
+        <div className="border-b border-[#B8B4D9]/15 pb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FFC978] mb-2">
+              <BookOpen className="w-4 h-4" />
+              <span>Room 03 / Mindful Micro-Journaling</span>
+            </div>
+            <h1 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-3">
+              Celestial Reflections
+            </h1>
+            <p className="text-sm sm:text-base text-[#B8B4D9] max-w-2xl leading-relaxed">
+              Inscribe your thoughts under the calm night sky. Every entry crystallizes into a star on your living constellation map.
+            </p>
           </div>
-          <h1 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-3">
-            Celestial Reflections
-          </h1>
-          <p className="text-sm sm:text-base text-[#B8B4D9] max-w-2xl leading-relaxed">
-            Inscribe your thoughts under the calm night sky. Every entry crystallizes into a star on your living constellation map.
-          </p>
+
+          <Button
+            size="sm"
+            variant="secondary"
+            icon={<Sparkles className="w-3.5 h-3.5 text-[#FFC978]" />}
+            iconPosition="left"
+            onClick={handleOpenRecap}
+          >
+            Brightest Nights Reel
+          </Button>
         </div>
 
         {/* Journal Inscription Card */}
@@ -117,6 +144,14 @@ export const JournalView: React.FC<JournalViewProps> = ({ activeMood }) => {
 
         {/* Rotating Gratitude Deck */}
         <GratitudePromptHub />
+
+        {recapData && (
+          <MonthlyRecapModal
+            isOpen={isRecapOpen}
+            onClose={() => setIsRecapOpen(false)}
+            recapData={recapData}
+          />
+        )}
       </div>
     </RouteTransition>
   );

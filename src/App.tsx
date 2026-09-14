@@ -14,6 +14,9 @@ import { WellnessView } from './views/WellnessView';
 import { BreathingView } from './views/BreathingView';
 import { MeditationView } from './views/MeditationView';
 import { FaceDetectionModal } from './components/vision/FaceDetectionModal';
+import { MonthlyRecapModal } from './components/gamification/MonthlyRecapModal';
+import { checkShouldShowMonthlyRecap, generateMonthlyRecap } from './utils/monthlyRecap';
+import type { MonthlyRecapData } from './types/recap';
 import { MOODS } from './components/sections/HeroSection';
 import type { MoodType } from './types';
 import type { RawExpressions } from './utils/expressionMapper';
@@ -29,6 +32,26 @@ const AppContent: React.FC = () => {
     mood: MoodType;
     confidence: number;
   } | null>(null);
+  const [isRecapModalOpen, setIsRecapModalOpen] = useState(false);
+  const [recapData, setRecapData] = useState<MonthlyRecapData | null>(null);
+  const [recapPromptAvailable, setRecapPromptAvailable] = useState<boolean>(false);
+
+  // Check if new monthly recap is available on mount
+  React.useEffect(() => {
+    let isMounted = true;
+    checkShouldShowMonthlyRecap().then(async ({ shouldShow }) => {
+      if (isMounted && shouldShow) {
+        const data = await generateMonthlyRecap();
+        if (isMounted && data.totalPositiveMoments > 0) {
+          setRecapData(data);
+          setRecapPromptAvailable(true);
+        }
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleConfirmMood = (
     mood: MoodType,
@@ -155,6 +178,34 @@ const AppContent: React.FC = () => {
             />
           </motion.div>
         )}
+
+        {/* Monthly Recap Available Floating Notification */}
+        {recapPromptAvailable && !isRecapModalOpen && recapData && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-6 left-6 z-40 p-4 rounded-2xl bg-[#1A1836]/95 border border-[#FFC978]/40 shadow-[0_10px_35px_rgba(10,8,28,0.9)] backdrop-blur-xl flex items-center gap-3 text-xs text-[#F5F2ED] max-w-sm"
+          >
+            <div className="w-8 h-8 rounded-xl bg-[#FFC978]/20 border border-[#FFC978]/50 flex items-center justify-center text-[#FFC978] shrink-0">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div className="space-y-0.5">
+              <div className="font-semibold text-[#FFC978]">
+                {recapData.monthName} Brightest Nights
+              </div>
+              <p className="text-[11px] text-[#B8B4D9]">
+                Your monthly constellation highlights are ready.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsRecapModalOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-[#FFC978] hover:bg-[#FFD88A] text-[#1A1836] font-bold text-xs transition-all shrink-0 cursor-pointer shadow-glow-sm"
+            >
+              View Reel ✨
+            </button>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* 5. Animated Route Switcher (Camera Push-in/Push-out between rooms) */}
@@ -215,6 +266,18 @@ const AppContent: React.FC = () => {
         onClose={() => setIsFaceDetectionOpen(false)}
         onConfirmMood={handleConfirmMood}
       />
+
+      {/* 7. Monthly Brightest Nights Highlight Reel Modal */}
+      {recapData && (
+        <MonthlyRecapModal
+          isOpen={isRecapModalOpen}
+          onClose={() => {
+            setIsRecapModalOpen(false);
+            setRecapPromptAvailable(false);
+          }}
+          recapData={recapData}
+        />
+      )}
     </div>
   );
 };

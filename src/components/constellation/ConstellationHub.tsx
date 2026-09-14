@@ -19,6 +19,9 @@ import { StreakDisplay } from './StreakDisplay';
 import { PatternInsights } from './PatternInsights';
 import { JournalModal } from '../journal/JournalModal';
 import { AuthModal } from '../auth/AuthModal';
+import { MonthlyRecapModal } from '../gamification/MonthlyRecapModal';
+import { generateMonthlyRecap } from '../../utils/monthlyRecap';
+import type { MonthlyRecapData } from '../../types/recap';
 import { Button } from '../common/Button';
 import type { MoodType } from '../../types';
 
@@ -35,6 +38,8 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
   const [insights, setInsights] = useState<PatternInsight | null>(null);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isRecapOpen, setIsRecapOpen] = useState(false);
+  const [recapData, setRecapData] = useState<MonthlyRecapData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const loadData = async () => {
@@ -47,6 +52,16 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
       console.error('Error loading constellation data:', e);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleOpenRecap = async () => {
+    try {
+      const data = await generateMonthlyRecap();
+      setRecapData(data);
+      setIsRecapOpen(true);
+    } catch (e) {
+      console.error('Error generating monthly recap:', e);
     }
   };
 
@@ -94,6 +109,16 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
               Face Scan Star
             </Button>
           )}
+
+          <Button
+            size="sm"
+            variant="secondary"
+            icon={<Sparkles className="w-3.5 h-3.5 text-[#FFC978]" />}
+            iconPosition="left"
+            onClick={handleOpenRecap}
+          >
+            Brightest Nights Reel
+          </Button>
 
           <Button
             size="sm"
@@ -172,6 +197,14 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
           />
         )}
       </AnimatePresence>
+
+      {recapData && (
+        <MonthlyRecapModal
+          isOpen={isRecapOpen}
+          onClose={() => setIsRecapOpen(false)}
+          recapData={recapData}
+        />
+      )}
     </section>
   );
 };
