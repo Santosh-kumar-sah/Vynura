@@ -1,6 +1,7 @@
 import { fetchMoodEntries, supabase, calculateStreak, type MoodEntry } from '../lib/supabase';
 import type { MoodType } from '../types';
 import type { MonthlyRecapData, RecapMoment } from '../types/recap';
+import { generateWeatherReport } from './weatherReport';
 import { MOODS } from '../components/sections/HeroSection';
 
 const LOCAL_RECAP_KEY = 'vynura_last_recap_shown_month';
@@ -117,6 +118,8 @@ export async function generateMonthlyRecap(
 
   const poeticSummary = `In ${monthName}, your constellation was illuminated by ${dominantMoodPercentage}% ${MOODS[dominantMood]?.label || dominantMood}. You anchored ${totalPositiveMoments} moments of starlight and calm across the cosmos.`;
 
+  const weatherReport = await generateWeatherReport(_userId, month, year);
+
   return {
     monthKey,
     monthName,
@@ -130,6 +133,7 @@ export async function generateMonthlyRecap(
     longestStreakDays: Math.max(streakDays, 3),
     highlights,
     poeticSummary,
+    weatherReport,
   };
 }
 

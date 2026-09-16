@@ -13,6 +13,22 @@ export interface RecapMoment {
   sparkTitle?: string;
 }
 
+export interface MonthlyWeatherReport {
+  monthName: string;
+  year: number;
+  dominantMood: MoodType;
+  dominantMoodLabel: string;
+  dominantMoodColor: string;
+  weatherAtmosphere: string;
+  weatherIconName: string;
+  trajectory: 'improving' | 'declining' | 'stable';
+  trajectoryLabel: string;
+  trajectoryTrendSummary: string;
+  topCorrelationInsight: string;
+  nextMonthFocus: string;
+  suggestedPractice: string;
+}
+
 export interface MonthlyRecapData {
   monthKey: string;
   monthName: string;
@@ -26,4 +42,5 @@ export interface MonthlyRecapData {
   longestStreakDays: number;
   highlights: RecapMoment[];
   poeticSummary: string;
+  weatherReport?: MonthlyWeatherReport;
 }

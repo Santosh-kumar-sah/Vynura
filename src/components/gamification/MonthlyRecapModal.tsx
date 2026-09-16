@@ -12,6 +12,8 @@ import {
   Orbit,
   Quote,
   Compass,
+  CloudSun,
+  Target,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import type { MonthlyRecapData } from '../../types/recap';
@@ -33,8 +35,11 @@ export const MonthlyRecapModal: React.FC<MonthlyRecapModalProps> = ({
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [hasCopied, setHasCopied] = useState<boolean>(false);
 
-  // Total slides: Cover (0) + Dominant Mood (1) + Highlight Moments (N) + Summary (Final)
-  const totalSlides = 2 + recapData.highlights.length + 1;
+  // Total slides: Cover (0) + Dominant Mood (1) + Highlight Moments (N) + Weather Report (if available) + Summary (Final)
+  const hasWeatherReport = Boolean(recapData.weatherReport);
+  const highlightCount = recapData.highlights.length;
+  const weatherSlideIndex = 2 + highlightCount;
+  const totalSlides = 2 + highlightCount + (hasWeatherReport ? 1 : 0) + 1;
   const lastSlideIndex = totalSlides - 1;
 
   useEffect(() => {
@@ -426,7 +431,7 @@ export const MonthlyRecapModal: React.FC<MonthlyRecapModalProps> = ({
               )}
 
               {/* SLIDES 2 to N: Individual Highlight Moments */}
-              {currentSlide >= 2 && currentSlide < lastSlideIndex && (
+              {currentSlide >= 2 && currentSlide < 2 + highlightCount && (
                 (() => {
                   const momentIndex = currentSlide - 2;
                   const moment = recapData.highlights[momentIndex];
@@ -503,6 +508,85 @@ export const MonthlyRecapModal: React.FC<MonthlyRecapModalProps> = ({
                     </motion.div>
                   );
                 })()
+              )}
+
+              {/* SLIDE: Emotional Weather Report */}
+              {hasWeatherReport && currentSlide === weatherSlideIndex && recapData.weatherReport && (
+                <motion.div
+                  key="slide-weather-report"
+                  initial={{ opacity: 0, x: 25 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -25 }}
+                  transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#6FBFC4]/15 border border-[#6FBFC4]/40 text-[#6FBFC4]">
+                      <CloudSun className="w-3.5 h-3.5" />
+                      <span>EMOTIONAL WEATHER REPORT</span>
+                    </div>
+                    <span
+                      className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border"
+                      style={{
+                        backgroundColor: `${recapData.weatherReport.dominantMoodColor}20`,
+                        borderColor: `${recapData.weatherReport.dominantMoodColor}50`,
+                        color: recapData.weatherReport.dominantMoodColor,
+                      }}
+                    >
+                      {recapData.weatherReport.trajectoryLabel}
+                    </span>
+                  </div>
+
+                  {/* Atmosphere Headline Card */}
+                  <div
+                    className="p-5 rounded-2xl border shadow-xl relative overflow-hidden space-y-2"
+                    style={{
+                      background: 'linear-gradient(135deg, #24214A 0%, #1A1836 100%)',
+                      borderColor: `${recapData.weatherReport.dominantMoodColor}45`,
+                    }}
+                  >
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#B8B4D9]">
+                      Prevailing Climate
+                    </div>
+                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
+                      {recapData.weatherReport.weatherAtmosphere}
+                    </h3>
+                    <p className="text-xs text-[#B8B4D9] leading-relaxed">
+                      {recapData.weatherReport.trajectoryTrendSummary}
+                    </p>
+                  </div>
+
+                  {/* Correlation & Focus Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="p-3.5 rounded-2xl bg-[#24214A]/70 border border-[#B8B4D9]/20 space-y-1">
+                      <div className="flex items-center gap-1 text-[10px] font-mono text-[#FFC978] uppercase">
+                        <Sparkles className="w-3 h-3" />
+                        <span>Circadian Rhythm</span>
+                      </div>
+                      <p className="text-xs text-[#F5F2ED] font-heading leading-snug">
+                        "{recapData.weatherReport.topCorrelationInsight}"
+                      </p>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-[#24214A]/70 border border-[#6FBFC4]/30 space-y-1">
+                      <div className="flex items-center gap-1 text-[10px] font-mono text-[#6FBFC4] uppercase">
+                        <Target className="w-3 h-3" />
+                        <span>Next Month Focus</span>
+                      </div>
+                      <p className="text-xs text-[#F5F2ED] leading-snug">
+                        {recapData.weatherReport.nextMonthFocus}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Suggested Micro-Practice */}
+                  <div className="p-3 rounded-xl bg-[#121029]/80 border border-[#FFC978]/30 flex items-center justify-between text-xs">
+                    <span className="text-[#B8B4D9] font-mono">Suggested Micro-Anchor:</span>
+                    <span className="font-heading font-semibold text-[#FFC978]">
+                      {recapData.weatherReport.suggestedPractice}
+                    </span>
+                  </div>
+                </motion.div>
               )}
 
               {/* FINAL SLIDE: Recap Scorecard & Canvas Export */}
