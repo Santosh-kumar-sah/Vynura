@@ -11,8 +11,10 @@ import {
 import { 
   fetchMoodEntries, 
   generatePatternInsights, 
+  getMoodCorrelations,
   type MoodEntry, 
-  type PatternInsight 
+  type PatternInsight,
+  type MoodCorrelationAnalysis
 } from '../../lib/supabase';
 import { ConstellationCanvas } from './ConstellationCanvas';
 import { StreakDisplay } from './StreakDisplay';
@@ -36,6 +38,7 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
 }) => {
   const [entries, setEntries] = useState<MoodEntry[]>([]);
   const [insights, setInsights] = useState<PatternInsight | null>(null);
+  const [correlations, setCorrelations] = useState<MoodCorrelationAnalysis | null>(null);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isRecapOpen, setIsRecapOpen] = useState(false);
@@ -45,9 +48,13 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const data = await fetchMoodEntries();
+      const [data, corr] = await Promise.all([
+        fetchMoodEntries(),
+        getMoodCorrelations(),
+      ]);
       setEntries(data);
       setInsights(generatePatternInsights(data));
+      setCorrelations(corr);
     } catch (e) {
       console.error('Error loading constellation data:', e);
     } finally {
@@ -172,7 +179,7 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
             <span>Harmonic Pattern Synthesis · 傾向分析</span>
           </div>
 
-          <PatternInsights insight={insights} />
+          <PatternInsights insight={insights} correlations={correlations} />
         </div>
       )}
 
