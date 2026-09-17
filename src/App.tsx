@@ -16,6 +16,7 @@ import { MeditationView } from './views/MeditationView';
 import { FaceDetectionModal } from './components/vision/FaceDetectionModal';
 import { MonthlyRecapModal } from './components/gamification/MonthlyRecapModal';
 import { checkShouldShowMonthlyRecap, generateMonthlyRecap } from './utils/monthlyRecap';
+import { checkAndScheduleEveningNudge } from './utils/notificationManager';
 import type { MonthlyRecapData } from './types/recap';
 import { MOODS } from './components/sections/HeroSection';
 import type { MoodType } from './types';
@@ -36,7 +37,7 @@ const AppContent: React.FC = () => {
   const [recapData, setRecapData] = useState<MonthlyRecapData | null>(null);
   const [recapPromptAvailable, setRecapPromptAvailable] = useState<boolean>(false);
 
-  // Check if new monthly recap is available on mount
+  // Check if new monthly recap is available & schedule evening nudge on mount
   React.useEffect(() => {
     let isMounted = true;
     checkShouldShowMonthlyRecap().then(async ({ shouldShow }) => {
@@ -48,6 +49,10 @@ const AppContent: React.FC = () => {
         }
       }
     });
+
+    // Check & schedule passive evening re-engagement nudge
+    checkAndScheduleEveningNudge();
+
     return () => {
       isMounted = false;
     };

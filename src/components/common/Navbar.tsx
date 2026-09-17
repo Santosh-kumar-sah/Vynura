@@ -12,9 +12,11 @@ import {
   Radio,
   ArrowRight,
   HeartHandshake,
+  Bell,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from './Button';
+import { PreferencesModal } from './PreferencesModal';
 
 interface NavbarProps {
   onOpenFaceDetection?: () => void;
@@ -25,6 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
 
   useEffect(() => {
@@ -174,6 +177,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
               <span className="text-[11px] text-[#6FBFC4] font-semibold">Resonance Active</span>
             </div>
 
+            {/* Celestial Preferences & Starlight Reminders Bell Button */}
+            <button
+              onClick={() => setIsPreferencesOpen(true)}
+              className="p-2 sm:p-2.5 rounded-full bg-[#1A1836]/80 hover:bg-[#2D2A5C] text-[#FFC978] hover:text-[#FFF2D6] border border-[#FFC978]/30 hover:border-[#FFC978]/60 transition-all cursor-pointer shadow-glow-sm"
+              title="Celestial Preferences & Starlight Reminders"
+              aria-label="Celestial Preferences"
+            >
+              <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </button>
+
             {/* Primary Action Button: Looking Glass */}
             <div className="hidden sm:block">
               <Button
@@ -204,6 +217,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
           </div>
         </div>
       </div>
+
+      {/* Celestial Preferences Modal */}
+      <PreferencesModal
+        isOpen={isPreferencesOpen}
+        onClose={() => setIsPreferencesOpen(false)}
+      />
 
       {/* Mobile Glassmorphic Drawer Sheet */}
       <AnimatePresence>
