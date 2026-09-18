@@ -6,7 +6,8 @@ import {
   Plus, 
   RefreshCw, 
   LogIn,
-  Camera
+  Camera,
+  Share2
 } from 'lucide-react';
 import { 
   fetchMoodEntries, 
@@ -22,6 +23,7 @@ import { PatternInsights } from './PatternInsights';
 import { JournalModal } from '../journal/JournalModal';
 import { AuthModal } from '../auth/AuthModal';
 import { MonthlyRecapModal } from '../gamification/MonthlyRecapModal';
+import { ConstellationShareCard } from './ConstellationShareCard';
 import { generateMonthlyRecap } from '../../utils/monthlyRecap';
 import type { MonthlyRecapData } from '../../types/recap';
 import { Button } from '../common/Button';
@@ -42,6 +44,7 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
   const [isJournalOpen, setIsJournalOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isRecapOpen, setIsRecapOpen] = useState(false);
+  const [isShareCardOpen, setIsShareCardOpen] = useState(false);
   const [recapData, setRecapData] = useState<MonthlyRecapData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -129,6 +132,16 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
 
           <Button
             size="sm"
+            variant="secondary"
+            icon={<Share2 className="w-3.5 h-3.5 text-[#FFC978]" />}
+            iconPosition="left"
+            onClick={() => setIsShareCardOpen(true)}
+          >
+            Share Sky Snapshot
+          </Button>
+
+          <Button
+            size="sm"
             variant="primary"
             icon={<Plus className="w-3.5 h-3.5" />}
             onClick={() => setIsJournalOpen(true)}
@@ -168,6 +181,7 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
         <ConstellationCanvas
           entries={entries}
           onSelectEntry={() => {}}
+          onOpenShare={() => setIsShareCardOpen(true)}
         />
       </div>
 
@@ -212,6 +226,12 @@ export const ConstellationHub: React.FC<ConstellationHubProps> = ({
           recapData={recapData}
         />
       )}
+
+      <ConstellationShareCard
+        isOpen={isShareCardOpen}
+        onClose={() => setIsShareCardOpen(false)}
+        entries={entries}
+      />
     </section>
   );
 };

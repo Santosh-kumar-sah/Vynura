@@ -9,7 +9,8 @@ import {
   Calendar, 
   Activity, 
   X,
-  Star
+  Star,
+  Share2
 } from 'lucide-react';
 import type { MoodEntry } from '../../lib/supabase';
 import { MOODS } from '../sections/HeroSection';
@@ -17,6 +18,7 @@ import { MOODS } from '../sections/HeroSection';
 interface ConstellationCanvasProps {
   entries: MoodEntry[];
   onSelectEntry?: (entry: MoodEntry) => void;
+  onOpenShare?: () => void;
 }
 
 interface StarPosition {
@@ -30,6 +32,7 @@ interface StarPosition {
 export const ConstellationCanvas: React.FC<ConstellationCanvasProps> = ({
   entries,
   onSelectEntry,
+  onOpenShare,
 }) => {
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -176,6 +179,15 @@ export const ConstellationCanvas: React.FC<ConstellationCanvasProps> = ({
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
+          {onOpenShare && (
+            <button
+              onClick={onOpenShare}
+              className="p-1.5 rounded-xl hover:bg-[#2D2A5C] text-[#FFC978] hover:text-[#FFF2D6] transition-colors cursor-pointer"
+              title="Share Sky Snapshot"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
