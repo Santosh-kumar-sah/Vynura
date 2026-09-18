@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeroSection } from '../components/sections/HeroSection';
+import { PairedMoodWidget } from '../components/social/PairedMoodWidget';
 import { ConceptSection } from '../components/sections/ConceptSection';
 import { FeaturesSection } from '../components/sections/FeaturesSection';
 import { PrivacySection } from '../components/sections/PrivacySection';
@@ -27,6 +28,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onSelectMood={onSelectMood}
           onStartJourney={() => navigate('/mood')}
         />
+        <PairedMoodWidget />
         <ConceptSection />
         <FeaturesSection />
         <PrivacySection />

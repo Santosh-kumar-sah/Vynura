@@ -41,6 +41,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
     if (!isSupabaseConfigured || !supabase) {
       // Demo guest mode
+      const demoUser = {
+        id: 'celestial_' + (email ? email.replace(/[^a-zA-Z0-9]/g, '_') : 'guest'),
+        email: email || 'celestial@vynura.io',
+      };
+      try {
+        localStorage.setItem('vynura_demo_user', JSON.stringify(demoUser));
+      } catch {
+        // ignore
+      }
       setTimeout(() => {
         setLoading(false);
         setSuccessMessage('Logged in as Guest Celestial Explorer ✦');
