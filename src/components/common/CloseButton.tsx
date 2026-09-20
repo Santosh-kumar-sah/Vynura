@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ interface CloseButtonProps {
 export const CloseButton: React.FC<CloseButtonProps> = ({
   to = '/',
   onClick,
-  ariaLabel = 'Return to Home Sanctuary',
+  ariaLabel = 'Close view',
   className = '',
 }) => {
   const navigate = useNavigate();
@@ -27,26 +26,14 @@ export const CloseButton: React.FC<CloseButtonProps> = ({
   };
 
   return (
-    <motion.button
+    <button
       onClick={handleClick}
-      whileHover={{ scale: 1.1, rotate: 90 }}
-      whileTap={{ scale: 0.9 }}
-      transition={{
-        type: 'spring',
-        stiffness: 450,
-        damping: 22,
-        mass: 0.7,
-      }}
       aria-label={ariaLabel}
       title={ariaLabel}
-      className={`fixed top-4 right-4 sm:top-6 sm:right-8 z-50 w-11 h-11 sm:w-12 sm:h-12 min-w-[44px] min-h-[44px] rounded-full bg-[#1A1836]/90 hover:bg-[#2D2A5C] border border-[#FFC978]/40 hover:border-[#FFC978]/80 text-[#F5F2ED] hover:text-[#FFC978] flex items-center justify-center shadow-glow-sm hover:shadow-glow-md backdrop-blur-xl transition-colors cursor-pointer select-none ${className}`}
-      style={{
-        marginTop: 'max(0px, env(safe-area-inset-top))',
-        marginRight: 'max(0px, env(safe-area-inset-right))',
-      }}
+      className={`fixed top-4 right-4 sm:top-5 sm:right-6 z-50 w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer select-none active:scale-[0.97] ${className}`}
     >
-      <X className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
+      <X className="w-4 h-4 stroke-[1.75]" />
       <span className="sr-only">{ariaLabel}</span>
-    </motion.button>
+    </button>
   );
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Sparkles, 
   Volume2, 
   VolumeX, 
   Play, 
@@ -62,11 +61,11 @@ export const MeditationCategoryPicker: React.FC<MeditationCategoryPickerProps> =
     <div className="space-y-6 text-left">
       {/* Category Horizontal Carousel / Tabs */}
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#B8B4D9]">
-            Select Sanctuary Environment
+        <div className="flex items-center justify-between mb-2.5">
+          <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-neutral-400">
+            Select Environment
           </span>
-          <span className="text-xs font-mono" style={{ color: currentCategory.colors.primary }}>
+          <span className="text-xs font-mono text-amber-400">
             {currentCategory.emotion}
           </span>
         </div>
@@ -78,48 +77,37 @@ export const MeditationCategoryPicker: React.FC<MeditationCategoryPickerProps> =
               <button
                 key={cat.id}
                 onClick={() => onSelectCategory(cat.id)}
-                className={`p-3 rounded-2xl border text-left transition-all duration-300 relative overflow-hidden cursor-pointer group ${
+                className={`p-3 rounded-xl border text-left transition-all duration-150 relative overflow-hidden cursor-pointer group ${
                   isSelected
-                    ? 'shadow-glow-sm'
-                    : 'bg-[#15122E]/70 hover:bg-[#1E1B3D]/80 border-[#B8B4D9]/15'
+                    ? 'bg-amber-400/[0.06] border-amber-400/40 text-white'
+                    : 'bg-white/[0.02] hover:bg-white/[0.05] border-white/[0.08] text-white/70 hover:text-white'
                 }`}
-                style={{
-                  backgroundColor: isSelected ? `${cat.colors.primary}18` : undefined,
-                  borderColor: isSelected ? cat.colors.primary : undefined,
-                }}
               >
                 {/* Active Indicator Top Rim */}
                 {isSelected && (
                   <motion.div
                     layoutId="activeCategoryRim"
-                    className="absolute top-0 left-0 right-0 h-[2px]"
-                    style={{ backgroundColor: cat.colors.primary }}
+                    className="absolute top-0 left-0 right-0 h-[2px] bg-amber-400"
                   />
                 )}
 
-                <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center justify-between mb-2">
                   <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center border"
-                    style={{
-                      backgroundColor: `${cat.colors.primary}20`,
-                      borderColor: `${cat.colors.primary}40`,
-                      color: cat.colors.primary,
-                    }}
+                    className={`transition-colors ${
+                      isSelected ? 'text-amber-400' : 'text-white/60 group-hover:text-white'
+                    }`}
                   >
                     {CATEGORY_ICONS[cat.id]}
                   </div>
                   {isSelected && (
-                    <span
-                      className="w-1.5 h-1.5 rounded-full animate-ping"
-                      style={{ backgroundColor: cat.colors.primary }}
-                    />
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                   )}
                 </div>
 
-                <div className="font-heading text-xs sm:text-sm font-bold text-[#F5F2ED] truncate">
+                <div className="text-xs sm:text-sm font-medium text-white truncate">
                   {cat.name}
                 </div>
-                <div className="text-[10px] text-[#B8B4D9] font-mono truncate opacity-80">
+                <div className="text-[10px] text-neutral-400 font-mono truncate">
                   {cat.subtitle}
                 </div>
               </button>
@@ -131,33 +119,22 @@ export const MeditationCategoryPicker: React.FC<MeditationCategoryPickerProps> =
       {/* Selected Category Feature Highlight Box */}
       <motion.div
         key={currentCategory.id}
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="p-4 sm:p-5 rounded-2xl border relative overflow-hidden backdrop-blur-md"
-        style={{
-          backgroundColor: `${currentCategory.colors.primary}0D`,
-          borderColor: `${currentCategory.colors.primary}35`,
-        }}
+        transition={{ duration: 0.2 }}
+        className="p-4 sm:p-5 rounded-xl border border-white/[0.08] bg-[#121316]"
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span
-                className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold border"
-                style={{
-                  backgroundColor: currentCategory.colors.badgeBg,
-                  borderColor: `${currentCategory.colors.primary}40`,
-                  color: currentCategory.colors.textAccent,
-                }}
-              >
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider font-medium bg-white/[0.04] border border-white/[0.08] text-amber-400">
                 {currentCategory.subtitle}
               </span>
-              <span className="text-xs text-[#B8B4D9] italic">
+              <span className="text-xs text-neutral-400">
                 {currentCategory.tagline}
               </span>
             </div>
-            <p className="text-xs text-[#F5F2ED]/90 leading-relaxed max-w-xl">
+            <p className="text-xs text-neutral-300 leading-relaxed max-w-xl">
               {currentCategory.visualMetaphor}
             </p>
           </div>
@@ -165,21 +142,17 @@ export const MeditationCategoryPicker: React.FC<MeditationCategoryPickerProps> =
           {/* Sound Toggle */}
           <button
             onClick={onToggleAmbientSound}
-            className="self-start sm:self-center px-3 py-2 rounded-xl border flex items-center gap-2 text-xs font-semibold transition-all cursor-pointer bg-[#121029]/80 shrink-0"
-            style={{
-              borderColor: ambientSound ? `${currentCategory.colors.primary}60` : '#B8B4D9/20',
-              color: ambientSound ? currentCategory.colors.primary : '#B8B4D9',
-            }}
+            className="self-start sm:self-center px-3 py-1.5 rounded-lg border border-white/[0.08] flex items-center gap-2 text-xs font-mono transition-colors cursor-pointer bg-white/[0.03] hover:bg-white/[0.06] text-neutral-300 hover:text-white shrink-0"
             title="Toggle Ambient Audio Soundscape"
           >
             {ambientSound ? (
               <>
-                <Volume2 className="w-4 h-4" />
-                <span>Ambient Sound On</span>
+                <Volume2 className="w-3.5 h-3.5 text-amber-400 stroke-[1.5]" />
+                <span>Ambient On</span>
               </>
             ) : (
               <>
-                <VolumeX className="w-4 h-4" />
+                <VolumeX className="w-3.5 h-3.5 text-neutral-500 stroke-[1.5]" />
                 <span>Sound Off</span>
               </>
             )}
@@ -190,10 +163,10 @@ export const MeditationCategoryPicker: React.FC<MeditationCategoryPickerProps> =
       {/* Duration Picker Chips */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#B8B4D9]">
+          <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-neutral-400">
             Session Duration
           </span>
-          <span className="text-xs font-mono text-[#B8B4D9]">
+          <span className="text-xs font-mono text-neutral-400">
             {Math.floor(selectedDuration / 60)} minutes
           </span>
         </div>
@@ -205,19 +178,14 @@ export const MeditationCategoryPicker: React.FC<MeditationCategoryPickerProps> =
               <button
                 key={opt.seconds}
                 onClick={() => onSelectDuration(opt.seconds)}
-                className={`py-2 px-2 rounded-xl text-xs font-bold transition-all duration-200 border text-center cursor-pointer ${
+                className={`py-2 px-2 rounded-lg text-xs font-medium transition-all duration-150 border text-center cursor-pointer ${
                   isSelected
-                    ? 'text-[#F5F2ED] shadow-glow-sm'
-                    : 'bg-[#15122E]/60 text-[#B8B4D9] border-[#B8B4D9]/15 hover:border-[#B8B4D9]/30'
+                    ? 'bg-white text-neutral-950 border-white font-medium'
+                    : 'bg-white/[0.02] text-neutral-400 border-white/[0.08] hover:border-white/[0.15] hover:text-white'
                 }`}
-                style={{
-                  backgroundColor: isSelected ? `${currentCategory.colors.primary}25` : undefined,
-                  borderColor: isSelected ? currentCategory.colors.primary : undefined,
-                  color: isSelected ? '#FFFFFF' : undefined,
-                }}
               >
                 <div>{opt.label}</div>
-                <div className="text-[10px] font-mono opacity-70 font-normal">{opt.tag}</div>
+                <div className={`text-[10px] font-mono ${isSelected ? 'text-neutral-600' : 'text-neutral-500'}`}>{opt.tag}</div>
               </button>
             );
           })}
@@ -228,15 +196,10 @@ export const MeditationCategoryPicker: React.FC<MeditationCategoryPickerProps> =
       <div className="pt-2">
         <button
           onClick={onStart}
-          className="w-full py-4 px-6 rounded-2xl font-heading text-base sm:text-lg font-bold transition-all flex items-center justify-center gap-3 cursor-pointer shadow-glow-md group"
-          style={{
-            background: `linear-gradient(135deg, ${currentCategory.colors.primary} 0%, ${currentCategory.colors.secondary} 100%)`,
-            color: '#0A081C',
-          }}
+          className="w-full py-3.5 px-6 rounded-xl bg-white hover:bg-neutral-200 text-neutral-950 font-medium text-sm transition-colors flex items-center justify-center gap-2.5 cursor-pointer shadow-sm group"
         >
-          <Play className="w-5 h-5 fill-current transition-transform group-hover:scale-110" />
-          <span>Begin {currentCategory.name} Meditation</span>
-          <Sparkles className="w-4 h-4 ml-1 opacity-70" />
+          <Play className="w-4 h-4 fill-current transition-transform group-hover:scale-105" />
+          <span>Begin {currentCategory.name} Session</span>
         </button>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Orbit } from 'lucide-react';
 import { RouteTransition } from '../components/common/RouteTransition';
 import { CloseButton } from '../components/common/CloseButton';
 import { ConstellationHub } from '../components/constellation/ConstellationHub';
@@ -23,18 +22,17 @@ export const ConstellationView: React.FC<ConstellationViewProps> = ({
       {/* Floating On-Brand X Close Button */}
       <CloseButton to="/" ariaLabel="Return to Night Sky Hub" />
 
-      <div className="relative min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 space-y-12">
-        {/* Dedicated Room Header */}
-        <div className="border-b border-[#B8B4D9]/15 pb-8">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#6FBFC4] mb-2">
-            <Orbit className="w-4 h-4" />
-            <span>Room 02 / Astral History & Pattern Insights</span>
+      <div className="relative min-h-screen pt-24 pb-28 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10 space-y-12">
+        {/* Clean Editorial Header */}
+        <div className="border-b border-white/[0.06] pb-8">
+          <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-white/50 mb-2">
+            03 / LONGITUDINAL TRAJECTORY
           </div>
-          <h1 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-3">
-            Constellation Mood Map
+          <h1 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight mb-2">
+            Constellation Pattern Map.
           </h1>
-          <p className="text-sm sm:text-base text-[#B8B4D9] max-w-2xl leading-relaxed">
-            Your emotional journey mapped as interconnected stellar nodes across the night sky. Explore your longitudinal resonance patterns and celestial streaks.
+          <p className="text-sm text-white/70 max-w-2xl leading-relaxed">
+            Your emotional trajectory mapped as continuous nodal checkpoints. Analyze valence consistency and autonomic recovery patterns over time.
           </p>
         </div>
 

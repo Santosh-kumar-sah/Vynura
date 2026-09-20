@@ -113,18 +113,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartJourney }) => {
           <span>Vynura 2.0 · On-device vision intelligence</span>
         </motion.div>
 
-        {/* 5. HEADLINE: Centered, max-width ~900-1000px, wraps to 2-3 lines naturally
+        {/* 5. HEADLINE: Centered, max-width ~900-1000px, staggered line reveal (80-100ms stagger, ease-out)
             - Font-weight 600 (NOT 700+, NOT 900)
             - Font-size clamp(40px, 6vw, 64px)
             - Color solid white, NO gradient fill, NO accent-colored words */}
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.05 }}
-          className="max-w-[920px] mx-auto text-center font-semibold text-[clamp(2.5rem,5.5vw,4rem)] leading-[1.08] tracking-[-0.025em] text-white text-balance"
-        >
-          Real-time emotional tracking powered by private on-device vision.
-        </motion.h1>
+        <h1 className="max-w-[920px] mx-auto text-center font-semibold text-[clamp(2.5rem,5.5vw,4rem)] leading-[1.08] tracking-[-0.025em] text-white">
+          <span className="block overflow-hidden pb-1">
+            <motion.span
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.06 }}
+              className="block"
+            >
+              Real-time emotional tracking
+            </motion.span>
+          </span>
+          <span className="block overflow-hidden pb-1">
+            <motion.span
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
+              className="block"
+            >
+              powered by private on-device vision.
+            </motion.span>
+          </span>
+        </h1>
 
         {/* 6. SUBTEXT: Centered, max-width ~600px, 18px, color gray-400 (60% white), font-weight 400
             - Margin-top 24px from headline */}

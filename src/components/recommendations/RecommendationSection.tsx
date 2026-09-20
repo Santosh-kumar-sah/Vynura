@@ -3,10 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
   Compass,
-  ArrowRight,
   HeartHandshake,
   Quote,
-  Activity,
   ShieldCheck,
   TrendingUp,
   TrendingDown,
@@ -161,122 +159,47 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
       />
 
       {/* Header Container */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <motion.div
-          key={`header-${mood}-${prescription.mode}-${prescription.tier}`}
-          initial={{ opacity: 0, x: -25 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
-        >
-          <div
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest mb-2"
-            style={{ color: prescription.accentColor || moodInfo.color }}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>02 / SHIFT ENGINE · Valence-Arousal Prescription</span>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/[0.06]">
+        <div>
+          <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-white/50 mb-2">
+            02 / SHIFT ENGINE · TENSOR PRESCRIPTION
           </div>
 
-          <div className="flex items-baseline gap-3 mb-2">
-            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold text-[#F5F2ED] tracking-tight">
-              {prescription.headline}
-            </h2>
-          </div>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-3">
+            {prescription.headline}
+          </h2>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span
-              className="px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5"
-              style={{
-                backgroundColor: `${moodInfo.color}15`,
-                borderColor: `${moodInfo.color}45`,
-                color: moodInfo.color,
-              }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: moodInfo.color }} />
-              <span>Resonance: {blendInfo?.isBlend ? blendInfo.blendLabel : moodInfo.label}</span>
-              {!blendInfo?.isBlend && <span className="opacity-70 font-mono">({moodInfo.sublabel})</span>}
-              {blendInfo?.isBlend && (
-                <span className="opacity-80 font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#FFC978]/20 text-[#FFC978]">
-                  Dual-Harmonic
-                </span>
-              )}
+            <span className="px-2.5 py-1 rounded-md text-xs font-mono text-white/80 bg-white/[0.04] border border-white/[0.08] flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+              <span>{blendInfo?.isBlend ? blendInfo.blendLabel : moodInfo.label}</span>
             </span>
 
-            {/* Mode & Tier Badge */}
-            <span
-              className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold border flex items-center gap-1"
-              style={{
-                backgroundColor: `${prescription.accentColor}18`,
-                borderColor: `${prescription.accentColor}40`,
-                color: prescription.accentColor,
-              }}
-            >
-              <Activity className="w-3 h-3" />
-              <span>Mode: {prescription.mode.toUpperCase()}</span>
-              <span className="opacity-60">•</span>
-              <span>Tier: {prescription.tier.toUpperCase()}</span>
+            <span className="px-2.5 py-1 rounded-md text-[11px] font-mono text-white/60 bg-white/[0.03] border border-white/[0.06]">
+              Mode: {prescription.mode.toUpperCase()} · Tier: {prescription.tier.toUpperCase()}
             </span>
 
-            {/* Trajectory Indicator Badge */}
             {prescription.trend && (
-              <span
-                className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold border flex items-center gap-1.5"
-                style={{
-                  backgroundColor:
-                    prescription.trend.trajectory === 'improving'
-                      ? 'rgba(111, 191, 196, 0.15)'
-                      : prescription.trend.trajectory === 'declining'
-                      ? 'rgba(255, 158, 170, 0.15)'
-                      : 'rgba(184, 180, 217, 0.15)',
-                  borderColor:
-                    prescription.trend.trajectory === 'improving'
-                      ? 'rgba(111, 191, 196, 0.4)'
-                      : prescription.trend.trajectory === 'declining'
-                      ? 'rgba(255, 158, 170, 0.4)'
-                      : 'rgba(184, 180, 217, 0.3)',
-                  color:
-                    prescription.trend.trajectory === 'improving'
-                      ? '#6FBFC4'
-                      : prescription.trend.trajectory === 'declining'
-                      ? '#FF9EAA'
-                      : '#B8B4D9',
-                }}
-                title={prescription.trend.trendSummary}
-              >
-                {prescription.trend.trajectory === 'improving' && (
-                  <TrendingUp className="w-3 h-3 text-[#6FBFC4]" />
-                )}
-                {prescription.trend.trajectory === 'declining' && (
-                  <TrendingDown className="w-3 h-3 text-[#FF9EAA]" />
-                )}
-                {prescription.trend.trajectory === 'stable' && (
-                  <Minus className="w-3 h-3 text-[#B8B4D9]" />
-                )}
+              <span className="px-2.5 py-1 rounded-md text-[11px] font-mono text-white/60 bg-white/[0.03] border border-white/[0.06] flex items-center gap-1.5">
+                {prescription.trend.trajectory === 'improving' && <TrendingUp className="w-3 h-3 text-emerald-400" />}
+                {prescription.trend.trajectory === 'declining' && <TrendingDown className="w-3 h-3 text-rose-400" />}
+                {prescription.trend.trajectory === 'stable' && <Minus className="w-3 h-3 text-white/40" />}
                 <span>Trajectory: {prescription.trend.trajectoryLabel}</span>
               </span>
             )}
-
-            <span className="text-xs text-[#B8B4D9] font-medium hidden sm:inline-block">
-              {prescription.subheadline}
-            </span>
           </div>
-        </motion.div>
+        </div>
 
         {/* Recalibrate CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.35, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
-          className="flex flex-col sm:flex-row items-start sm:items-center gap-3"
-        >
+        <div>
           <button
             onClick={onOpenFaceDetection}
-            className="px-4 py-2 rounded-xl bg-[#24214A]/80 hover:bg-[#2D2A5C] text-[#FFC978] border border-[#FFC978]/30 hover:border-[#FFC978]/60 text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer shadow-glow-sm"
+            className="px-4 py-2 rounded-lg bg-white text-[#08090A] hover:bg-neutral-100 text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer active:scale-[0.97]"
           >
-            <Compass className="w-3.5 h-3.5" />
-            <span>Recalibrate Face Scan</span>
-            <ArrowRight className="w-3 h-3" />
+            <Compass className="w-3.5 h-3.5 stroke-[1.75]" />
+            <span>Recalibrate State</span>
           </button>
-        </motion.div>
+        </div>
       </div>
 
       {/* Verified India Mental Health & Crisis Support Banner */}
@@ -292,40 +215,20 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 
       {/* Dynamic Quotes Wisdom Banner */}
       {dynamicQuote && (
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#24214A]/70 via-[#1A1836]/90 to-[#121029]/80 border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm"
-          style={{
-            borderColor: `${prescription.accentColor || moodInfo.color}35`,
-          }}
-        >
+        <div className="p-4 sm:p-5 rounded-2xl bg-[#121316] border border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div
-              className="p-2 rounded-xl border mt-0.5"
-              style={{
-                backgroundColor: `${prescription.accentColor || moodInfo.color}20`,
-                borderColor: `${prescription.accentColor || moodInfo.color}50`,
-                color: prescription.accentColor || moodInfo.color,
-              }}
-            >
-              <Quote className="w-4 h-4" />
-            </div>
-            <div>
-              <p className="font-heading text-sm sm:text-base text-[#FFF2D6] italic leading-relaxed">
-                "{dynamicQuote.quote}"
-              </p>
-            </div>
+            <Quote className="w-4 h-4 text-white/45 shrink-0 mt-0.5 stroke-[1.5]" />
+            <p className="text-xs sm:text-sm text-white/80 leading-relaxed italic">
+              "{dynamicQuote.quote}"
+            </p>
           </div>
 
           <div className="text-right shrink-0">
-            <span className="text-xs font-bold font-mono" style={{ color: prescription.accentColor || moodInfo.color }}>
+            <span className="text-xs font-mono text-[#F59E0B] font-medium block">
               — {dynamicQuote.author}
             </span>
-            <span className="text-[10px] text-[#B8B4D9] block">Wisdom Stream</span>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* Capture-First Flow for High-Tier Good States (Amplify / Sustain at High Tier) */}

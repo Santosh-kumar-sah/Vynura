@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Sun,
   Shield,
-  Activity,
   Sparkles,
   EyeOff,
   Cpu,
@@ -18,13 +17,14 @@ import {
   ArrowDown,
   Lock,
 } from 'lucide-react';
+import type { MoodType } from '../../types';
 import { SwirlLoadingState } from './SwirlLoadingState';
 import { FaceCanvasOverlay } from './FaceCanvasOverlay';
 import { ManualMoodSelector } from './ManualMoodSelector';
 import { Button } from '../common/Button';
 import { mapExpressionsToVynuraMood, analyzeLighting } from '../../utils/expressionMapper';
-import type { MoodType } from '../../types';
 import { MOODS } from '../sections/HeroSection';
+import { AnimatedNumber } from '../common/AnimatedNumber';
 
 interface WebcamLookingGlassProps {
   currentMood: MoodType;
@@ -393,45 +393,17 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
 
   return (
     <div className="w-full space-y-6">
-      <div
-        className="relative rounded-3xl bg-gradient-to-b from-[#24214A]/90 via-[#1A1836]/95 to-[#121029]/95 border p-5 sm:p-7 shadow-[0_20px_60px_-15px_rgba(10,8,28,0.9)] overflow-hidden transition-all duration-500 backdrop-blur-xl"
-        style={{
-          borderColor: `${activeMoodData.color}45`,
-          boxShadow: `0 20px 60px -15px ${activeMoodData.color}25, 0 0 0 1px ${activeMoodData.color}30`,
-        }}
-      >
-        {/* Dynamic Top Rim Light Accent */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2.5px] transition-colors duration-500"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${activeMoodData.color}, transparent)`,
-          }}
-        />
-
+      <div className="relative rounded-2xl bg-[#121316] border border-white/[0.08] p-6 sm:p-8 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] overflow-hidden">
         {/* Top Control Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-[#B8B4D9]/15">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/[0.06]">
           <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center border shadow-glow-sm transition-colors duration-300"
-              style={{
-                backgroundColor: `${activeMoodData.color}20`,
-                borderColor: `${activeMoodData.color}60`,
-                color: activeMoodData.color,
-              }}
-            >
-              <Camera className="w-5 h-5" />
-            </div>
+            <Camera className="w-5 h-5 text-white/60 stroke-[1.5]" />
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
-                  Looking Glass Feed
-                </span>
-                <span className="text-xs text-[#FFC978]/90 font-mono">
-                  {activeMoodData.sublabel}
-                </span>
+              <div className="text-[11px] font-mono uppercase tracking-widest text-white/50">
+                Landmark Stream · {activeMoodData.label}
               </div>
-              <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
-                Biometric Emotional Scanner
+              <h3 className="text-base sm:text-lg font-semibold text-white tracking-tight">
+                Client-Side Expression Regression
               </h3>
             </div>
           </div>
@@ -440,24 +412,24 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
             {/* Camera On/Off Toggle Button */}
             <button
               onClick={handleToggleCamera}
-              className="px-3.5 py-1.5 rounded-xl bg-[#121029]/80 hover:bg-[#2D2A5C] border border-[#B8B4D9]/25 text-xs font-semibold text-[#F5F2ED] transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-white/80 transition-colors flex items-center gap-2 cursor-pointer active:scale-[0.97]"
             >
               {isCameraActive ? (
                 <>
-                  <span className="w-2 h-2 rounded-full bg-[#6FBFC4] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span>Camera Live</span>
                 </>
               ) : (
                 <>
-                  <VideoOff className="w-3.5 h-3.5 text-[#FF9E7D]" />
+                  <VideoOff className="w-3.5 h-3.5 text-white/40" />
                   <span>Camera Off</span>
                 </>
               )}
             </button>
 
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#121029]/80 border border-[#6FBFC4]/30 text-xs text-[#6FBFC4]">
-              <Shield className="w-3.5 h-3.5" />
-              <span>Local Wasm Neural</span>
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-white/50">
+              <Shield className="w-3.5 h-3.5 stroke-[1.5]" />
+              <span>Wasm Runtime</span>
             </div>
           </div>
         </div>
@@ -509,26 +481,17 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
 
               {/* Snapshot Locked Overlay */}
               {isLockedSnapshot && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#121029]/95 z-30 space-y-3">
-                  <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center border shadow-glow-sm"
-                    style={{
-                      backgroundColor: `${activeMoodData.color}25`,
-                      borderColor: activeMoodData.color,
-                      color: activeMoodData.color,
-                    }}
-                  >
-                    <CheckCircle2 className="w-8 h-8" />
-                  </div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#08090A]/95 z-30 space-y-4">
+                  <CheckCircle2 className="w-10 h-10 text-emerald-400 stroke-[1.5]" />
                   <div>
-                    <span className="text-xs font-mono uppercase tracking-widest text-[#6FBFC4] font-bold block mb-1">
-                      Camera Safely Turned Off
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-white/50 block mb-1">
+                      Frame Processed · Sensor Purged
                     </span>
-                    <h4 className="font-heading text-xl font-bold text-[#F5F2ED]">
-                      Captured: {activeMoodData.label} ({activeMoodData.sublabel})
+                    <h4 className="text-xl font-semibold text-white tracking-tight">
+                      Calibrated: {activeMoodData.label} ({activeMoodData.sublabel})
                     </h4>
-                    <p className="text-xs text-[#B8B4D9] mt-1">
-                      Personalized mood-shift suggestions have been generated below.
+                    <p className="text-xs text-white/60 mt-1">
+                      Adaptive sensory protocols have been populated below.
                     </p>
                   </div>
 
@@ -536,7 +499,7 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
                     <Button
                       size="sm"
                       variant="primary"
-                      icon={<ArrowDown className="w-4 h-4" />}
+                      icon={<ArrowDown className="w-3.5 h-3.5" />}
                       onClick={() => {
                         const recElem = document.getElementById('recommendations');
                         recElem?.scrollIntoView({ behavior: 'smooth' });
@@ -612,25 +575,27 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
               </AnimatePresence>
             </div>
 
-            {/* Live 5-Channel Mood Spectrum Telemetry */}
-            <div className="grid grid-cols-5 gap-2 px-1">
-              {(Object.keys(MOODS) as MoodType[]).map((mKey) => {
+            {/* Breakdown Bars (Monochrome & Restrained) */}
+            <div className="grid grid-cols-5 gap-2.5 max-w-lg mx-auto">
+              {(['calm', 'happy', 'energetic', 'neutral', 'sad'] as MoodType[]).map((mKey) => {
                 const val = Math.round((breakdown[mKey] || 0.1) * 100);
                 const isWinner = detectedMood === mKey;
                 return (
                   <div key={mKey} className="text-center space-y-1">
-                    <div className="flex justify-between items-center text-[10px] text-[#B8B4D9] font-mono px-1">
-                      <span className={isWinner ? 'text-[#F5F2ED] font-bold' : ''}>
-                        {mKey.slice(0, 3)}
+                    <div className="flex justify-between items-center text-[10px] font-mono px-0.5">
+                      <span className={isWinner ? 'text-white font-medium' : 'text-white/40'}>
+                        {mKey.slice(0, 3).toUpperCase()}
                       </span>
-                      <span>{val}%</span>
+                      <span className={isWinner ? 'text-[#F59E0B] font-mono' : 'text-white/40 font-mono'}>
+                        {val}%
+                      </span>
                     </div>
-                    <div className="h-1.5 w-full bg-[#1A1836] rounded-full overflow-hidden border border-[#B8B4D9]/15">
+                    <div className="h-1 w-full bg-white/[0.06] rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-300"
                         style={{
                           width: `${val}%`,
-                          backgroundColor: MOODS[mKey].color,
+                          backgroundColor: isWinner ? '#F59E0B' : 'rgba(255, 255, 255, 0.25)',
                         }}
                       />
                     </div>
@@ -640,28 +605,19 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
             </div>
 
             {/* Bottom Confirmation Bar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#1A1836]/90 border border-[#B8B4D9]/20">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-white/[0.03] border border-white/[0.08]">
               <div className="flex items-center gap-3 text-left w-full sm:w-auto">
-                <div
-                  className="w-4 h-4 rounded-full animate-pulse shrink-0"
-                  style={{
-                    backgroundColor: activeMoodData.color,
-                    boxShadow: `0 0 12px ${activeMoodData.color}`,
-                  }}
-                />
+                <span className="w-2 h-2 rounded-full bg-[#F59E0B] shrink-0" />
                 <div>
-                  <div className="text-xs text-[#B8B4D9] flex items-center gap-1.5">
-                    <Activity className="w-3.5 h-3.5 text-[#FFC978]" />
-                    <span>Real-Time Biometric Match:</span>
-                    <span className="font-mono font-bold text-[#F5F2ED]">
-                      {Math.round(confidence * 100)}%
+                  <div className="text-[11px] font-mono text-white/50 flex items-center gap-1.5">
+                    <span>Biometric Match:</span>
+                    <span className="font-semibold text-white">
+                      <AnimatedNumber value={Math.round(confidence * 100)} />%
                     </span>
                   </div>
-                  <div className="font-heading text-lg font-bold text-[#F5F2ED] flex items-center gap-2">
-                    <span style={{ color: activeMoodData.color }}>
-                      {activeMoodData.label}
-                    </span>
-                    <span className="text-xs text-[#B8B4D9] font-normal">
+                  <div className="text-base font-semibold text-white">
+                    {activeMoodData.label}
+                    <span className="text-xs text-white/50 font-normal ml-2">
                       ({activeMoodData.sublabel})
                     </span>
                   </div>
@@ -672,11 +628,11 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
               <Button
                 size="md"
                 variant="primary"
-                className="w-full sm:w-auto shadow-glow-sm cursor-pointer"
-                icon={isConfirmed ? <CheckCircle2 className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                className="w-full sm:w-auto cursor-pointer"
+                icon={isConfirmed ? <CheckCircle2 className="w-4 h-4" /> : <Lock className="w-3.5 h-3.5" />}
                 onClick={() => handleConfirm(detectedMood, confidence)}
               >
-                {isConfirmed ? 'Calibrating...' : 'Capture & Get Suggested Actions'}
+                {isConfirmed ? 'Calibrating...' : 'Confirm & Calibrate'}
               </Button>
             </div>
 

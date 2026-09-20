@@ -4,12 +4,10 @@ import {
   Wind, 
   BookOpen, 
   Music, 
-  Clock, 
+  Flame, 
   Sparkles, 
   ArrowUpRight, 
-  CheckCircle2, 
-  Flame,
-  Heart
+  Check 
 } from 'lucide-react';
 import type { RecommendationItem } from '../../types/recommendations';
 import type { MoodType } from '../../types';
@@ -31,17 +29,18 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
   const [hasEngaged, setHasEngaged] = useState(false);
 
   const getCategoryIcon = (category: RecommendationItem['category']) => {
+    const iconClass = "w-4 h-4 text-white/60 stroke-[1.5]";
     switch (category) {
       case 'somatic':
-        return <Wind className="w-4 h-4" />;
+        return <Wind className={iconClass} />;
       case 'cognitive':
-        return <BookOpen className="w-4 h-4" />;
+        return <BookOpen className={iconClass} />;
       case 'sonic':
-        return <Music className="w-4 h-4" />;
+        return <Music className={iconClass} />;
       case 'mindful':
-        return <Flame className="w-4 h-4" />;
+        return <Flame className={iconClass} />;
       default:
-        return <Sparkles className="w-4 h-4" />;
+        return <Sparkles className={iconClass} />;
     }
   };
 
@@ -53,100 +52,59 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 25, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{
         duration: 0.35,
         delay,
-        ease: [0.34, 1.56, 0.64, 1],
+        ease: [0.16, 1, 0.3, 1],
       }}
-      whileHover={{ y: -4 }}
-      className="group relative rounded-2xl bg-gradient-to-b from-[#24214A]/90 to-[#181636]/95 p-6 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
-      style={{
-        boxShadow: `0 0 0 1px ${item.accentColor}35, 0 10px 30px -5px rgba(10,8,28,0.85)`,
-      }}
+      className="group relative rounded-2xl bg-[#121316] border border-white/[0.08] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.5)] p-6 flex flex-col justify-between"
     >
-      {/* Top Luminous Accent Strip */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[2px] opacity-70 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${item.accentColor}, transparent)`,
-        }}
-      />
-
       <div>
-        {/* Header Row: Category Badge, Kanji & Duration */}
-        <div className="flex items-center justify-between gap-2 mb-4">
+        {/* Header Row: Plain Thin-Stroke Icon, Category Tag & Duration */}
+        <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-white/[0.06]">
           <div className="flex items-center gap-2">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center border"
-              style={{
-                backgroundColor: `${item.accentColor}18`,
-                borderColor: `${item.accentColor}40`,
-                color: item.accentColor,
-              }}
-            >
-              {getCategoryIcon(item.category)}
-            </div>
-            <div>
-              <span
-                className="text-[10px] font-mono font-bold uppercase tracking-wider block"
-                style={{ color: item.accentColor }}
-              >
-                {item.tag}
-              </span>
-            </div>
+            {getCategoryIcon(item.category)}
+            <span className="text-[11px] font-mono text-white/50 uppercase tracking-wider">
+              {item.tag}
+            </span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#121029]/80 border border-[#B8B4D9]/15 text-[11px] font-mono text-[#B8B4D9]">
-            <Clock className="w-3 h-3 text-[#FFC978]" />
-            <span>{item.durationText}</span>
+          <div className="text-[11px] font-mono text-white/45">
+            {item.durationText}
           </div>
         </div>
 
         {/* Title and Subtitle */}
-        <h3 className="font-heading text-xl font-bold text-[#F5F2ED] mb-1 group-hover:text-[#FFC978] transition-colors">
+        <h3 className="text-lg font-semibold text-white tracking-tight mb-1">
           {item.title}
         </h3>
-        <div className="text-xs text-[#6FBFC4] font-medium mb-3">
+        <div className="text-xs text-white/50 mb-3">
           {item.subtitle}
         </div>
 
         {/* Description Body */}
-        <p className="text-xs sm:text-sm text-[#B8B4D9] leading-relaxed mb-4">
+        <p className="text-xs sm:text-sm text-white/70 leading-relaxed mb-6">
           {item.description}
         </p>
-
-        {/* Optional Shinkai Quote */}
-        {item.quote && (
-          <div className="p-3 rounded-xl bg-[#121029]/70 border border-[#FFC978]/25 mb-4 relative">
-            <p className="text-xs italic text-[#FFF2D6] font-heading leading-relaxed mb-1">
-              "{item.quote.text}"
-            </p>
-            <span className="text-[10px] text-[#FFC978] block text-right font-medium">
-              — {item.quote.author}
-            </span>
-          </div>
-        )}
       </div>
 
       {/* Action CTA Button */}
-      <div className="pt-4 border-t border-[#B8B4D9]/15 flex items-center justify-between gap-3">
+      <div className="pt-4 border-t border-white/[0.06]">
         <button
           onClick={handleActionClick}
-          className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+          className={`w-full py-2.5 px-4 rounded-lg text-xs font-medium transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.97] ${
             hasEngaged
-              ? 'bg-[#2D2A5C] text-[#6FBFC4] border border-[#6FBFC4]/40'
-              : 'text-[#1A1836] shadow-glow-sm hover:opacity-95'
+              ? 'bg-white/[0.06] text-white/70 border border-white/[0.1]'
+              : 'bg-white text-[#08090A] hover:bg-neutral-100 font-semibold'
           }`}
-          style={{
-            backgroundColor: hasEngaged ? undefined : item.accentColor,
-          }}
         >
           {hasEngaged ? (
             <>
-              <CheckCircle2 className="w-4 h-4 text-[#6FBFC4]" />
-              <span>Shift Engaged</span>
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Shift Active</span>
             </>
           ) : (
             <>
@@ -155,16 +113,6 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
             </>
           )}
         </button>
-
-        {hasEngaged && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="p-2 rounded-lg bg-[#FFC978]/15 text-[#FFC978]"
-          >
-            <Heart className="w-4 h-4 fill-[#FFC978]" />
-          </motion.div>
-        )}
       </div>
     </motion.div>
   );

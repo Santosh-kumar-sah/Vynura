@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Sparkles, 
   RotateCw, 
   BookOpen, 
   CheckCircle2, 
   Heart 
 } from 'lucide-react';
-import { Button } from '../common/Button';
 import { saveMoodEntry } from '../../lib/supabase';
 import type { MoodType } from '../../types';
 
@@ -110,57 +108,32 @@ export const GratitudePromptHub: React.FC<GratitudePromptHubProps> = ({ onSaved 
   };
 
   return (
-    <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#24214A]/85 via-[#1A1836]/90 to-[#121029]/95 border backdrop-blur-xl relative overflow-hidden transition-all duration-500 shadow-lg"
-      style={{
-        borderColor: `${currentPrompt.accentColor}40`,
-        boxShadow: `0 10px 40px -10px ${currentPrompt.accentColor}25`,
-      }}
-    >
-      {/* Top Rim Glow */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[2px] transition-colors duration-500"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${currentPrompt.accentColor}, transparent)`,
-        }}
-      />
-
+    <div className="p-6 sm:p-8 rounded-2xl bg-[#121316] border border-white/[0.08]">
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 mb-5 pb-3 border-b border-[#B8B4D9]/15">
+      <div className="flex items-center justify-between gap-4 mb-5 pb-4 border-b border-white/[0.06]">
         <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center border shadow-glow-sm"
-            style={{
-              backgroundColor: `${currentPrompt.accentColor}20`,
-              borderColor: `${currentPrompt.accentColor}50`,
-              color: currentPrompt.accentColor,
-            }}
-          >
-            <Heart className="w-5 h-5" />
-          </div>
+          <Heart className="w-4 h-4 text-white/70 stroke-[1.5] shrink-0" />
           <div>
             <div className="flex items-center gap-2">
-              <span
-                className="text-[10px] font-mono font-bold uppercase tracking-widest"
-                style={{ color: currentPrompt.accentColor }}
-              >
-                Gratitude & Reflection Deck
+              <span className="text-[10px] font-mono font-medium uppercase tracking-wider text-amber-400">
+                Reflective Inquiry
               </span>
-              <span className="text-xs text-[#FFC978] font-mono font-semibold">
-                {currentPrompt.tag}
+              <span className="text-[10px] font-mono text-neutral-500">
+                · {currentPrompt.tag}
               </span>
             </div>
-            <h4 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
-              Theme: {currentPrompt.theme}
+            <h4 className="text-sm sm:text-base font-medium text-white">
+              {currentPrompt.theme}
             </h4>
           </div>
         </div>
 
         <button
           onClick={handleNextPrompt}
-          className="px-3 py-1.5 rounded-xl bg-[#2D2A5C]/60 hover:bg-[#2D2A5C] text-xs font-semibold text-[#FFC978] border border-[#FFC978]/30 hover:border-[#FFC978]/60 transition-all flex items-center gap-1.5 cursor-pointer"
+          className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-neutral-300 hover:text-white border border-white/[0.08] transition-colors flex items-center gap-1.5 cursor-pointer"
         >
-          <RotateCw className="w-3.5 h-3.5" />
-          <span>Rotate Prompt ✦</span>
+          <RotateCw className="w-3.5 h-3.5 stroke-[1.5]" />
+          <span>Rotate prompt</span>
         </button>
       </div>
 
@@ -168,13 +141,13 @@ export const GratitudePromptHub: React.FC<GratitudePromptHubProps> = ({ onSaved 
       <AnimatePresence mode="wait">
         <motion.div
           key={currentPrompt.id}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
-          className="p-4 rounded-2xl bg-[#121029]/80 border border-[#B8B4D9]/20 mb-4"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.2 }}
+          className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] mb-4"
         >
-          <p className="font-heading text-sm sm:text-base text-[#FFF2D6] italic leading-relaxed">
+          <p className="text-sm sm:text-base text-neutral-200 font-normal leading-relaxed">
             "{currentPrompt.prompt}"
           </p>
         </motion.div>
@@ -186,31 +159,29 @@ export const GratitudePromptHub: React.FC<GratitudePromptHubProps> = ({ onSaved 
           rows={3}
           value={journalText}
           onChange={(e) => setJournalText(e.target.value)}
-          placeholder="Capture your reflection under the starlight..."
-          className="w-full rounded-2xl bg-[#121029]/90 border border-[#B8B4D9]/25 p-3.5 text-xs text-[#F5F2ED] placeholder:text-[#B8B4D9]/40 focus:outline-none focus:border-[#FFC978] transition-colors resize-none font-body leading-relaxed"
+          placeholder="Record your reflection..."
+          className="w-full rounded-xl bg-white/[0.02] border border-white/[0.08] p-3.5 text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:border-white/30 transition-colors resize-none font-sans leading-relaxed"
         />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="text-[11px] text-[#B8B4D9] flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-[#FFC978]" />
-            <span>Saves directly as an illuminated star in your constellation map.</span>
+          <div className="text-xs text-neutral-400">
+            Encrypted client-side and saved to your local constellation map.
           </div>
 
           {isSaved ? (
-            <div className="px-4 py-2.5 rounded-xl bg-[#6FBFC4]/20 border border-[#6FBFC4]/50 text-xs text-[#6FBFC4] flex items-center gap-1.5 font-bold">
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Inscribed into Sky ✦</span>
+            <div className="px-3.5 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-neutral-200 flex items-center gap-1.5 font-medium">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 stroke-[1.5]" />
+              <span>Entry recorded</span>
             </div>
           ) : (
-            <Button
-              size="md"
-              variant="primary"
+            <button
               disabled={isSaving || !journalText.trim()}
-              icon={<BookOpen className="w-4 h-4" />}
               onClick={handleSaveEntry}
+              className="px-4 py-2 rounded-lg bg-white hover:bg-neutral-200 disabled:opacity-40 disabled:hover:bg-white text-neutral-950 text-xs font-medium transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
             >
-              {isSaving ? 'Inscribing...' : 'Save Starlight Reflection'}
-            </Button>
+              <BookOpen className="w-3.5 h-3.5 stroke-[1.5]" />
+              <span>{isSaving ? 'Saving...' : 'Record reflection'}</span>
+            </button>
           )}
         </div>
       </div>

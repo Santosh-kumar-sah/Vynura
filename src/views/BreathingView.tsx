@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wind, Play, Pause, RotateCcw, Sparkles, CheckCircle2, ShieldCheck, Heart } from 'lucide-react';
+import { Play, Pause, RotateCcw, CheckCircle2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { RouteTransition } from '../components/common/RouteTransition';
 import { CloseButton } from '../components/common/CloseButton';
-import { Button } from '../components/common/Button';
 
 interface BreathingPhase {
   name: string;
@@ -18,38 +17,38 @@ interface BreathingPhase {
 const TECHNIQUES: Record<string, { label: string; tag: string; totalCycles: number; phases: BreathingPhase[]; description: string; benefits: string }> = {
   '478': {
     label: '4-7-8 Parasympathetic Downshift',
-    tag: 'Rest Flow',
+    tag: 'Vagal Tone',
     totalCycles: 4,
-    description: 'Dr. Andrew Weil rhythmic tranquilizer for the nervous system. Naturally lowers heart rate and dampens acute fight-or-flight cortisol release.',
-    benefits: 'Vagal nerve stimulation · Lowers systolic blood pressure · Induces deep sleep onset',
+    description: 'Clinically validated pacing to stimulate vagal nerve transmission, lowering resting heart rate and cortisol levels.',
+    benefits: 'Vagal nerve stimulation · Heart rate dampening · Sleep latency reduction',
     phases: [
-      { name: 'Inhale', duration: 4, instruction: 'Inhale firefly starlight softly through your nose...', cue: 'Inhale (4s)', targetScale: 1.35 },
-      { name: 'Hold', duration: 7, instruction: 'Hold the breath gently. Feel your heart slow to a calm pace...', cue: 'Hold (7s)', targetScale: 1.35 },
-      { name: 'Exhale', duration: 8, instruction: 'Release all tension with a soft, steady whoosh...', cue: 'Exhale (8s)', targetScale: 0.7 },
+      { name: 'Inhale', duration: 4, instruction: 'Inhale smoothly through the nose expanding the diaphragm...', cue: 'Inhale (4s)', targetScale: 1.35 },
+      { name: 'Hold', duration: 7, instruction: 'Hold with relaxed shoulders and steady posture...', cue: 'Hold (7s)', targetScale: 1.35 },
+      { name: 'Exhale', duration: 8, instruction: 'Even, controlled exhalation through the mouth...', cue: 'Exhale (8s)', targetScale: 0.7 },
     ],
   },
   'box': {
     label: '4-4-4-4 Box Breathing Circuit',
-    tag: 'Navy SEAL Focus',
+    tag: 'Focus',
     totalCycles: 4,
-    description: 'Tactical autonomic regulation technique designed for intense cognitive clarity and psychological steadiness under pressure.',
-    benefits: 'Balances sympathetic & parasympathetic tones · Enhances attentional bandwidth · Clears mental fog',
+    description: 'Autonomic regulation technique used to optimize attentional control and executive function under cognitive load.',
+    benefits: 'Autonomic equilibrium · Attentional focus · Stress modulation',
     phases: [
-      { name: 'Inhale', duration: 4, instruction: 'Inhale crisp night air evenly through your nose...', cue: 'Inhale (4s)', targetScale: 1.3 },
-      { name: 'Hold', duration: 4, instruction: 'Hold with relaxed chest, dropped shoulders, and peaceful mind...', cue: 'Hold (4s)', targetScale: 1.3 },
-      { name: 'Exhale', duration: 4, instruction: 'Exhale completely, letting distracting thoughts drift into the night...', cue: 'Exhale (4s)', targetScale: 0.75 },
-      { name: 'Pause', duration: 4, instruction: 'Rest in pure still equilibrium before the next breath...', cue: 'Pause (4s)', targetScale: 0.75 },
+      { name: 'Inhale', duration: 4, instruction: 'Controlled nasal inhalation filling lungs evenly...', cue: 'Inhale (4s)', targetScale: 1.3 },
+      { name: 'Hold', duration: 4, instruction: 'Hold retention without tension in neck or chest...', cue: 'Hold (4s)', targetScale: 1.3 },
+      { name: 'Exhale', duration: 4, instruction: 'Slow, steady exhalation emptying lungs fully...', cue: 'Exhale (4s)', targetScale: 0.75 },
+      { name: 'Pause', duration: 4, instruction: 'Rest in pause prior to next breath cycle...', cue: 'Pause (4s)', targetScale: 0.75 },
     ],
   },
   'calm': {
     label: '4-6 Coherent Calming Wave',
-    tag: 'Coherence Flow',
+    tag: 'Coherence',
     totalCycles: 5,
-    description: 'Resonance frequency breathing tuned to ~0.1 Hz to harmonize heart rate variability (HRV) with respiration.',
-    benefits: 'Maximizes respiratory sinus arrhythmia · Soothes emotional turbulence · Grounding stabilization',
+    description: 'Resonance frequency pacing tuned to 0.1 Hz to maximize heart rate variability (HRV) and cardiac coherence.',
+    benefits: 'HRV maximization · Cardiac coherence · Parasympathetic baseline',
     phases: [
-      { name: 'Inhale', duration: 4, instruction: 'Expand your belly with warm golden amber starlight...', cue: 'Inhale (4s)', targetScale: 1.25 },
-      { name: 'Exhale', duration: 6, instruction: 'Slowly let go, sinking deeper into quiet tranquility...', cue: 'Exhale (6s)', targetScale: 0.75 },
+      { name: 'Inhale', duration: 4, instruction: 'Continuous 4-second diaphragmatic inhalation...', cue: 'Inhale (4s)', targetScale: 1.25 },
+      { name: 'Exhale', duration: 6, instruction: 'Extended 6-second rhythmic exhalation...', cue: 'Exhale (6s)', targetScale: 0.75 },
     ],
   },
 };
@@ -99,21 +98,21 @@ export const BreathingView: React.FC = () => {
     color: string;
   }[]>([]);
 
-  // Initialize firefly particle lung system
+  // Initialize particle lung system
   useEffect(() => {
-    const pCount = 95;
-    const colors = ['#FFC978', '#6FBFC4', '#FF9E7D', '#FFF2D6', '#C25AE0'];
+    const pCount = 75;
+    const colors = ['#F59E0B', '#FCD34D', '#FFFFFF', '#D4D4D8', '#FEF3C7'];
     const pts = [];
     for (let i = 0; i < pCount; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const baseDist = 40 + Math.random() * 110;
+      const baseDist = 45 + Math.random() * 105;
       pts.push({
         angle,
         dist: baseDist,
         baseDist,
-        speed: 0.008 + Math.random() * 0.018,
-        size: 1.8 + Math.random() * 2.5,
-        alpha: 0.4 + Math.random() * 0.6,
+        speed: 0.004 + Math.random() * 0.012,
+        size: 1.5 + Math.random() * 2,
+        alpha: 0.3 + Math.random() * 0.5,
         color: colors[Math.floor(Math.random() * colors.length)],
       });
     }
@@ -143,7 +142,8 @@ export const BreathingView: React.FC = () => {
     let currentLungScale = 1;
 
     const render = () => {
-      const targetLungScale = isActive ? activePhase.targetScale : 1;
+      const idleBreath = 1 + Math.sin(Date.now() / 2400) * 0.06;
+      const targetLungScale = isActive ? activePhase.targetScale : idleBreath;
       currentLungScale += (targetLungScale - currentLungScale) * 0.035;
 
       ctx.clearRect(0, 0, width, height);
@@ -155,17 +155,17 @@ export const BreathingView: React.FC = () => {
         0,
         centerX,
         centerY,
-        85 * currentLungScale
+        80 * currentLungScale
       );
-      grad.addColorStop(0, 'rgba(255, 201, 120, 0.45)');
-      grad.addColorStop(0.4, 'rgba(111, 191, 196, 0.25)');
-      grad.addColorStop(1, 'rgba(26, 24, 54, 0)');
+      grad.addColorStop(0, 'rgba(245, 158, 11, 0.22)');
+      grad.addColorStop(0.45, 'rgba(245, 158, 11, 0.08)');
+      grad.addColorStop(1, 'rgba(18, 19, 22, 0)');
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(centerX, centerY, 85 * currentLungScale, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, 80 * currentLungScale, 0, Math.PI * 2);
       ctx.fill();
 
-      // Swarming firefly particles pulsating in and out
+      // Swarming particles pulsating in and out
       for (const p of particlesRef.current) {
         p.angle += p.speed;
         const currentDist = p.baseDist * currentLungScale;
@@ -174,11 +174,11 @@ export const BreathingView: React.FC = () => {
 
         // Soft outer particle glow
         ctx.beginPath();
-        ctx.arc(x, y, p.size * 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = `${p.color}35`;
+        ctx.arc(x, y, p.size * 2, 0, Math.PI * 2);
+        ctx.fillStyle = `${p.color}25`;
         ctx.fill();
 
-        // Core bright spark
+        // Core spark
         ctx.beginPath();
         ctx.arc(x, y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
@@ -187,12 +187,12 @@ export const BreathingView: React.FC = () => {
         ctx.globalAlpha = 1;
       }
 
-      // Radiant center starlight node
+      // Center node
       ctx.beginPath();
-      ctx.arc(centerX, centerY, 5 * currentLungScale, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, 3.5 * currentLungScale, 0, Math.PI * 2);
       ctx.fillStyle = '#FFFFFF';
-      ctx.shadowColor = '#FFC978';
-      ctx.shadowBlur = 18;
+      ctx.shadowColor = '#F59E0B';
+      ctx.shadowBlur = 12;
       ctx.fill();
       ctx.shadowBlur = 0;
 
@@ -223,10 +223,10 @@ export const BreathingView: React.FC = () => {
               setIsCompleted(true);
               setIsActive(false);
               confetti({
-                particleCount: 70,
-                spread: 90,
+                particleCount: 50,
+                spread: 70,
                 origin: { y: 0.6 },
-                colors: ['#FFC978', '#6FBFC4', '#FF9E7D', '#FFF2D6', '#C25AE0'],
+                colors: ['#F59E0B', '#FCD34D', '#FFFFFF'],
               });
               return 0;
             }
@@ -254,33 +254,27 @@ export const BreathingView: React.FC = () => {
 
   return (
     <RouteTransition>
-      {/* Floating On-Brand Circular Close Button returning to Wellness Room */}
-      <CloseButton to="/wellness" ariaLabel="Return to Wellness Actions Sanctuary" />
+      <CloseButton to="/wellness" ariaLabel="Return to Wellness Actions" />
 
       <div className="relative min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto z-10 space-y-8">
         {/* Header */}
-        <div className="border-b border-[#B8B4D9]/15 pb-6">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#6FBFC4] mb-2">
-            <Wind className="w-4 h-4" />
-            <span>Room 04-A / Somatic Lung Pacer</span>
+        <div className="border-b border-white/[0.08] pb-6">
+          <div className="text-xs font-mono uppercase tracking-wider text-amber-400 mb-2">
+            Respiratory Protocol
           </div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-2">
-                Firefly Particle Lung Pacer
+              <h1 className="font-heading text-3xl sm:text-4xl font-normal tracking-tight text-white mb-2">
+                Somatic Respiratory Regulator
               </h1>
-              <p className="text-sm sm:text-base text-[#B8B4D9] max-w-2xl leading-relaxed">
-                Harmonize your breath with expanding and contracting firefly constellations. Clinically proven to shift heart-rate variability and down-regulate sympathetic activation.
+              <p className="text-sm text-neutral-400 max-w-2xl leading-relaxed">
+                Paced visual respirations structured to stimulate vagal tone and down-regulate autonomic stress responses.
               </p>
-            </div>
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-[#121029]/80 border border-[#6FBFC4]/30 text-xs font-semibold text-[#6FBFC4] shrink-0 self-start md:self-auto">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Evidence-Based Vagal Pacing</span>
             </div>
           </div>
         </div>
 
-        {/* Technique Selector Chips */}
+        {/* Technique Selector */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {(Object.keys(TECHNIQUES) as ('478' | 'box' | 'calm')[]).map((key) => {
             const tech = TECHNIQUES[key];
@@ -289,22 +283,22 @@ export const BreathingView: React.FC = () => {
               <button
                 key={key}
                 onClick={() => handleSelectTech(key)}
-                className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
+                className={`p-4 rounded-xl border text-left transition-colors cursor-pointer ${
                   isSelected
-                    ? 'bg-[#2D2A5C] text-[#F5F2ED] border-[#6FBFC4] shadow-glow-sm'
-                    : 'bg-[#1A1836]/60 text-[#B8B4D9] border-[#B8B4D9]/15 hover:border-[#B8B4D9]/30 hover:bg-[#1A1836]/90'
+                    ? 'bg-white/[0.06] text-white border-white/30'
+                    : 'bg-white/[0.02] text-neutral-400 border-white/[0.08] hover:border-white/[0.15] hover:text-white'
                 }`}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-[#F5F2ED]">{tech.label.split(' ')[0]}</span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#121029]/80 border border-[#B8B4D9]/20 text-[#FFC978]">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-medium text-white">{tech.label.split(' ')[0]}</span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-amber-400">
                     {tech.tag}
                   </span>
                 </div>
-                <div className="text-xs font-heading font-semibold text-[#FFF2D6]">
+                <div className="text-xs font-medium text-neutral-200">
                   {tech.label.substring(tech.label.indexOf(' ') + 1)}
                 </div>
-                <div className="text-[11px] text-[#B8B4D9] mt-1.5 line-clamp-2">
+                <div className="text-[11px] text-neutral-500 mt-1.5 line-clamp-2">
                   {tech.benefits}
                 </div>
               </button>
@@ -313,23 +307,20 @@ export const BreathingView: React.FC = () => {
         </div>
 
         {/* Main Pacer Card */}
-        <div className="rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border border-[#6FBFC4]/40 p-6 sm:p-10 shadow-[0_25px_80px_rgba(10,8,28,0.95)] relative overflow-hidden text-center">
-          {/* Top Rim Glow */}
-          <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-transparent via-[#6FBFC4] to-transparent" />
-
+        <div className="rounded-2xl bg-[#121316] border border-white/[0.08] p-6 sm:p-10 relative overflow-hidden text-center">
           {/* Subheader with Cycle Badge */}
-          <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-[#B8B4D9]/15">
+          <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-white/[0.06]">
             <div className="text-left">
-              <div className="text-xs font-mono text-[#6FBFC4] uppercase tracking-wider font-semibold">
+              <div className="text-[11px] font-mono text-amber-400 uppercase tracking-wider font-medium">
                 Active Protocol
               </div>
-              <div className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
+              <div className="text-base sm:text-lg font-medium text-white">
                 {activeTechniqueData.label}
               </div>
             </div>
 
-            <div className="px-4 py-2 rounded-full bg-[#121029]/80 border border-[#FFC978]/30 text-xs font-mono text-[#FFC978] whitespace-nowrap shadow-inner">
-              Cycle {currentCycle} / {activeTechniqueData.totalCycles}
+            <div className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
+              Cycle {currentCycle} of {activeTechniqueData.totalCycles}
             </div>
           </div>
 
@@ -341,21 +332,21 @@ export const BreathingView: React.FC = () => {
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none space-y-1.5">
               <motion.div
                 key={activePhase.name}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                className="text-xs sm:text-sm font-mono font-bold uppercase tracking-widest text-[#FFC978]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
+                className="text-xs sm:text-sm font-mono font-medium uppercase tracking-wider text-amber-400"
               >
                 {activePhase.cue}
               </motion.div>
 
-              <div className="font-heading text-5xl sm:text-6xl font-bold text-[#F5F2ED] drop-shadow-lg">
+              <div className="font-heading text-5xl sm:text-6xl font-normal text-white">
                 {isActive ? timeLeftInPhase : activePhase.duration}
-                <span className="text-base sm:text-lg text-[#B8B4D9] font-normal ml-1">s</span>
+                <span className="text-base sm:text-lg text-neutral-500 font-mono ml-1">s</span>
               </div>
 
-              <div className="text-xs sm:text-sm text-[#6FBFC4] font-medium max-w-[220px] leading-relaxed">
-                {isActive ? activePhase.instruction : 'Press Begin to calibrate breath rhythm'}
+              <div className="text-xs text-neutral-400 font-normal max-w-[240px] leading-relaxed">
+                {isActive ? activePhase.instruction : 'Select Begin to initiate paced breathing'}
               </div>
             </div>
           </div>
@@ -364,47 +355,40 @@ export const BreathingView: React.FC = () => {
           <AnimatePresence>
             {isCompleted && (
               <motion.div
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="p-4 rounded-2xl bg-[#6FBFC4]/20 border border-[#6FBFC4]/50 mb-6 text-sm text-[#F5F2ED] flex items-center justify-center gap-2.5 font-semibold shadow-glow-sm"
+                className="p-3.5 rounded-xl bg-white/[0.04] border border-white/[0.08] mb-6 text-xs text-neutral-200 flex items-center justify-center gap-2 font-medium"
               >
-                <CheckCircle2 className="w-5 h-5 text-[#6FBFC4]" />
-                <span>Full Breath Circuit Complete. Autonomic Balance Calibrated ✦</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 stroke-[1.5]" />
+                <span>Protocol complete. Vagal activation calibrated.</span>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* Control Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              size="lg"
-              variant="primary"
-              className="px-10 py-3.5 text-sm"
-              icon={isActive ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
               onClick={() => setIsActive(!isActive)}
+              className="px-6 py-2.5 rounded-xl bg-white hover:bg-neutral-200 text-neutral-950 font-medium text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
-              {isActive ? 'Pause Pacer' : isCompleted ? 'Restart Circuit' : 'Begin Starlight Breath'}
-            </Button>
+              {isActive ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+              <span>{isActive ? 'Pause' : isCompleted ? 'Restart' : 'Begin Protocol'}</span>
+            </button>
 
-            <Button
-              size="lg"
-              variant="secondary"
-              icon={<RotateCcw className="w-5 h-5" />}
+            <button
               onClick={handleReset}
+              className="px-4 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-neutral-300 hover:text-white text-xs font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
-              Reset Circuit
-            </Button>
+              <RotateCcw className="w-3.5 h-3.5 stroke-[1.5]" />
+              <span>Reset</span>
+            </button>
           </div>
 
           {/* Physiological Insight Footer */}
-          <div className="mt-8 pt-4 border-t border-[#B8B4D9]/15 flex flex-col sm:flex-row items-center justify-between text-xs text-[#B8B4D9] gap-2">
-            <span className="flex items-center gap-1.5 text-[#6FBFC4]">
-              <Sparkles className="w-4 h-4" /> Firefly particles organically breathe with your lungs
-            </span>
-            <span className="flex items-center gap-1.5 text-[#FFC978] font-mono">
-              <Heart className="w-3.5 h-3.5 fill-current" /> Heart Rate Variability (HRV) Synchronization
-            </span>
+          <div className="mt-8 pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-500 font-mono gap-2">
+            <span>Synchronized pulmonary expansion</span>
+            <span>Heart Rate Variability (HRV) resonance</span>
           </div>
         </div>
       </div>

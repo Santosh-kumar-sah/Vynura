@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { Compass } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { RouteTransition } from '../components/common/RouteTransition';
 import { CloseButton } from '../components/common/CloseButton';
 import { WebcamLookingGlass } from '../components/vision/WebcamLookingGlass';
 import { RecommendationSection } from '../components/recommendations/RecommendationSection';
 import { BreathingGuide } from '../components/wellness/BreathingGuide';
 import { MeditationTimer } from '../components/wellness/MeditationTimer';
+import { AnimatedNumber } from '../components/common/AnimatedNumber';
 import type { MoodType } from '../types';
 import type { MeditationCategoryId } from '../types/meditation';
 import type { RawExpressions } from '../utils/expressionMapper';
@@ -34,26 +34,25 @@ export const MoodView: React.FC<MoodViewProps> = ({
   const [isMeditationOpen, setIsMeditationOpen] = useState(false);
   const [meditationCategory, setMeditationCategory] = useState<MeditationCategoryId>('starlight');
 
-  const currentMoodData = MOODS[activeMood];
+  const currentMoodData = MOODS[activeMood] || MOODS.calm;
   const blendInfo = rawExpressions ? getBlendLabel(rawExpressions) : null;
 
   return (
     <RouteTransition>
-      {/* Floating On-Brand X Close Button */}
-      <CloseButton to="/" ariaLabel="Return to Night Sky Hub" />
+      {/* Minimal Monochrome Close Button */}
+      <CloseButton to="/" ariaLabel="Return to Overview" />
 
-      <div className="relative min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 space-y-12">
-        {/* Dedicated Room Header */}
-        <div className="border-b border-[#B8B4D9]/15 pb-8">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FFC978] mb-2">
-            <Compass className="w-4 h-4" />
-            <span>Room 01 / Phase 2: Face Detection Core</span>
+      <div className="relative min-h-screen pt-24 pb-28 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10 space-y-12">
+        {/* Clean Editorial Header */}
+        <div className="border-b border-white/[0.06] pb-8">
+          <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-white/50 mb-2">
+            01 / REAL-TIME INGESTION
           </div>
-          <h1 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-3">
-            Biometric Looking Glass
+          <h1 className="text-3xl sm:text-4xl font-semibold text-white tracking-tight mb-2">
+            Biometric Looking Glass.
           </h1>
-          <p className="text-sm sm:text-base text-[#B8B4D9] max-w-2xl leading-relaxed">
-            Look into your camera. Vynura detects your emotional resonance in real-time using on-device neural vision. Zero video is ever uploaded or stored.
+          <p className="text-sm text-white/70 max-w-2xl leading-relaxed">
+            Continuously evaluates facial geometry using client-side neural inference. Video frames exist solely in volatile GPU memory and are immediately purged.
           </p>
         </div>
 
@@ -64,42 +63,52 @@ export const MoodView: React.FC<MoodViewProps> = ({
           onConfirmMood={onConfirmMood}
         />
 
-        {/* Dynamic Calibrated Sky Affirmation */}
-        <div
-          className="w-full rounded-3xl p-6 sm:p-7 border backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-5 transition-all duration-500"
-          style={{
-            backgroundColor: `${currentMoodData.color}10`,
-            borderColor: `${currentMoodData.color}40`,
-          }}
-        >
+        {/* Dynamic Calibrated State Status (Linear Surface Panel) */}
+        <div className="w-full rounded-2xl p-6 sm:p-7 bg-[#121316] border border-white/[0.08] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B8B4D9]">
-                Active Emotional Calibration
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+              <span className="text-[11px] font-mono uppercase tracking-widest text-white/50">
+                Calibrated State
               </span>
               {blendInfo?.isBlend && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#FFC978]/20 border border-[#FFC978]/40 text-[#FFC978]">
-                  ✦ Dual-Harmonic Blend
+                <span className="text-[10px] font-mono text-white/50">
+                  · Composite Harmonic
                 </span>
               )}
             </div>
-            <div className="font-heading text-2xl font-bold text-[#F5F2ED] mb-1">
-              {blendInfo?.isBlend
-                ? blendInfo.blendLabel
-                : `${currentMoodData.label} · ${currentMoodData.sublabel}`}
-            </div>
-            <p className="text-xs text-[#B8B4D9] italic font-heading max-w-xl">
-              "{currentMoodData.quote}"
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeMood}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2 }}
+                className="text-2xl font-semibold text-white tracking-tight"
+              >
+                {blendInfo?.isBlend
+                  ? blendInfo.blendLabel
+                  : `${currentMoodData.label} — ${currentMoodData.sublabel}`}
+              </motion.div>
+            </AnimatePresence>
+
+            <p className="text-xs text-white/60 mt-1 max-w-xl">
+              {currentMoodData.shiftAction}
             </p>
           </div>
 
-          <div className="px-4 py-2 rounded-2xl bg-[#121029]/80 border text-xs font-mono text-[#FFC978] shadow-inner shrink-0"
-               style={{ borderColor: `${currentMoodData.color}50` }}>
-            Clarity: {Math.round(confidence * 100)}%
+          <div className="px-3.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-white/80 shrink-0">
+            <span>Confidence: </span>
+            <AnimatedNumber
+              value={Math.round(confidence * 100)}
+              className="font-semibold text-white"
+            />
+            <span>%</span>
           </div>
         </div>
 
-        {/* Phase 3 Shift Engine: Personalized Recommendations based on Calibrated Mood */}
+        {/* Shift Engine: Targeted Recommendations */}
         <RecommendationSection
           mood={activeMood}
           confidence={confidence}
