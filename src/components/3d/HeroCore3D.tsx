@@ -83,52 +83,48 @@ export const HeroCore3D: React.FC<HeroCore3DProps> = ({
       void main() {
         vec2 st = (gl_FragCoord.xy - 0.5 * uResolution) / min(uResolution.x, uResolution.y);
 
-        float t = uTime * 0.12;
+        float t = uTime * 0.10;
 
-        // 1. Slow, drifting fluid aurora background (amber-coral to deep violet)
-        float wave1 = snoise(vec2(st.x * 1.3 + t * 0.14, st.y * 1.3 - t * 0.12));
-        float wave2 = snoise(vec2(st.x * 2.1 - t * 0.18, st.y * 1.8 + t * 0.16));
-        float aurora = smoothstep(-0.4, 0.7, wave1 * 0.6 + wave2 * 0.4);
-        
-        vec3 violetNight = vec3(0.12, 0.08, 0.22);
-        vec3 coralDrift = vec3(0.35, 0.14, 0.20);
-        vec3 auroraColor = mix(violetNight * 0.4, coralDrift * 0.5, aurora);
+        // 1. Slow, drifting fluid wave for organic light shape
+        float wave1 = snoise(vec2(st.x * 1.2 + t * 0.12, st.y * 1.2 - t * 0.10));
+        float wave2 = snoise(vec2(st.x * 1.8 - t * 0.14, st.y * 1.6 + t * 0.12));
+        float organicDrift = smoothstep(-0.4, 0.7, wave1 * 0.6 + wave2 * 0.4);
 
-        // 2. Buoyancy offset
-        vec2 center = uMouse * 0.08;
+        // 2. Buoyancy & Mouse Interaction
+        vec2 center = uMouse * 0.06;
         vec2 diff = st - center;
         float dist = length(diff);
 
-        // Fluidic surface wave distortion
-        float warp = snoise(vec2(diff.x * 2.4 + t * 0.22, diff.y * 2.4 - t * 0.2)) * 0.06;
+        // Subtle fluid surface warp
+        float warp = snoise(vec2(diff.x * 2.0 + t * 0.18, diff.y * 2.0 - t * 0.16)) * 0.05;
         float warpedDist = dist + warp;
 
-        // 4-7-8 Breathing Scale (6% gentle expansion)
+        // 4-7-8 Breathing Scale (5-6% gentle expansion)
         float breathScale = uBreathPhase;
-        float radius = 0.36 * breathScale;
+        float radius = 0.38 * breathScale;
 
-        // Multi-stage Gaussian falloff for rich, warm atmospheric light
-        float goldenCore = exp(-pow(warpedDist / (radius * 0.75), 2.2) * 2.8) * 0.68;
-        float coralMid   = exp(-pow(warpedDist / (radius * 1.35), 1.9) * 2.0) * 0.46;
-        float violetHalo = exp(-pow(dist / 1.0, 1.4) * 1.4) * 0.22;
+        // Multi-stage Gaussian falloff for ultra-soft atmospheric illumination
+        float amberCore = exp(-pow(warpedDist / (radius * 0.8), 2.0) * 2.5) * 0.65;
+        float warmMid   = exp(-pow(warpedDist / (radius * 1.4), 1.8) * 1.8) * 0.40;
+        float softHalo  = exp(-pow(dist / 1.1, 1.4) * 1.4) * 0.18;
 
-        float totalGlow = goldenCore + coralMid + violetHalo;
+        float totalGlow = amberCore + warmMid + softHalo;
 
-        // Cinematic "Golden Hour Meets Night Sky" Palette
-        vec3 warmGold = mix(vec3(1.0, 0.75, 0.32), uColor, 0.5);
-        vec3 softCoral = mix(vec3(0.96, 0.42, 0.48), uColor * 0.8 + vec3(0.2, 0.05, 0.1), 0.4);
-        vec3 deepViolet = vec3(0.55, 0.38, 0.85);
+        // Warm amber/gold primary brand light with subtle deep undertone
+        vec3 warmAmber = vec3(0.96, 0.62, 0.04); // #F59E0B
+        vec3 softGold = vec3(1.0, 0.78, 0.35);
+        vec3 deepAtmosphere = vec3(0.18, 0.12, 0.06);
 
-        vec3 glowColor = mix(warmGold, softCoral, smoothstep(0.08, 0.32, warpedDist));
-        glowColor = mix(glowColor, deepViolet, smoothstep(0.28, 0.65, dist));
+        vec3 glowColor = mix(warmAmber, softGold, smoothstep(0.05, 0.30, warpedDist));
+        glowColor = mix(glowColor, deepAtmosphere, smoothstep(0.25, 0.70, dist));
 
-        vec3 finalColor = auroraColor + glowColor * totalGlow;
+        vec3 finalColor = glowColor * totalGlow;
 
-        // Smooth atmospheric vignette into #0D0B14 base
-        float vignette = 1.0 - smoothstep(0.55, 1.25, length(st));
+        // Smooth atmospheric vignette into #0B0A10 base
+        float vignette = 1.0 - smoothstep(0.50, 1.20, length(st));
         finalColor *= vignette;
 
-        float alpha = clamp(totalGlow * 1.35 + aurora * 0.12, 0.0, 0.82) * vignette;
+        float alpha = clamp(totalGlow * 1.25 + organicDrift * 0.08, 0.0, 0.75) * vignette;
 
         gl_FragColor = vec4(finalColor, alpha);
       }
@@ -247,7 +243,7 @@ export const HeroCore3D: React.FC<HeroCore3DProps> = ({
       ref={mountRef}
       className={`relative w-full h-full select-none pointer-events-none ${className}`}
       style={{
-        filter: 'blur(60px)',
+        filter: 'blur(80px)',
       }}
     />
   );

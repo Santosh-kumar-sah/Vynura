@@ -21,17 +21,17 @@ export const PrivacySection: React.FC = () => {
   ];
 
   return (
-    <section id="privacy" className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-white/[0.08]">
+    <section id="privacy" className="py-28 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-white/[0.08]">
       {/* Centered Single-Column Moment */}
-      <div className="text-center max-w-2xl mx-auto mb-16">
-        <div className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-widest text-[#94A3B8] mb-3">
+      <div className="text-center max-w-2xl mx-auto mb-20">
+        <div className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.16em] text-white/50 mb-3">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
           <span>Security & Data Boundary</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3">
+        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-3">
           Your camera never leaves your hardware.
         </h2>
-        <p className="text-sm text-[#94A3B8] leading-relaxed">
+        <p className="text-sm text-white/70 leading-relaxed">
           Engineered with zero cloud transmission, zero biometric retention, and complete client-side execution.
         </p>
       </div>
@@ -51,7 +51,7 @@ export const PrivacySection: React.FC = () => {
                 {proof.status}
               </span>
             </div>
-            <p className="sm:w-2/3 text-xs text-[#94A3B8] leading-relaxed">
+            <p className="sm:w-2/3 text-xs text-white/70 leading-relaxed">
               {proof.desc}
             </p>
           </div>

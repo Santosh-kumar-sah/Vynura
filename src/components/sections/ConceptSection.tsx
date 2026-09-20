@@ -21,24 +21,24 @@ export const ConceptSection: React.FC = () => {
   ];
 
   return (
-    <section id="concept" className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-white/[0.08]">
-      {/* Section Header: Centered & Minimal */}
-      <div className="max-w-xl mb-16">
-        <div className="text-[11px] font-mono uppercase tracking-widest text-[#94A3B8] mb-2">
+    <section id="concept" className="py-28 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-white/[0.08]">
+      {/* Section Header: Minimal & Confident */}
+      <div className="max-w-xl mb-20">
+        <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-white/50 mb-3">
           System Architecture
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-2">
-          How Vynura evaluates state
+        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-3">
+          How Vynura evaluates state.
         </h2>
-        <p className="text-sm text-[#94A3B8]">
+        <p className="text-sm text-white/70 leading-relaxed">
           A deterministic client-side pipeline converting facial geometry into physiological regulation.
         </p>
       </div>
 
       {/* Unboxed Asymmetric Split: Narrative on Left, Graphic on Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        {/* Left: 3 Numbered Steps sitting directly on page */}
-        <div className="lg:col-span-7 space-y-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        {/* Left: 3 Numbered Steps sitting directly on page without boxes */}
+        <div className="lg:col-span-7 space-y-12">
           {steps.map((item, idx) => (
             <motion.div
               key={item.num}
@@ -46,16 +46,16 @@ export const ConceptSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.35, delay: idx * 0.08 }}
-              className="flex items-start gap-4"
+              className="flex items-start gap-5"
             >
-              <span className="font-mono text-xs text-[#64748B] pt-1">
+              <span className="font-mono text-xs text-white/40 pt-1 select-none">
                 {item.num}
               </span>
               <div>
-                <h3 className="text-base font-semibold text-white mb-1">
+                <h3 className="text-base font-semibold text-white mb-1.5 tracking-tight">
                   {item.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed max-w-lg">
+                <p className="text-xs sm:text-sm text-white/70 leading-relaxed max-w-lg">
                   {item.desc}
                 </p>
               </div>
@@ -67,30 +67,30 @@ export const ConceptSection: React.FC = () => {
         <div className="lg:col-span-5 flex flex-col items-center justify-center relative py-6">
           <div className="relative w-56 h-56 flex items-center justify-center">
             {/* Ambient concentric landmark rings */}
-            <div className="absolute inset-0 rounded-full border border-white/[0.08]" />
-            <div className="absolute inset-6 rounded-full border border-dashed border-white/[0.12]" />
-            <div className="absolute inset-14 rounded-full border border-white/[0.05]" />
+            <div className="absolute inset-0 rounded-full border border-white/[0.06]" />
+            <div className="absolute inset-6 rounded-full border border-dashed border-white/[0.1]" />
+            <div className="absolute inset-14 rounded-full border border-white/[0.04]" />
 
-            {/* Landmark nodal markers */}
-            <div className="absolute top-16 left-16 w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-            <div className="absolute top-16 right-16 w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
-            <div className="absolute top-24 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
-            <div className="absolute bottom-16 left-20 right-20 h-3 border-b-2 border-amber-400/80 rounded-full" />
+            {/* Landmark nodal markers with warm amber accent */}
+            <div className="absolute top-16 left-16 w-1.5 h-1.5 rounded-full bg-white/60" />
+            <div className="absolute top-16 right-16 w-1.5 h-1.5 rounded-full bg-white/60" />
+            <div className="absolute top-24 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+            <div className="absolute bottom-16 left-20 right-20 h-3 border-b-2 border-white/40 rounded-full" />
 
             <div className="text-center">
-              <span className="text-[10px] font-mono text-[#94A3B8] uppercase tracking-widest block mb-0.5">
+              <span className="text-[10px] font-mono text-white/50 uppercase tracking-widest block mb-0.5">
                 Latency
               </span>
-              <span className="text-2xl font-mono font-bold text-white tracking-tight">
+              <span className="text-2xl font-mono font-semibold text-white tracking-tight">
                 &lt;16ms
               </span>
             </div>
           </div>
 
-          <div className="mt-4 flex items-center gap-6 text-[11px] font-mono text-[#64748B]">
-            <span>68 Landmarking Points</span>
+          <div className="mt-6 flex items-center gap-4 text-[11px] font-mono text-white/45">
+            <span>68 Landmarks</span>
             <span>·</span>
-            <span>0 KB Cloud Transfer</span>
+            <span>0 KB Transferred</span>
           </div>
         </div>
       </div>

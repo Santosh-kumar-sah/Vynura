@@ -5,25 +5,25 @@ export const Footer: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="border-t border-white/[0.06] bg-[#0D0B14] py-16 text-xs text-[#B8B3CE]">
+    <footer className="border-t border-white/[0.08] bg-[#0B0A10] py-20 text-xs text-white/70">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-white/[0.08] border border-white/[0.14] flex items-center justify-center text-amber-400 font-semibold text-xs">
+              <div className="w-6 h-6 rounded-md bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-[#F59E0B] font-semibold text-xs">
                 ✦
               </div>
               <span className="font-semibold text-base tracking-tight text-white">
                 Vynura
               </span>
             </div>
-            <p className="text-xs text-[#94A3B8] max-w-sm leading-relaxed">
+            <p className="text-xs text-white/60 max-w-sm leading-relaxed">
               Intelligent emotional state engine. High-performance on-device facial landmark tracking and physiological regulation.
             </p>
             <div className="inline-flex items-center gap-2 pt-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span className="text-[11px] font-mono text-[#64748B]">All Local Engines Operational</span>
+              <span className="text-[11px] font-mono text-white/45">All Local Engines Operational</span>
             </div>
           </div>
 
@@ -36,7 +36,7 @@ export const Footer: React.FC = () => {
               <li>
                 <button
                   onClick={() => navigate('/mood')}
-                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-xs text-[#94A3B8]"
+                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-xs text-white/60"
                 >
                   Shift Engine
                 </button>
@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
               <li>
                 <button
                   onClick={() => navigate('/constellation')}
-                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-xs text-[#94A3B8]"
+                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-xs text-white/60"
                 >
                   Constellation Map
                 </button>
@@ -52,7 +52,7 @@ export const Footer: React.FC = () => {
               <li>
                 <button
                   onClick={() => navigate('/wellness/breathing')}
-                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-xs text-[#94A3B8]"
+                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-xs text-white/60"
                 >
                   Breath Regulation
                 </button>
@@ -60,7 +60,7 @@ export const Footer: React.FC = () => {
               <li>
                 <button
                   onClick={() => navigate('/wellness')}
-                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-xs text-[#94A3B8]"
+                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 text-xs text-white/60"
                 >
                   Sanctuary Hub
                 </button>
@@ -75,17 +75,17 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2">
               <li>
-                <a href="#concept" className="hover:text-white transition-colors">
+                <a href="#concept" className="text-white/60 hover:text-white transition-colors">
                   Inference Architecture
                 </a>
               </li>
               <li>
-                <a href="#privacy" className="hover:text-white transition-colors">
+                <a href="#privacy" className="text-white/60 hover:text-white transition-colors">
                   Zero Data Retention
                 </a>
               </li>
               <li>
-                <a href="#paired-checkins" className="hover:text-white transition-colors">
+                <a href="#paired-checkins" className="text-white/60 hover:text-white transition-colors">
                   Mutual Consent Social
                 </a>
               </li>
@@ -94,7 +94,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom copyright row */}
-        <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#64748B]">
+        <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-white/40 font-mono">
           <div>
             © {new Date().getFullYear()} Vynura. Private on-device biometric intelligence.
           </div>

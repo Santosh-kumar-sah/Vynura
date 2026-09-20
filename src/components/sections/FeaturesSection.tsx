@@ -28,37 +28,37 @@ export const FeaturesSection: React.FC = () => {
   ];
 
   return (
-    <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-white/[0.08]">
+    <section id="features" className="py-28 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-white/[0.08]">
       {/* Section Header */}
-      <div className="max-w-xl mb-16">
-        <div className="text-[11px] font-mono uppercase tracking-widest text-[#94A3B8] mb-2">
+      <div className="max-w-xl mb-20">
+        <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-white/50 mb-3">
           Interventions
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-2">
-          Targeted sensory regulation
+        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-3">
+          Targeted sensory regulation.
         </h2>
-        <p className="text-sm text-[#94A3B8]">
+        <p className="text-sm text-white/70 leading-relaxed">
           Actionable tools calibrated to your current physiological frequency.
         </p>
       </div>
 
       {/* Part 1: Full-Width Feature Highlight (Unboxed) */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/[0.06]">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-16 border-b border-white/[0.06]">
         <div className="max-w-xl">
-          <div className="text-xs font-mono text-amber-400 mb-2">
+          <div className="text-xs font-mono text-[#F59E0B] mb-2 tracking-wider">
             01 / REAL-TIME TENSOR TRACKING
           </div>
-          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight">
+          <h3 className="text-2xl sm:text-3xl font-semibold text-white mb-3 tracking-tight">
             60 FPS on-device micro-expression analysis.
           </h3>
-          <p className="text-sm text-[#94A3B8] leading-relaxed">
+          <p className="text-sm text-white/70 leading-relaxed">
             Continuously evaluates subtle micro-smiles, eyebrow furrowing, and ocular narrowing without transmitting any imagery over the network.
           </p>
         </div>
 
         <button
           onClick={() => navigate('/mood')}
-          className="inline-flex items-center gap-2 text-xs font-medium text-white hover:text-amber-300 transition-colors cursor-pointer bg-transparent border-none p-0 shrink-0 self-start md:self-end"
+          className="inline-flex items-center gap-2 text-xs font-medium text-white hover:text-[#F59E0B] transition-colors cursor-pointer bg-transparent border-none p-0 shrink-0 self-start md:self-end"
         >
           <span>Open Shift Engine</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -66,7 +66,7 @@ export const FeaturesSection: React.FC = () => {
       </div>
 
       {/* Part 2: 3-Column Editorial Text Split (Unboxed, sitting directly on page) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-16">
         {interventions.map((item, idx) => (
           <motion.div
             key={item.title}
@@ -74,16 +74,16 @@ export const FeaturesSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35, delay: idx * 0.08 }}
-            className="flex flex-col justify-between space-y-4"
+            className="flex flex-col justify-between space-y-5"
           >
             <div>
-              <div className="text-[11px] font-mono text-[#64748B] mb-2">
+              <div className="text-[11px] font-mono text-white/40 mb-2.5">
                 0{idx + 2} / SYSTEM
               </div>
-              <h4 className="text-base font-semibold text-white mb-2">
+              <h4 className="text-base font-semibold text-white mb-2 tracking-tight">
                 {item.title}
               </h4>
-              <p className="text-xs text-[#94A3B8] leading-relaxed">
+              <p className="text-xs sm:text-sm text-white/70 leading-relaxed">
                 {item.desc}
               </p>
             </div>
@@ -91,7 +91,7 @@ export const FeaturesSection: React.FC = () => {
             <div>
               <button
                 onClick={() => navigate(item.to)}
-                className="inline-flex items-center gap-1.5 text-xs text-[#94A3B8] hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0"
+                className="inline-flex items-center gap-1.5 text-xs text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0"
               >
                 <span>{item.action}</span>
                 <ArrowRight className="w-3 h-3" />

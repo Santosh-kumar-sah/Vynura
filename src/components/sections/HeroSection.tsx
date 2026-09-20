@@ -96,29 +96,26 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <section className="relative min-h-[88vh] pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col justify-center overflow-hidden">
-      {/* LAYER 1: Deep Warm Charcoal-Plum Base Canvas */}
-      <div className="absolute inset-0 bg-[#0D0B14] pointer-events-none -z-30" />
+      {/* LAYER 1: Deep Near-Black Base Canvas */}
+      <div className="absolute inset-0 bg-[#0B0A10] pointer-events-none -z-30" />
 
-      {/* Cinematic Golden Hour meets Night Sky Ambient Gradient Wash */}
-      <div className="absolute inset-0 pointer-events-none -z-25 opacity-70">
-        {/* Upper-right warm golden/coral ambient glow */}
-        <div className="absolute -top-24 right-0 w-[600px] h-[500px] bg-gradient-to-bl from-amber-500/15 via-rose-500/10 to-transparent rounded-full blur-[100px]" />
-        {/* Left-hand soft violet ambient wash */}
-        <div className="absolute top-1/3 -left-20 w-[500px] h-[450px] bg-gradient-to-tr from-violet-600/10 via-indigo-500/05 to-transparent rounded-full blur-[100px]" />
+      {/* Subtle Warm Amber Atmospheric Ambient Glow */}
+      <div className="absolute inset-0 pointer-events-none -z-25 opacity-60">
+        <div className="absolute -top-24 right-0 w-[600px] h-[500px] bg-gradient-to-bl from-amber-500/10 to-transparent rounded-full blur-[100px]" />
       </div>
 
-      {/* LAYER 2: Asymmetric 4-7-8 Breathing Light Source (Golden Hour Warmth, Parallax Drift) */}
+      {/* LAYER 2: Asymmetric 4-7-8 Breathing Light Source (Ambient Room Light, Parallax Drift) */}
       <div
-        className="absolute -top-10 -right-16 sm:right-2 md:right-10 w-[520px] sm:w-[620px] md:w-[700px] h-[520px] sm:h-[620px] md:h-[700px] pointer-events-none -z-20 transition-transform duration-100 ease-out opacity-85"
+        className="absolute -top-10 -right-16 sm:right-2 md:right-8 w-[520px] sm:w-[620px] md:w-[700px] h-[520px] sm:h-[620px] md:h-[700px] pointer-events-none -z-20 transition-transform duration-100 ease-out opacity-80"
         style={{
-          transform: `translateY(${scrollY * 0.2}px)`,
+          transform: `translateY(${scrollY * 0.18}px)`,
         }}
       >
-        <HeroCore3D activeMoodColor={currentMood.color} />
+        <HeroCore3D activeMoodColor="#F59E0B" />
       </div>
 
-      {/* LAYER 3: Dark Directional Scrim Buffer & Fine Film-Grain Noise */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0D0B14] via-[#0D0B14]/85 to-transparent pointer-events-none -z-10" />
+      {/* LAYER 3: Directional Scrim Buffer & Fine Film-Grain Noise */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0B0A10] via-[#0B0A10]/80 to-transparent pointer-events-none -z-10" />
       <div className="absolute inset-0 grain-overlay pointer-events-none -z-10 opacity-70" />
 
       {/* LAYER 4: Content Layer (Crisp, High Contrast, Fully Readable) */}
@@ -128,37 +125,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] text-[#B8B3CE] mb-6 flex items-center gap-2.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08]"
+          className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] text-white/60 mb-6 flex items-center gap-2.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08]"
         >
-          <span
-            className="w-1.5 h-1.5 rounded-full animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.8)]"
-            style={{ backgroundColor: currentMood.color }}
-          />
-          <span>4-7-8 Breathing Engine · On-Device Vision</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+          <span>4-7-8 Somatic Engine · Client-Side Vision</span>
         </motion.div>
 
-        {/* Headline — Inter Tight 800, tight tracking, warm specular gold-to-coral gradient on key phrase */}
+        {/* Headline — Solid #FFFFFF, 56-72px, weight 600, tight tracking -2.5%, line-height 1.07 */}
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05 }}
-          className="font-heading font-extrabold text-4xl sm:text-6xl lg:text-7xl tracking-[-0.03em] text-white max-w-4xl leading-[1.07] mb-5 text-balance"
+          className="font-heading font-semibold text-4xl sm:text-6xl lg:text-7xl tracking-[-0.025em] text-white max-w-4xl leading-[1.07] mb-5 text-balance"
         >
-          Real-time emotional tracking powered by{' '}
-          <span className="bg-gradient-to-r from-[#FDE68A] via-[#F59E0B] to-[#FB7185] bg-clip-text text-transparent drop-shadow-sm">
-            local vision intelligence
-          </span>
-          .
+          Real-time emotional tracking powered by on-device vision.
         </motion.h1>
 
-        {/* Subtext Below Headline — 75% opacity, lighter 400 weight to step back visually */}
+        {/* Subtext Below Headline — 70% opacity, weight 400, strictly one sentence */}
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="text-base sm:text-lg text-[#B8B3CE] max-w-xl leading-relaxed mb-9 font-normal"
+          className="text-base sm:text-lg text-white/70 max-w-xl leading-relaxed mb-10 font-normal"
         >
-          Private on-device facial landmark analysis paired with instantaneous somatic pacing and acoustic frequency shifts.
+          Private facial landmark analysis paired with instantaneous somatic pacing and acoustic frequency shifts.
         </motion.p>
 
         {/* Primary & Secondary CTAs */}
@@ -181,15 +171,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           <Button
             size="lg"
-            variant="secondary"
-            icon={<Terminal className="w-4 h-4 text-[#A78BFA]" />}
+            variant="ghost"
+            icon={<Terminal className="w-4 h-4 text-white/60" />}
             iconPosition="left"
             onClick={() => {
               const el = document.getElementById('concept');
               el?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
-            Architecture
+            System Architecture
           </Button>
         </motion.div>
 
@@ -208,15 +198,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <button
                   key={key}
                   onClick={() => handleMoodSelect(key)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs transition-all duration-200 cursor-pointer border flex items-center gap-2 ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs transition-all duration-150 cursor-pointer border flex items-center gap-2 ${
                     isSelected
-                      ? 'bg-white/10 text-white font-medium border-white/20 shadow-[0_0_16px_rgba(245,158,11,0.2)]'
-                      : 'bg-transparent text-[#B8B3CE] border-transparent hover:text-white hover:bg-white/[0.04]'
+                      ? 'bg-white/[0.08] text-white font-medium border-white/20'
+                      : 'bg-transparent text-white/60 border-transparent hover:text-white hover:bg-white/[0.03]'
                   }`}
                 >
                   <span
                     className={`w-1.5 h-1.5 rounded-full transition-all ${
-                      isSelected ? 'scale-125 shadow-sm' : 'opacity-60'
+                      isSelected ? 'scale-125' : 'opacity-60'
                     }`}
                     style={{ backgroundColor: item.color }}
                   />
@@ -226,10 +216,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             })}
           </div>
 
-          {/* Supporting Microcopy with Warm Accent */}
-          <div className="text-xs text-[#B8B3CE] flex items-center justify-center gap-2">
+          {/* Supporting Microcopy */}
+          <div className="text-xs text-white/60 flex items-center justify-center gap-2">
             <span className="text-white font-medium">{currentMood.label}:</span>
-            <span className="text-[#A78BFA] font-mono text-[11px]">{currentMood.shiftAction}</span>
+            <span className="text-[#F59E0B] font-mono text-[11px]">{currentMood.shiftAction}</span>
           </div>
         </motion.div>
       </div>

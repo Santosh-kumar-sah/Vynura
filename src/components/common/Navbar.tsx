@@ -60,8 +60,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
       <div
         className={`max-w-6xl mx-auto rounded-2xl transition-all duration-300 relative ${
           scrolled
-            ? 'bg-[#0D0B14]/85 backdrop-blur-xl border border-white/[0.09] shadow-[0_12px_32px_rgba(0,0,0,0.6)] px-5 py-2.5'
-            : 'bg-[#0D0B14]/50 backdrop-blur-md border border-white/[0.06] px-5 py-3'
+            ? 'bg-[#0B0A10]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.6)] px-5 py-2.5'
+            : 'bg-[#0B0A10]/50 backdrop-blur-md border border-white/[0.06] px-5 py-3'
         }`}
       >
         <div className="flex items-center justify-between gap-4">
@@ -70,26 +70,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
             onClick={() => navigate('/')}
             className="flex items-center gap-2.5 focus:outline-none select-none shrink-0 cursor-pointer text-left bg-transparent border-none p-0 group"
           >
-            <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.12] flex items-center justify-center text-white transition-all group-hover:border-white/30">
-              <span className="text-amber-400 text-sm font-semibold">✦</span>
+            <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-white transition-all group-hover:border-white/30">
+              <span className="text-[#F59E0B] text-sm font-semibold">✦</span>
             </div>
             <span className="font-semibold text-base sm:text-lg tracking-tight text-white group-hover:text-white/90 transition-colors">
               Vynura
             </span>
           </button>
 
-          {/* Clean Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Clean Desktop Navigation (Linear style plain text links with opacity hover) */}
+          <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.to && !link.hash;
               return (
                 <button
                   key={link.label}
                   onClick={() => handleNavClick(link)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer bg-transparent border-none ${
+                  className={`text-xs font-medium transition-opacity cursor-pointer bg-transparent border-none p-0 ${
                     isActive
-                      ? 'text-white bg-white/[0.08]'
-                      : 'text-[#94A3B8] hover:text-white hover:bg-white/[0.04]'
+                      ? 'text-white opacity-100 font-semibold'
+                      : 'text-white opacity-70 hover:opacity-100'
                   }`}
                 >
                   {link.label}
@@ -160,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl bg-[#0D0B14]/95 backdrop-blur-2xl border border-white/[0.1] shadow-2xl p-4 space-y-3"
+            className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl bg-[#0B0A10]/95 backdrop-blur-2xl border border-white/[0.08] shadow-2xl p-4 space-y-3"
           >
             <div className="flex flex-col space-y-1">
               {navLinks.map((link) => (
@@ -170,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
                     setMobileMenuOpen(false);
                     handleNavClick(link);
                   }}
-                  className="px-3 py-2.5 rounded-lg text-left text-xs font-medium text-[#94A3B8] hover:text-white hover:bg-white/[0.05] transition-colors"
+                  className="px-3 py-2.5 rounded-lg text-left text-xs font-medium text-white/70 hover:text-white hover:bg-white/[0.04] transition-colors"
                 >
                   {link.label}
                 </button>

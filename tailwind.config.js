@@ -7,33 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        surface: {
-          base: "#0D0B14",
-          1: "#161320",
-          2: "#1E1A2B",
-          3: "#28233A",
-          border: "rgba(255, 255, 255, 0.08)",
-          highlight: "rgba(255, 255, 255, 0.16)",
-        },
+        canvas: "#0B0A10",
+        panel: "#131219",
         brand: {
-          primary: "#F59E0B",
-          gold: "#FBBF24",
-          violet: "#A78BFA",
-          coral: "#FB7185",
-          secondary: "#38BDF8",
-          neutral: "#94A3B8",
+          DEFAULT: "#F59E0B",
+          hover: "#D97706",
+          subtle: "rgba(245, 158, 11, 0.12)",
         },
-        sky: {
-          deep: "#0D0B14",
-          mid: "#161320",
+        surface: {
+          base: "#0B0A10",
+          1: "#131219",
+          border: "rgba(255, 255, 255, 0.08)",
         },
         accent: {
           glow: "#F59E0B",
-        },
-        text: {
-          primary: "#F8FAFC",
-          secondary: "#B8B3CE",
-          muted: "#716B89",
         },
         mood: {
           happy: "#F59E0B",
@@ -44,19 +31,13 @@ export default {
         }
       },
       fontFamily: {
-        heading: ["'Inter Tight'", "'Inter'", "system-ui", "-apple-system", "sans-serif"],
-        sans: ["'Inter'", "system-ui", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "sans-serif"],
+        sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
+        heading: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
         body: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
       boxShadow: {
-        'surface-sm': '0 1px 2px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-        'surface-md': '0 8px 24px -4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.07)',
-        'surface-lg': '0 20px 48px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.09)',
-        'surface-elevated': '0 12px 36px -6px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-        'glow-sm': '0 0 15px -3px rgba(245, 158, 11, 0.25)',
-        'glow-md': '0 0 25px -4px rgba(245, 158, 11, 0.35)',
-        'glow-lg': '0 0 40px -5px rgba(245, 158, 11, 0.45)',
+        'panel': '0 24px 48px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
       },
     },
   },
