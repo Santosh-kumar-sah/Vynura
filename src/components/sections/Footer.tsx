@@ -5,7 +5,7 @@ export const Footer: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="border-t border-white/[0.06] bg-[#090A0F] py-16 text-xs text-[#94A3B8]">
+    <footer className="border-t border-white/[0.06] bg-[#0D0B14] py-16 text-xs text-[#B8B3CE]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           {/* Brand Col */}

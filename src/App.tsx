@@ -92,7 +92,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div
-      className="relative min-h-screen bg-[#090A0F] text-[#F8FAFC] selection:bg-amber-400/20 selection:text-amber-200 overflow-x-hidden font-sans transition-colors duration-500"
+      className="relative min-h-screen bg-[#0D0B14] text-[#F8FAFC] selection:bg-amber-500/25 selection:text-amber-200 overflow-x-hidden font-sans transition-colors duration-500"
     >
       {/* Dynamic Ambient Radial Light Filter */}
       <div

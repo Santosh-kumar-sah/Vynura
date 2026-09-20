@@ -60,8 +60,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
       <div
         className={`max-w-6xl mx-auto rounded-2xl transition-all duration-300 relative ${
           scrolled
-            ? 'bg-[#090A0F]/85 backdrop-blur-xl border border-white/[0.09] shadow-[0_12px_32px_rgba(0,0,0,0.6)] px-5 py-2.5'
-            : 'bg-[#090A0F]/50 backdrop-blur-md border border-white/[0.06] px-5 py-3'
+            ? 'bg-[#0D0B14]/85 backdrop-blur-xl border border-white/[0.09] shadow-[0_12px_32px_rgba(0,0,0,0.6)] px-5 py-2.5'
+            : 'bg-[#0D0B14]/50 backdrop-blur-md border border-white/[0.06] px-5 py-3'
         }`}
       >
         <div className="flex items-center justify-between gap-4">
@@ -160,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl bg-[#090A0F]/95 backdrop-blur-2xl border border-white/[0.1] shadow-2xl p-4 space-y-3"
+            className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl bg-[#0D0B14]/95 backdrop-blur-2xl border border-white/[0.1] shadow-2xl p-4 space-y-3"
           >
             <div className="flex flex-col space-y-1">
               {navLinks.map((link) => (

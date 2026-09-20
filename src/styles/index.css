@@ -3,20 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #090A0F;
-  --bg-surface-1: #11131A;
-  --bg-surface-2: #181B24;
+  --bg-base: #0D0B14;
+  --bg-surface-1: #161320;
+  --bg-surface-2: #1E1A2B;
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-highlight: rgba(255, 255, 255, 0.16);
   --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --text-secondary: #B8B3CE;
+  --text-muted: #716B89;
   --accent: #F59E0B;
 
   /* Mood indicator accents */
   --mood-happy: #F59E0B;
   --mood-calm: #38BDF8;
-  --mood-sad: #64748B;
+  --mood-sad: #818CF8;
   --mood-energetic: #A855F7;
   --mood-neutral: #94A3B8;
 }
@@ -32,9 +32,9 @@ html, body {
 }
 
 h1, h2, h3, h4, .font-heading {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  letter-spacing: -0.025em;
-  font-weight: 700;
+  font-family: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.028em;
+  font-weight: 800;
 }
 
 /* Micro Grid Background (Linear / Vercel style) */

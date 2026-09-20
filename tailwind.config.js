@@ -8,41 +8,44 @@ export default {
     extend: {
       colors: {
         surface: {
-          base: "#090A0F",
-          1: "#11131A",
-          2: "#181B24",
-          3: "#202430",
+          base: "#0D0B14",
+          1: "#161320",
+          2: "#1E1A2B",
+          3: "#28233A",
           border: "rgba(255, 255, 255, 0.08)",
-          highlight: "rgba(255, 255, 255, 0.14)",
+          highlight: "rgba(255, 255, 255, 0.16)",
         },
         brand: {
           primary: "#F59E0B",
+          gold: "#FBBF24",
+          violet: "#A78BFA",
+          coral: "#FB7185",
           secondary: "#38BDF8",
           neutral: "#94A3B8",
         },
         sky: {
-          deep: "#090A0F",
-          mid: "#11131A",
+          deep: "#0D0B14",
+          mid: "#161320",
         },
         accent: {
           glow: "#F59E0B",
         },
         text: {
           primary: "#F8FAFC",
-          secondary: "#94A3B8",
-          muted: "#64748B",
+          secondary: "#B8B3CE",
+          muted: "#716B89",
         },
         mood: {
           happy: "#F59E0B",
           calm: "#38BDF8",
-          sad: "#64748B",
+          sad: "#818CF8",
           energetic: "#A855F7",
           neutral: "#94A3B8",
         }
       },
       fontFamily: {
+        heading: ["'Inter Tight'", "'Inter'", "system-ui", "-apple-system", "sans-serif"],
         sans: ["'Inter'", "system-ui", "-apple-system", "BlinkMacSystemFont", "'Segoe UI'", "Roboto", "sans-serif"],
-        heading: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
         body: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
         mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       },
