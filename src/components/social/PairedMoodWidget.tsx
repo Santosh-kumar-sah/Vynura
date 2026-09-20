@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Users,
   Copy,
   Check,
   Lock,
   RefreshCw,
   AlertCircle,
-  XCircle,
   ArrowRight,
 } from 'lucide-react';
 import { Button } from '../common/Button';
@@ -96,9 +94,9 @@ export const PairedMoodWidget: React.FC = () => {
     try {
       const newPair = await createPairInvite(currentUser.id);
       setConnection(newPair);
-      setSuccessMessage('Invite code generated. Share with your companion.');
+      setSuccessMessage('Invite code generated.');
     } catch (err) {
-      setErrorMessage('Could not generate invite code. Please try again.');
+      setErrorMessage('Could not generate invite code.');
       console.error(err);
     } finally {
       setActionLoading(false);
@@ -118,14 +116,14 @@ export const PairedMoodWidget: React.FC = () => {
       if (result.success && result.connection) {
         setConnection(result.connection);
         setInputCode('');
-        setSuccessMessage('Connected successfully. Mutual resonance active.');
+        setSuccessMessage('Connected successfully.');
         const mood = await getPartnerTodayMood(result.connection, currentUser.id);
         setPartnerMood(mood);
       } else {
         setErrorMessage(result.error || 'Failed to link companion code.');
       }
     } catch (err) {
-      setErrorMessage('Network error while pairing. Please try again.');
+      setErrorMessage('Network error while pairing.');
       console.error(err);
     } finally {
       setActionLoading(false);
@@ -140,7 +138,7 @@ export const PairedMoodWidget: React.FC = () => {
       setConnection(null);
       setPartnerMood(null);
       setShowRevokeConfirm(false);
-      setSuccessMessage('Connection revoked. Mutual visibility severed.');
+      setSuccessMessage('Connection revoked.');
     } catch (err) {
       setErrorMessage('Failed to revoke pairing.');
       console.error(err);
@@ -156,44 +154,34 @@ export const PairedMoodWidget: React.FC = () => {
   };
 
   return (
-    <section id="paired-checkins" className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-white/[0.06]">
-      {/* Widget Container */}
-      <div className="rounded-2xl bg-[#11131A] border border-white/[0.08] p-6 sm:p-8 shadow-[0_20px_48px_-12px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.06)] relative overflow-hidden">
-        {/* Top 1px sheen */}
-        <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
-
+    <section id="paired-checkins" className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-white/[0.08]">
+      {/* Soft Elevated Interactive Panel — Minimal border, shadow only */}
+      <div className="bg-[#0C0E14] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] rounded-2xl p-6 sm:p-10 relative overflow-hidden">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.06]">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-emerald-400">
-              <Users className="w-5 h-5" />
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-6 border-b border-white/[0.06]">
+          <div>
+            <div className="text-[11px] font-mono uppercase tracking-widest text-[#94A3B8] mb-1">
+              Opt-In Companion Link
             </div>
-            <div>
-              <div className="text-xs font-mono uppercase tracking-widest text-[#94A3B8] mb-0.5">
-                Opt-In Social · Zero Data Leakage
-              </div>
-              <h3 className="text-xl font-bold text-white tracking-tight">
-                Paired Check-ins
-              </h3>
-            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Paired Check-ins
+            </h3>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {currentUser && (
-              <Button
-                variant="ghost"
-                size="sm"
+              <button
                 onClick={loadPairingData}
                 disabled={loading || actionLoading}
-                className="text-xs"
-                icon={<RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />}
+                className="text-xs text-[#94A3B8] hover:text-white transition-colors cursor-pointer bg-transparent border-none p-0 flex items-center gap-1.5"
               >
-                Refresh
-              </Button>
+                <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                <span>Sync</span>
+              </button>
             )}
             {connection?.status === 'active' && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 border border-emerald-500/25 text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                 Active Link
               </span>
             )}
@@ -207,7 +195,7 @@ export const PairedMoodWidget: React.FC = () => {
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/25 text-red-300 text-xs flex items-center gap-2"
+              className="mt-4 p-3 rounded-lg bg-red-500/10 text-red-300 text-xs flex items-center gap-2"
             >
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{errorMessage}</span>
@@ -219,7 +207,7 @@ export const PairedMoodWidget: React.FC = () => {
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs flex items-center gap-2"
+              className="mt-4 p-3 rounded-lg bg-emerald-500/10 text-emerald-300 text-xs flex items-center gap-2"
             >
               <Check className="w-4 h-4 flex-shrink-0" />
               <span>{successMessage}</span>
@@ -228,21 +216,13 @@ export const PairedMoodWidget: React.FC = () => {
         </AnimatePresence>
 
         {/* Content Body */}
-        <div className="mt-6">
+        <div className="mt-8">
           {/* STATE 1: GUEST GUARD */}
           {authChecked && !currentUser && (
-            <div className="p-8 rounded-xl bg-[#090A0F]/60 border border-white/[0.06] text-center flex flex-col items-center justify-center space-y-4">
-              <div className="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-[#94A3B8]">
-                <Lock className="w-5 h-5 text-amber-400" />
-              </div>
-              <div className="max-w-md space-y-1">
-                <h4 className="text-base font-semibold text-white">
-                  Authentication required for paired check-ins
-                </h4>
-                <p className="text-xs text-[#94A3B8] leading-relaxed">
-                  Paired check-ins require verified mutual identity to guarantee zero unauthorized access. Guest sessions cannot establish permanent links.
-                </p>
-              </div>
+            <div className="py-6 text-center max-w-md mx-auto space-y-4">
+              <p className="text-xs text-[#94A3B8] leading-relaxed">
+                Paired check-ins require verified mutual identity. Guest sessions cannot establish persistent links.
+              </p>
               <Button
                 variant="primary"
                 size="md"
@@ -254,23 +234,21 @@ export const PairedMoodWidget: React.FC = () => {
             </div>
           )}
 
-          {/* STATE 2: UNPAIRED OR PENDING */}
+          {/* STATE 2: UNPAIRED / PENDING */}
           {currentUser && (!connection || connection.status === 'pending') && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Option A: Share Code */}
-              <div className="p-6 rounded-xl bg-[#090A0F]/60 border border-white/[0.06] flex flex-col justify-between space-y-4">
-                <div>
-                  <h4 className="text-sm font-semibold text-white mb-1">
-                    Invite Companion
-                  </h4>
-                  <p className="text-xs text-[#94A3B8] leading-relaxed">
-                    Generate an invite code for your partner. Pairing is strictly mutual and revocable anytime.
-                  </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-2">
+              {/* Option A: Generate Beacon */}
+              <div className="space-y-3">
+                <div className="text-xs font-semibold text-white">
+                  1. Share your invite code
                 </div>
+                <p className="text-xs text-[#94A3B8] leading-relaxed">
+                  Generate an invite code for your partner. Mutual consent only.
+                </p>
 
                 {connection?.status === 'pending' ? (
-                  <div className="space-y-3">
-                    <div className="p-3.5 rounded-lg bg-[#11131A] border border-white/[0.1] text-center font-mono text-xl font-bold tracking-widest text-amber-400 select-all">
+                  <div className="pt-2 space-y-2">
+                    <div className="font-mono text-xl font-bold tracking-widest text-amber-400 select-all">
                       {connection.invite_code}
                     </div>
                     <div className="flex gap-2">
@@ -278,8 +256,8 @@ export const PairedMoodWidget: React.FC = () => {
                         variant="secondary"
                         size="sm"
                         onClick={() => handleCopyCode(connection.invite_code)}
-                        className="w-full text-xs"
-                        icon={copiedCode ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        className="text-xs"
+                        icon={copiedCode ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                       >
                         {copiedCode ? 'Copied' : 'Copy Code'}
                       </Button>
@@ -288,8 +266,7 @@ export const PairedMoodWidget: React.FC = () => {
                         size="sm"
                         onClick={handleRevoke}
                         disabled={actionLoading}
-                        className="w-full text-xs text-red-400 hover:text-red-300"
-                        icon={<XCircle className="w-3.5 h-3.5" />}
+                        className="text-xs text-red-400 hover:text-red-300"
                       >
                         Cancel
                       </Button>
@@ -297,45 +274,43 @@ export const PairedMoodWidget: React.FC = () => {
                   </div>
                 ) : (
                   <Button
-                    variant="primary"
-                    size="md"
+                    variant="secondary"
+                    size="sm"
                     onClick={handleCreateInvite}
                     disabled={actionLoading}
-                    className="w-full text-xs"
+                    className="text-xs"
                   >
-                    {actionLoading ? 'Generating...' : 'Generate Invite Code'}
+                    {actionLoading ? 'Generating...' : 'Generate Code'}
                   </Button>
                 )}
               </div>
 
               {/* Option B: Enter Code */}
-              <div className="p-6 rounded-xl bg-[#090A0F]/60 border border-white/[0.06] flex flex-col justify-between space-y-4">
-                <div>
-                  <h4 className="text-sm font-semibold text-white mb-1">
-                    Accept Companion Code
-                  </h4>
-                  <p className="text-xs text-[#94A3B8] leading-relaxed">
-                    Enter the code provided by your companion to initialize mutual visibility.
-                  </p>
+              <div className="space-y-3">
+                <div className="text-xs font-semibold text-white">
+                  2. Accept companion code
                 </div>
+                <p className="text-xs text-[#94A3B8] leading-relaxed">
+                  Enter the code provided by your companion to link states.
+                </p>
 
-                <form onSubmit={handleAcceptInvite} className="space-y-3">
+                <form onSubmit={handleAcceptInvite} className="flex gap-2 pt-1">
                   <input
                     type="text"
                     value={inputCode}
                     onChange={(e) => setInputCode(e.target.value.toUpperCase())}
                     placeholder="STAR-XXXX"
                     maxLength={12}
-                    className="w-full px-4 py-2.5 bg-[#11131A] border border-white/[0.1] focus:border-white/30 rounded-xl text-center font-mono text-sm tracking-widest text-white placeholder:text-[#64748B] outline-none uppercase"
+                    className="w-full px-3 py-1.5 bg-white/[0.04] border border-white/[0.1] focus:border-white/30 rounded-lg font-mono text-xs tracking-wider text-white placeholder:text-[#64748B] outline-none uppercase"
                   />
                   <Button
                     type="submit"
-                    variant="secondary"
-                    size="md"
+                    variant="primary"
+                    size="sm"
                     disabled={actionLoading || !inputCode.trim()}
-                    className="w-full text-xs"
+                    className="shrink-0 text-xs"
                   >
-                    {actionLoading ? 'Connecting...' : 'Connect Companion'}
+                    Connect
                   </Button>
                 </form>
               </div>
@@ -344,38 +319,24 @@ export const PairedMoodWidget: React.FC = () => {
 
           {/* STATE 3: ACTIVE PAIR */}
           {currentUser && connection && connection.status === 'active' && (
-            <div className="space-y-5">
-              {/* Partner Status Card */}
-              <div className="p-6 rounded-xl bg-[#090A0F]/60 border border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-base"
-                    style={{
-                      backgroundColor: partnerMood?.todayMoodColor
-                        ? `${partnerMood.todayMoodColor}15`
-                        : 'rgba(255, 255, 255, 0.05)',
-                      color: partnerMood?.todayMoodColor || '#94A3B8',
-                      border: `1px solid ${partnerMood?.todayMoodColor || 'rgba(255, 255, 255, 0.1)'}40`,
-                    }}
-                  >
-                    ✦
-                  </div>
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-3">
+                <div className="flex items-center gap-3">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: partnerMood?.todayMoodColor || '#38BDF8' }}
+                  />
                   <div>
-                    <div className="text-[11px] font-mono text-[#64748B] uppercase tracking-wider mb-0.5">
-                      Companion Status · Today
+                    <div className="text-[11px] font-mono text-[#64748B] uppercase tracking-wider">
+                      Companion Status (Today Only)
                     </div>
-                    {partnerMood?.hasCalibratedToday ? (
-                      <div className="text-base font-semibold text-white">
-                        Resonating in{' '}
-                        <span style={{ color: partnerMood.todayMoodColor || '#FFF' }}>
-                          {partnerMood.todayMoodLabel || partnerMood.todayMoodCategory}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="text-sm text-[#94A3B8]">
-                        Not yet calibrated today.
-                      </div>
-                    )}
+                    <div className="text-base font-semibold text-white">
+                      {partnerMood?.hasCalibratedToday ? (
+                        <>Resonating in <span style={{ color: partnerMood.todayMoodColor || '#FFF' }}>{partnerMood.todayMoodLabel || partnerMood.todayMoodCategory}</span></>
+                      ) : (
+                        <span className="text-[#94A3B8]">Not yet calibrated today</span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -384,48 +345,40 @@ export const PairedMoodWidget: React.FC = () => {
                 </div>
               </div>
 
-              {/* Privacy Guarantee Note */}
-              <div className="p-3.5 rounded-lg bg-emerald-500/[0.06] border border-emerald-500/20 text-xs text-[#94A3B8] flex items-center gap-2.5">
-                <Lock className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>
-                  <strong className="text-white font-medium">Zero Leakage Guarantee:</strong> Today's overarching category is the only shared data point. Journal entries, facial coordinates, and historical trends remain strictly private.
-                </span>
+              {/* Zero Leakage Guarantee Notice */}
+              <div className="text-xs text-[#64748B] flex items-center gap-2 pt-4 border-t border-white/[0.06]">
+                <Lock className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span>Zero-Knowledge: Today's overarching state is the only data shared. Zero journal text or scores exposed.</span>
               </div>
 
-              {/* Revoke Controls */}
-              <div className="flex items-center justify-between pt-2 border-t border-white/[0.06] text-xs">
+              {/* Revoke Option */}
+              <div className="flex items-center justify-between pt-2 text-xs">
                 <span className="text-[#64748B]">
-                  Revoking terminates mutual access immediately.
+                  Revoke pairing terminates mutual access immediately.
                 </span>
                 {showRevokeConfirm ? (
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <button
                       onClick={() => setShowRevokeConfirm(false)}
-                      className="text-xs"
+                      className="text-xs text-[#94A3B8] hover:text-white cursor-pointer bg-transparent border-none"
                     >
                       Cancel
-                    </Button>
-                    <Button
-                      variant="primary"
-                      size="sm"
+                    </button>
+                    <button
                       onClick={handleRevoke}
                       disabled={actionLoading}
-                      className="text-xs bg-red-600 hover:bg-red-700 text-white border-red-500"
+                      className="text-xs text-red-400 font-medium hover:text-red-300 cursor-pointer bg-transparent border-none"
                     >
                       Confirm Revoke
-                    </Button>
+                    </button>
                   </div>
                 ) : (
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <button
                     onClick={() => setShowRevokeConfirm(true)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                    className="text-xs text-red-400 hover:text-red-300 cursor-pointer bg-transparent border-none"
                   >
                     Revoke Connection
-                  </Button>
+                  </button>
                 )}
               </div>
             </div>

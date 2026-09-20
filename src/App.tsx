@@ -102,8 +102,8 @@ const AppContent: React.FC = () => {
         }}
       />
 
-      {/* Subtle Micro-Grid Pattern */}
-      <div className="fixed inset-0 pointer-events-none z-0 bg-grid-pattern opacity-60" />
+      {/* Ultra-subtle Micro-Grid */}
+      <div className="fixed inset-0 pointer-events-none z-0 bg-grid-pattern opacity-20" />
 
       {/* Top Navigation Bar */}
       <Navbar onOpenFaceDetection={() => setIsFaceDetectionOpen(true)} />

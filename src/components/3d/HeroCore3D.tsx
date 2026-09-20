@@ -21,18 +21,13 @@ export const HeroCore3D: React.FC<HeroCore3DProps> = ({
     const mount = mountRef.current;
     if (!mount) return;
 
-    // Dimensions
-    const width = mount.clientWidth || 400;
-    const height = mount.clientHeight || 400;
+    let width = mount.clientWidth || 600;
+    let height = mount.clientHeight || 500;
 
-    // Scene
+    // Scene & Orthographic Camera for pixel-perfect shader rendering
     const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-    // Camera
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 0, 5.5);
-
-    // Renderer
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true,
@@ -40,165 +35,219 @@ export const HeroCore3D: React.FC<HeroCore3DProps> = ({
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
     mount.appendChild(renderer.domElement);
 
-    // Group for mouse/scroll parallax
-    const coreGroup = new THREE.Group();
-    scene.add(coreGroup);
+    // GLSL Shaders for 4-7-8 Breathing Volumetric Light & Drift Aurora
+    const vertexShader = `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
 
-    // Inner Geometric Core: TorusKnot for organic harmonic resonance
-    const innerGeometry = new THREE.TorusKnotGeometry(1.05, 0.32, 128, 32, 2, 3);
-    const innerMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x111420,
-      emissive: new THREE.Color(moodColorRef.current),
-      emissiveIntensity: 0.18,
-      roughness: 0.2,
-      metalness: 0.85,
-      clearcoat: 0.6,
-      clearcoatRoughness: 0.15,
-      wireframe: false,
-    });
-    const innerMesh = new THREE.Mesh(innerGeometry, innerMaterial);
-    coreGroup.add(innerMesh);
+    const fragmentShader = `
+      uniform float uTime;
+      uniform vec2 uResolution;
+      uniform vec2 uMouse;
+      uniform vec3 uColor;
+      uniform vec3 uSecondaryColor;
+      uniform float uBreathPhase;
+      varying vec2 vUv;
 
-    // Outer Geometric Orbital Lattice (Wireframe Shell)
-    const outerGeometry = new THREE.IcosahedronGeometry(2.0, 2);
-    const outerMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      wireframe: true,
+      // Smooth 2D Simplex / Perlin noise approximation
+      vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+      float snoise(vec2 v) {
+        const vec4 C = vec4(0.211324865405187,
+                            0.366025403784439,
+                           -0.577350269189626,
+                            0.024390243902439);
+        vec2 i  = floor(v + dot(v, C.yy) );
+        vec2 x0 = v -   i + dot(i, C.xx);
+        vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+        vec4 x12 = x0.xyxy + C.xxzz;
+        x12.xy -= i1;
+        i = mod289(i);
+        vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+              + i.x + vec3(0.0, i1.x, 1.0 ));
+        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+        m = m*m ;
+        m = m*m ;
+        vec3 x = 2.0 * fract(p * C.www) - 1.0;
+        vec3 h = abs(x) - 0.5;
+        vec3 ox = floor(x + 0.5);
+        vec3 a0 = x - ox;
+        m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+        vec3 g;
+        g.x  = a0.x  * x0.x  + h.x  * x0.y;
+        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+        return 130.0 * dot(m, g);
+      }
+
+      void main() {
+        vec2 st = (gl_FragCoord.xy - 0.5 * uResolution) / min(uResolution.x, uResolution.y);
+
+        // Slow unhurried time scale
+        float t = uTime * 0.18;
+
+        // 1. Aurora / Fluid Gradient Background Waves (Very low contrast, drifting softly)
+        float n1 = snoise(vec2(st.x * 1.2 + t * 0.25, st.y * 1.2 - t * 0.2));
+        float n2 = snoise(vec2(st.x * 2.0 - t * 0.15, st.y * 2.0 + t * 0.3));
+        float aurora = smoothstep(-0.6, 0.8, n1 * 0.6 + n2 * 0.4);
+
+        vec3 auroraColor = mix(vec3(0.035, 0.04, 0.06), uSecondaryColor * 0.12, aurora * 0.55);
+
+        // 2. Volumetric Breathing Light Core (Centered with damped mouse buoyancy)
+        vec2 lightCenter = uMouse * 0.15;
+        vec2 diff = st - lightCenter;
+        float dist = length(diff);
+
+        // Fluid fluidic surface distortion (feels like light through deep water)
+        float fluidDistort = snoise(vec2(diff.x * 2.8 + t * 0.4, diff.y * 2.8 - t * 0.35)) * 0.08;
+        float fluidDistort2 = snoise(vec2(diff.x * 5.0 - t * 0.2, diff.y * 5.0 + t * 0.25)) * 0.03;
+        float warpedDist = dist + fluidDistort + fluidDistort2;
+
+        // 4-7-8 Breathing expansion factor passed from JS
+        float breathScale = uBreathPhase;
+        float baseRadius = 0.28 * breathScale;
+
+        // Multi-tier exponential Gaussian falloff (strictly ZERO hard edges)
+        float innerCore = exp(-pow(warpedDist / (baseRadius * 0.65), 2.4) * 4.0);
+        float midGlow   = exp(-pow(warpedDist / (baseRadius * 1.15), 2.0) * 2.8) * 0.75;
+        float outerHalo = exp(-pow(dist / (baseRadius * 2.1), 1.6) * 1.8) * 0.35;
+        float atmosphericVeil = exp(-pow(dist / 1.1, 1.4) * 1.2) * 0.14;
+
+        float totalGlow = innerCore * 0.95 + midGlow + outerHalo + atmosphericVeil;
+
+        // Gradient color ramp: white-gold center transitioning to mood accent & deep space
+        vec3 centerWhite = vec3(0.98, 0.97, 0.94);
+        vec3 orbColor = mix(uColor, centerWhite, innerCore * 0.8);
+        orbColor = mix(orbColor, uSecondaryColor, (1.0 - innerCore) * 0.3);
+
+        vec3 finalColor = auroraColor + orbColor * totalGlow;
+
+        // Soft vignette to merge completely with background (#090A0F)
+        float vignette = 1.0 - smoothstep(0.5, 1.4, length(st));
+        finalColor *= vignette;
+
+        // Alpha falloff ensures no bounding box is ever visible
+        float alpha = clamp(totalGlow * 1.1 + aurora * 0.18, 0.0, 1.0) * vignette;
+
+        gl_FragColor = vec4(finalColor, alpha);
+      }
+    `;
+
+    const uniforms = {
+      uTime: { value: 0 },
+      uResolution: { value: new THREE.Vector2(width, height) },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+      uColor: { value: new THREE.Color(moodColorRef.current) },
+      uSecondaryColor: { value: new THREE.Color('#38BDF8') },
+      uBreathPhase: { value: 1.0 },
+    };
+
+    const material = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms,
       transparent: true,
-      opacity: 0.08,
+      depthWrite: false,
+      blending: THREE.NormalBlending,
     });
-    const outerMesh = new THREE.Mesh(outerGeometry, outerMaterial);
-    coreGroup.add(outerMesh);
 
-    // Subtle Satellite Nodes
-    const particleCount = 48;
-    const particleGeometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      const radius = 2.2 + Math.random() * 0.8;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
-      positions[i] = radius * Math.sin(phi) * Math.cos(theta);
-      positions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-      positions[i + 2] = radius * Math.cos(phi);
-    }
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const particleMaterial = new THREE.PointsMaterial({
-      color: new THREE.Color(moodColorRef.current),
-      size: 0.04,
-      transparent: true,
-      opacity: 0.6,
-    });
-    const particles = new THREE.Points(particleGeometry, particleMaterial);
-    coreGroup.add(particles);
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    const quad = new THREE.Mesh(geometry, material);
+    scene.add(quad);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-    scene.add(ambientLight);
-
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
-    keyLight.position.set(4, 5, 4);
-    scene.add(keyLight);
-
-    const pointLight = new THREE.PointLight(new THREE.Color(moodColorRef.current), 3.0, 10);
-    pointLight.position.set(-3, -2, 2);
-    scene.add(pointLight);
-
-    // Mouse Tracking with Eased Damping
-    const targetRotation = { x: 0, y: 0 };
-    const targetPosition = { x: 0, y: 0 };
+    // Mouse tracking with heavy fluidic damping
+    const mouseTarget = { x: 0, y: 0 };
+    const mouseCurrent = { x: 0, y: 0 };
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = mount.getBoundingClientRect();
-      const clientX = e.clientX - rect.left;
-      const clientY = e.clientY - rect.top;
-
-      const normX = (clientX / rect.width) * 2 - 1;
-      const normY = -(clientY / rect.height) * 2 + 1;
-
-      targetRotation.y = normX * 0.7;
-      targetRotation.x = -normY * 0.5;
-      targetPosition.x = normX * 0.2;
-      targetPosition.y = normY * 0.2;
-    };
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      coreGroup.position.y = -scrollY * 0.0008;
+      const normX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const normY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+      mouseTarget.x = normX;
+      mouseTarget.y = normY;
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('scroll', handleScroll, { passive: true });
 
     // Resize Observer
     const resizeObserver = new ResizeObserver(() => {
       if (!mount) return;
-      const newWidth = mount.clientWidth;
-      const newHeight = mount.clientHeight;
-      camera.aspect = newWidth / newHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(newWidth, newHeight);
+      width = mount.clientWidth;
+      height = mount.clientHeight;
+      renderer.setSize(width, height);
+      uniforms.uResolution.value.set(width, height);
     });
     resizeObserver.observe(mount);
 
-    // Animation Loop
-    let animationFrameId: number;
+    // 4-7-8 Breathing Cycle Logic in Animation Loop
+    // Total cycle: 4s inhale + 7s hold + 8s exhale = 19.0 seconds
+    const CYCLE_DURATION = 19.0;
+    const INHALE_DURATION = 4.0;
+    const HOLD_DURATION = 7.0;
+
+    let animId: number;
     let clock = new THREE.Clock();
 
     const currentColor = new THREE.Color(moodColorRef.current);
     const targetColor = new THREE.Color(moodColorRef.current);
 
     const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-      const delta = clock.getDelta();
+      animId = requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
 
-      // Smooth color transition
+      uniforms.uTime.value = elapsed;
+
+      // 4-7-8 Breathing Math
+      const cycleTime = elapsed % CYCLE_DURATION;
+      let breathScale = 1.0;
+
+      if (cycleTime < INHALE_DURATION) {
+        // Inhale: 0s -> 4s (smooth cubic ease in-out from 1.0 to 1.28)
+        const t = cycleTime / INHALE_DURATION;
+        const ease = t * t * (3.0 - 2.0 * t);
+        breathScale = 1.0 + 0.28 * ease;
+      } else if (cycleTime < INHALE_DURATION + HOLD_DURATION) {
+        // Hold: 4s -> 11s (peak suspension with very slight harmonic float)
+        const holdT = cycleTime - INHALE_DURATION;
+        breathScale = 1.28 + Math.sin(holdT * 0.8) * 0.015;
+      } else {
+        // Exhale: 11s -> 19s (slow 8-second release back to 1.0)
+        const exhaleT = (cycleTime - (INHALE_DURATION + HOLD_DURATION)) / (CYCLE_DURATION - (INHALE_DURATION + HOLD_DURATION));
+        const ease = exhaleT * exhaleT * (3.0 - 2.0 * exhaleT);
+        breathScale = 1.28 - 0.28 * ease;
+      }
+
+      uniforms.uBreathPhase.value = breathScale;
+
+      // Slow color transition (2.5s+ smooth lerp without abrupt jumps)
       targetColor.set(moodColorRef.current);
-      currentColor.lerp(targetColor, 0.05);
-      innerMaterial.emissive.copy(currentColor);
-      pointLight.color.copy(currentColor);
-      particleMaterial.color.copy(currentColor);
+      currentColor.lerp(targetColor, 0.025);
+      uniforms.uColor.value.copy(currentColor);
 
-      // Autonomous gentle harmonic rotation
-      innerMesh.rotation.x += delta * 0.22;
-      innerMesh.rotation.y += delta * 0.35;
-      outerMesh.rotation.x -= delta * 0.08;
-      outerMesh.rotation.y -= delta * 0.12;
-      particles.rotation.y += delta * 0.05;
-
-      // Mouse Parallax Damping
-      coreGroup.rotation.x += (targetRotation.x - coreGroup.rotation.x) * 0.05;
-      coreGroup.rotation.y += (targetRotation.y - coreGroup.rotation.y) * 0.05;
-      coreGroup.position.x += (targetPosition.x - coreGroup.position.x) * 0.05;
-
-      // Floating harmonic breathing
-      innerMesh.position.y = Math.sin(elapsed * 1.5) * 0.05;
+      // Mouse inertia damping
+      mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.03;
+      mouseCurrent.y += (mouseTarget.y - mouseCurrent.y) * 0.03;
+      uniforms.uMouse.value.set(mouseCurrent.x, mouseCurrent.y);
 
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // Cleanup
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('scroll', handleScroll);
       resizeObserver.disconnect();
-
-      innerGeometry.dispose();
-      innerMaterial.dispose();
-      outerGeometry.dispose();
-      outerMaterial.dispose();
-      particleGeometry.dispose();
-      particleMaterial.dispose();
+      geometry.dispose();
+      material.dispose();
       renderer.dispose();
-
       if (mount.contains(renderer.domElement)) {
         mount.removeChild(renderer.domElement);
       }
@@ -208,7 +257,7 @@ export const HeroCore3D: React.FC<HeroCore3DProps> = ({
   return (
     <div
       ref={mountRef}
-      className={`relative w-full h-[360px] sm:h-[440px] md:h-[500px] flex items-center justify-center select-none pointer-events-auto cursor-grab active:cursor-grabbing ${className}`}
+      className={`relative w-full h-[400px] sm:h-[480px] md:h-[540px] flex items-center justify-center select-none pointer-events-none ${className}`}
     />
   );
 };

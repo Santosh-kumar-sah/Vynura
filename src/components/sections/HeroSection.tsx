@@ -13,30 +13,30 @@ export const MOODS: Record<MoodType, MoodConfig> = {
     kanji: '',
     color: '#38BDF8',
     gradient: 'from-sky-500/10 to-transparent',
-    quote: 'Baseline parasympathetic tone. Optimal state for deep reasoning.',
-    shiftAction: '4-7-8 Coherent Pacing',
+    quote: 'Baseline parasympathetic tone.',
+    shiftAction: '4-7-8 Coherent Breath Pacing',
     soundscape: 'Binaural 432Hz Drift',
   },
   happy: {
     id: 'happy',
     label: 'Radiant Joy',
-    sublabel: 'High Dopaminergic Momentum',
+    sublabel: 'Dopaminergic Tone',
     kanji: '',
     color: '#F59E0B',
     gradient: 'from-amber-500/10 to-transparent',
-    quote: 'Dopaminergic and optimistic momentum. Amplify through creative output.',
-    shiftAction: 'Capture Anchor + Micro-Journal',
+    quote: 'Elevated creative momentum.',
+    shiftAction: 'Momentum Anchor + Quick Journal',
     soundscape: 'Warm Resonant Acoustics',
   },
   energetic: {
     id: 'energetic',
-    label: 'High Energy',
-    sublabel: 'Sympathetic Activation',
+    label: 'High Focus',
+    sublabel: 'Sympathetic Drive',
     kanji: '',
     color: '#A855F7',
     gradient: 'from-purple-500/10 to-transparent',
-    quote: 'Elevated sympathetic arousal. Direct raw drive into focused execution.',
-    shiftAction: '25m Focus Sprint Timer',
+    quote: 'High sympathetic drive.',
+    shiftAction: '25-Minute Execution Sprint',
     soundscape: 'High-Tempo Neuro Synth',
   },
   neutral: {
@@ -46,20 +46,20 @@ export const MOODS: Record<MoodType, MoodConfig> = {
     kanji: '',
     color: '#94A3B8',
     gradient: 'from-slate-500/10 to-transparent',
-    quote: 'Balanced sensory equilibrium. Open bandwidth for new tasks.',
+    quote: 'Balanced baseline state.',
     shiftAction: 'Cognitive Grounding Scan',
-    soundscape: 'White Noise & Forest Air',
+    soundscape: 'Ambient White Noise',
   },
   sad: {
     id: 'sad',
     label: 'Low Valence',
-    sublabel: 'Reflective Down-Regulation',
+    sublabel: 'Down-Regulation',
     kanji: '',
     color: '#64748B',
     gradient: 'from-slate-600/10 to-transparent',
-    quote: 'Energy conservation state. Gentle physiological regulation recommended.',
+    quote: 'Energy conservation state.',
     shiftAction: 'Physiological Sigh + Rest',
-    soundscape: 'Slow Ambient Piano',
+    soundscape: 'Slow Piano Ambient',
   },
 };
 
@@ -86,49 +86,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const moodKeys: MoodType[] = ['calm', 'happy', 'energetic', 'neutral', 'sad'];
 
   return (
-    <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col items-center text-center">
-      {/* Subtle Directional Top Sheen */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] bg-gradient-to-b from-white/[0.04] to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+    <section className="relative pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col items-center text-center">
+      {/* Volumetric Breathing Orb Light Source (4-7-8 Breathing Rhythm, Zero Hard Edges) */}
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 w-full max-w-3xl pointer-events-none -z-10 opacity-90">
+        <HeroCore3D activeMoodColor={currentMood.color} />
+      </div>
 
-      {/* Top Engineering Capsule */}
+      {/* Top Meta Label */}
       <motion.div
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-xs text-[#94A3B8] mb-6"
+        className="text-[11px] font-mono uppercase tracking-widest text-[#94A3B8] mb-6 flex items-center gap-2"
       >
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-        <span className="font-medium text-white/90">Vynura 2.0</span>
-        <span className="text-white/20">|</span>
-        <span>Local Neural Vision Engine</span>
+        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: currentMood.color }} />
+        <span>4-7-8 Breathing Light Core · Local Neural Vision</span>
       </motion.div>
 
-      {/* Main Headline — Exactly 8 words, strong & benefit-driven */}
+      {/* Headline — 8 words, strong & benefit-driven */}
       <motion.h1
-        initial={{ opacity: 0, y: 14 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.05 }}
-        className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white max-w-4xl leading-[1.1] mb-5"
+        transition={{ duration: 0.4, delay: 0.05 }}
+        className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white max-w-4xl leading-[1.08] mb-5"
       >
         Real-time emotional tracking powered by local vision intelligence.
       </motion.h1>
 
       {/* Single Sentence Subline */}
       <motion.p
-        initial={{ opacity: 0, y: 14 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.1 }}
-        className="text-base sm:text-lg text-[#94A3B8] max-w-2xl leading-relaxed mb-8"
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="text-base sm:text-lg text-[#94A3B8] max-w-xl leading-relaxed mb-8 font-normal"
       >
-        Private on-device facial landmark analysis with instant physiological regulation and soundscape shifts.
+        Private on-device facial landmark analysis paired with instantaneous somatic and acoustic regulation.
       </motion.p>
 
-      {/* Call to Action Buttons */}
+      {/* Primary CTAs */}
       <motion.div
-        initial={{ opacity: 0, y: 14 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.15 }}
-        className="flex flex-wrap items-center justify-center gap-3.5 mb-14"
+        transition={{ duration: 0.4, delay: 0.15 }}
+        className="flex items-center justify-center gap-3.5 mb-16"
       >
         <Button
           size="lg"
@@ -151,63 +151,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             el?.scrollIntoView({ behavior: 'smooth' });
           }}
         >
-          System Architecture
+          Architecture
         </Button>
       </motion.div>
 
-      {/* 3D Centerpiece & Interactive State Controller */}
-      <div className="w-full relative flex flex-col items-center">
-        {/* Interactive Three.js Core */}
-        <div className="relative w-full max-w-2xl">
-          <HeroCore3D activeMoodColor={currentMood.color} />
+      {/* Unboxed State Selector — Sits directly on page, no card container */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="w-full max-w-xl pt-6 border-t border-white/[0.08]"
+      >
+        <div className="flex items-center justify-center gap-1 sm:gap-2 mb-3">
+          {moodKeys.map((key) => {
+            const item = MOODS[key];
+            const isSelected = selectedMood === key;
+            return (
+              <button
+                key={key}
+                onClick={() => handleMoodSelect(key)}
+                className={`px-3 py-1.5 rounded-full text-xs transition-all duration-200 cursor-pointer border-none flex items-center gap-1.5 ${
+                  isSelected
+                    ? 'bg-white/10 text-white font-medium'
+                    : 'bg-transparent text-[#94A3B8] hover:text-white hover:bg-white/[0.04]'
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${
+                    isSelected ? 'scale-125' : 'opacity-60'
+                  }`}
+                  style={{ backgroundColor: item.color }}
+                />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Minimal State Controller Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.2 }}
-          className="mt-2 w-full max-w-xl p-2 rounded-2xl bg-[#11131A] border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.06)] flex flex-col gap-3"
-        >
-          <div className="grid grid-cols-5 gap-1.5">
-            {moodKeys.map((key) => {
-              const item = MOODS[key];
-              const isSelected = selectedMood === key;
-              return (
-                <button
-                  key={key}
-                  onClick={() => handleMoodSelect(key)}
-                  className={`py-2 px-1.5 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer border flex flex-col items-center gap-1 ${
-                    isSelected
-                      ? 'bg-white/[0.08] text-white border-white/[0.18] shadow-sm'
-                      : 'bg-transparent text-[#94A3B8] border-transparent hover:text-white hover:bg-white/[0.03]'
-                  }`}
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <span className="truncate w-full text-center text-[11px] sm:text-xs">
-                    {item.label.replace(/Deep |Radiant |High /g, '')}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Quick Real-Time Shift Telemetry */}
-          <div className="px-3 py-2 rounded-xl bg-[#090A0F]/60 border border-white/[0.04] flex items-center justify-between text-xs text-[#94A3B8]">
-            <div className="flex items-center gap-2">
-              <span className="text-white font-medium">{currentMood.label}</span>
-              <span className="text-[#64748B]">·</span>
-              <span className="text-[11px] text-[#64748B]">{currentMood.sublabel}</span>
-            </div>
-            <div className="text-[11px] text-white/80 font-mono">
-              Suggested: <span className="text-white font-medium">{currentMood.shiftAction}</span>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+        {/* Supporting microcopy: Exactly one line */}
+        <div className="text-xs text-[#94A3B8] flex items-center justify-center gap-2">
+          <span className="text-white font-medium">{currentMood.label}:</span>
+          <span>{currentMood.shiftAction}</span>
+        </div>
+      </motion.div>
     </section>
   );
 };
