@@ -15,29 +15,26 @@ interface GlowingCardProps {
 
 export const GlowingCard: React.FC<GlowingCardProps> = ({
   children,
-  accentColor = '#FFC978',
   className,
-  glowOnHover = true,
   delay = 0,
   interactive = false,
   onClick,
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: '-50px' }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
       transition={{
         duration: 0.35,
         delay,
-        ease: [0.34, 1.56, 0.64, 1], // Overshoot pop
+        ease: [0.16, 1, 0.3, 1],
       }}
       whileHover={
         interactive
           ? {
-              y: -4,
-              scale: 1.015,
-              transition: { duration: 0.2, ease: [0.34, 1.56, 0.64, 1] },
+              y: -2,
+              transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
             }
           : undefined
       }
@@ -45,32 +42,16 @@ export const GlowingCard: React.FC<GlowingCardProps> = ({
       className={twMerge(
         clsx(
           'relative rounded-2xl p-6 sm:p-7 overflow-hidden',
-          'bg-gradient-to-br from-[#24214A]/70 via-[#1D1B3E]/85 to-[#161430]/95',
-          'backdrop-blur-xl border border-[#B8B4D9]/15',
-          'shadow-[0_12px_36px_-8px_rgba(10,8,28,0.75)]',
-          glowOnHover && 'transition-all duration-300 hover:border-[#FFC978]/40 hover:shadow-[0_0_30px_-5px_rgba(255,201,120,0.25)]',
+          'bg-[#11131A] border border-white/[0.08]',
+          'shadow-[0_16px_36px_-10px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.06)]',
+          'transition-all duration-200 hover:border-white/[0.16] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.1)]',
           interactive && 'cursor-pointer',
           className
         )
       )}
     >
-      {/* Top Edge Luminous Light Flare */}
-      <div
-        className="absolute top-0 left-10 right-10 h-[1.5px] opacity-70 pointer-events-none"
-        style={{
-          background: `linear-gradient(90deg, transparent 0%, ${accentColor} 50%, transparent 100%)`,
-        }}
-      />
-
-      {/* Subtle Corner Accents */}
-      <div className="absolute top-2.5 left-2.5 w-1.5 h-1.5 border-t border-l border-[#FFC978]/30 rounded-tl-sm pointer-events-none" />
-      <div className="absolute bottom-2.5 right-2.5 w-1.5 h-1.5 border-b border-r border-[#FFC978]/30 rounded-br-sm pointer-events-none" />
-
-      {/* Internal ambient glow blob */}
-      <div
-        className="absolute -top-16 -right-16 w-36 h-36 rounded-full opacity-15 blur-3xl pointer-events-none"
-        style={{ backgroundColor: accentColor }}
-      />
+      {/* 1px Subtly Graduated Top Rim Highlight */}
+      <div className="absolute top-0 left-6 right-6 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
 
       <div className="relative z-10">{children}</div>
     </motion.div>

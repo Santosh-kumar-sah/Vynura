@@ -1,64 +1,65 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Eye, Music, Wind, Heart, ArrowRight } from 'lucide-react';
+import { ArrowRight, Terminal } from 'lucide-react';
 import { Button } from '../common/Button';
+import { HeroCore3D } from '../3d/HeroCore3D';
 import type { MoodType, MoodConfig } from '../../types';
 
 export const MOODS: Record<MoodType, MoodConfig> = {
-  happy: {
-    id: 'happy',
-    label: 'Joy & Radiance',
-    sublabel: 'Radiance',
-    kanji: 'Joy',
-    color: '#FF9E7D',
-    gradient: 'from-[#FF9E7D]/20 via-[#FFC978]/10 to-transparent',
-    quote: 'Your light is magnetic today. Let us amplify this resonance.',
-    shiftAction: 'Euphoric Lofi Soundscape + Gratitude Anchor',
-    soundscape: 'Warm Acoustic & Summer Fireflies',
-  },
   calm: {
     id: 'calm',
-    label: 'Deep Serenity',
-    sublabel: 'Serenity',
-    kanji: 'Calm',
-    color: '#6FBFC4',
-    gradient: 'from-[#6FBFC4]/20 via-[#4A5B8C]/10 to-transparent',
-    quote: 'Still waters reflect the infinite sky. You are grounded in this moment.',
-    shiftAction: 'Coherent 4-7-8 Breathing + Ocean Drift',
-    soundscape: 'Binaural Theta Waves (432Hz)',
+    label: 'Deep Calm',
+    sublabel: 'Parasympathetic Active',
+    kanji: '',
+    color: '#38BDF8',
+    gradient: 'from-sky-500/10 to-transparent',
+    quote: 'Baseline parasympathetic tone. Optimal state for deep reasoning.',
+    shiftAction: '4-7-8 Coherent Pacing',
+    soundscape: 'Binaural 432Hz Drift',
   },
-  sad: {
-    id: 'sad',
-    label: 'Gentle Rain',
-    sublabel: 'Gentle',
-    kanji: 'Reflect',
-    color: '#4A5B8C',
-    gradient: 'from-[#4A5B8C]/25 via-[#2D2A5C]/20 to-transparent',
-    quote: 'Every rain shower cleanses the soil for tomorrow\'s blossoming.',
-    shiftAction: 'Compassionate Self-Inquiry Prompt + Warm Tone Hug',
-    soundscape: 'Soft Piano & Midnight Rain',
+  happy: {
+    id: 'happy',
+    label: 'Radiant Joy',
+    sublabel: 'High Dopaminergic Momentum',
+    kanji: '',
+    color: '#F59E0B',
+    gradient: 'from-amber-500/10 to-transparent',
+    quote: 'Dopaminergic and optimistic momentum. Amplify through creative output.',
+    shiftAction: 'Capture Anchor + Micro-Journal',
+    soundscape: 'Warm Resonant Acoustics',
   },
   energetic: {
     id: 'energetic',
-    label: 'Starlight Surge',
-    sublabel: 'Surge',
-    kanji: 'Energy',
-    color: '#C25AE0',
-    gradient: 'from-[#C25AE0]/20 via-[#FFC978]/10 to-transparent',
-    quote: 'Raw momentum flows through you. Direct this current with intention.',
-    shiftAction: 'Focus Sprint Timer + High-Vibe Groove',
-    soundscape: 'Uplifting Synthwave & Cosmic Pulses',
+    label: 'High Energy',
+    sublabel: 'Sympathetic Activation',
+    kanji: '',
+    color: '#A855F7',
+    gradient: 'from-purple-500/10 to-transparent',
+    quote: 'Elevated sympathetic arousal. Direct raw drive into focused execution.',
+    shiftAction: '25m Focus Sprint Timer',
+    soundscape: 'High-Tempo Neuro Synth',
   },
   neutral: {
     id: 'neutral',
-    label: 'Clear Equilibrium',
-    sublabel: 'Equilibrium',
-    kanji: 'Balance',
-    color: '#8B87B0',
-    gradient: 'from-[#8B87B0]/20 via-[#2D2A5C]/15 to-transparent',
-    quote: 'A clean slate before the brush touches canvas. Where will you wander?',
-    shiftAction: 'Micro-Mindfulness Scan + Vision Prompt',
-    soundscape: 'Ambient Wind Chimes & Forest Mist',
+    label: 'Equilibrium',
+    sublabel: 'Homeostatic Baseline',
+    kanji: '',
+    color: '#94A3B8',
+    gradient: 'from-slate-500/10 to-transparent',
+    quote: 'Balanced sensory equilibrium. Open bandwidth for new tasks.',
+    shiftAction: 'Cognitive Grounding Scan',
+    soundscape: 'White Noise & Forest Air',
+  },
+  sad: {
+    id: 'sad',
+    label: 'Low Valence',
+    sublabel: 'Reflective Down-Regulation',
+    kanji: '',
+    color: '#64748B',
+    gradient: 'from-slate-600/10 to-transparent',
+    quote: 'Energy conservation state. Gentle physiological regulation recommended.',
+    shiftAction: 'Physiological Sigh + Rest',
+    soundscape: 'Slow Ambient Piano',
   },
 };
 
@@ -70,204 +71,141 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onStartJourney,
-  activeMood = 'happy',
+  activeMood = 'calm',
   onSelectMood,
 }) => {
   const [internalMood, setInternalMood] = useState<MoodType>(activeMood);
   const selectedMood = activeMood || internalMood;
   const currentMood = MOODS[selectedMood];
 
-  const handleMoodClick = (mKey: MoodType) => {
+  const handleMoodSelect = (mKey: MoodType) => {
     setInternalMood(mKey);
     if (onSelectMood) onSelectMood(mKey);
   };
 
+  const moodKeys: MoodType[] = ['calm', 'happy', 'energetic', 'neutral', 'sad'];
+
   return (
-    <section className="relative min-h-[92vh] flex flex-col justify-center items-center pt-28 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Dynamic Mood Ambient Radial Light (shifts smoothly when user clicks mood pills) */}
+    <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col items-center text-center">
+      {/* Subtle Directional Top Sheen */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[280px] bg-gradient-to-b from-white/[0.04] to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+
+      {/* Top Engineering Capsule */}
       <motion.div
-        key={selectedMood}
-        initial={{ opacity: 0, scale: 0.85 }}
-        animate={{ opacity: 0.35, scale: 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="absolute top-1/4 w-[500px] sm:w-[700px] h-[500px] rounded-full blur-[120px] pointer-events-none -z-10"
-        style={{ backgroundColor: currentMood.color }}
-      />
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-xs text-[#94A3B8] mb-6"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+        <span className="font-medium text-white/90">Vynura 2.0</span>
+        <span className="text-white/20">|</span>
+        <span>Local Neural Vision Engine</span>
+      </motion.div>
 
-      <div className="max-w-5xl mx-auto w-full text-center flex flex-col items-center">
-        {/* Status pill */}
+      {/* Main Headline — Exactly 8 words, strong & benefit-driven */}
+      <motion.h1
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.05 }}
+        className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white max-w-4xl leading-[1.1] mb-5"
+      >
+        Real-time emotional tracking powered by local vision intelligence.
+      </motion.h1>
+
+      {/* Single Sentence Subline */}
+      <motion.p
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.1 }}
+        className="text-base sm:text-lg text-[#94A3B8] max-w-2xl leading-relaxed mb-8"
+      >
+        Private on-device facial landmark analysis with instant physiological regulation and soundscape shifts.
+      </motion.p>
+
+      {/* Call to Action Buttons */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.15 }}
+        className="flex flex-wrap items-center justify-center gap-3.5 mb-14"
+      >
+        <Button
+          size="lg"
+          variant="primary"
+          icon={<ArrowRight className="w-4 h-4" />}
+          onClick={() => {
+            if (onStartJourney) onStartJourney();
+          }}
+        >
+          Start Calibration
+        </Button>
+
+        <Button
+          size="lg"
+          variant="secondary"
+          icon={<Terminal className="w-4 h-4 text-[#94A3B8]" />}
+          iconPosition="left"
+          onClick={() => {
+            const el = document.getElementById('concept');
+            el?.scrollIntoView({ behavior: 'smooth' });
+          }}
+        >
+          System Architecture
+        </Button>
+      </motion.div>
+
+      {/* 3D Centerpiece & Interactive State Controller */}
+      <div className="w-full relative flex flex-col items-center">
+        {/* Interactive Three.js Core */}
+        <div className="relative w-full max-w-2xl">
+          <HeroCore3D activeMoodColor={currentMood.color} />
+        </div>
+
+        {/* Minimal State Controller Bar */}
         <motion.div
-          initial={{ opacity: 0, y: -16, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#24214A]/70 border border-[#FFC978]/35 backdrop-blur-md shadow-glow-sm mb-6"
-        >
-          <span className="text-[#FFC978] text-xs">✦</span>
-          <span className="text-xs font-semibold text-[#F5F2ED] tracking-wide">
-            Face-Powered Emotional Sanctuary
-          </span>
-          <span className="w-1 h-1 rounded-full bg-[#FFC978]/60" />
-          <span className="text-[11px] text-[#FFC978] font-bold">Real-Time Insight</span>
-        </motion.div>
-
-        {/* Hero Title with Shinkai Sky Aesthetic */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.08, ease: [0.34, 1.56, 0.64, 1] }}
-          className="font-heading text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#F5F2ED] leading-[1.12] mb-6 max-w-4xl"
+          transition={{ duration: 0.35, delay: 0.2 }}
+          className="mt-2 w-full max-w-xl p-2 rounded-2xl bg-[#11131A] border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.06)] flex flex-col gap-3"
         >
-          See your emotion in the mirror of the{' '}
-          <span className="relative inline-block">
-            <span className="bg-gradient-to-r from-[#FFC978] via-[#FF9E7D] to-[#6FBFC4] bg-clip-text text-transparent">
-              night sky
-            </span>
-            <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#FFC978] to-transparent opacity-70" />
-          </span>
-          .
-        </motion.h1>
-
-        {/* Tagline & Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.15, ease: [0.34, 1.56, 0.64, 1] }}
-          className="text-lg sm:text-xl text-[#B8B4D9] max-w-2xl font-normal leading-relaxed mb-4"
-        >
-          <span className="font-heading font-semibold text-[#F5F2ED] italic text-xl sm:text-2xl block mb-1">
-            "See it. Feel it. Shift it."
-          </span>
-          An intimate web companion inspired by twilight skies & warm firefly glows.
-          Look into your camera, discover your emotional landscape, and receive instantaneous sonic & somatic shifts.
-        </motion.p>
-
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 18, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.35, delay: 0.22, ease: [0.34, 1.56, 0.64, 1] }}
-          className="flex flex-wrap items-center justify-center gap-4 mt-4 mb-12"
-        >
-          <Button
-            size="lg"
-            variant="primary"
-            icon={<ArrowRight className="w-4 h-4" />}
-            onClick={() => {
-              if (onStartJourney) onStartJourney();
-            }}
-          >
-            Begin Your Journey
-          </Button>
-
-          <Button
-            size="lg"
-            variant="secondary"
-            icon={<Eye className="w-4 h-4 text-[#6FBFC4]" />}
-            iconPosition="left"
-            onClick={() => {
-              const el = document.getElementById('concept');
-              el?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            How Vision Works
-          </Button>
-        </motion.div>
-
-        {/* Interactive Mood Alchemy Preview Bar */}
-        <motion.div
-          id="spectrum"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-          className="w-full max-w-3xl rounded-2xl bg-gradient-to-b from-[#24214A]/80 to-[#1A1836]/95 border border-[#B8B4D9]/20 p-5 sm:p-6 backdrop-blur-xl shadow-[0_16px_40px_-10px_rgba(10,8,28,0.85)] relative overflow-hidden"
-        >
-          {/* Top light rim */}
-          <div
-            className="absolute top-0 left-0 right-0 h-[1.5px] transition-colors duration-500"
-            style={{
-              background: `linear-gradient(90deg, transparent, ${currentMood.color}, transparent)`,
-            }}
-          />
-
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-[#B8B4D9]/15">
-            <div className="flex items-center gap-2 text-left">
-              <Sparkles className="w-4 h-4 text-[#FFC978]" />
-              <span className="text-xs uppercase tracking-wider font-semibold text-[#B8B4D9]">
-                Interactive Mood Engine Preview
-              </span>
-            </div>
-            <span className="text-xs text-[#FFC978]/90 font-medium">
-              Select an emotional frequency to preview recommendations:
-            </span>
-          </div>
-
-          {/* Mood Select Pills */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
-            {(Object.keys(MOODS) as MoodType[]).map((mKey) => {
-              const mood = MOODS[mKey];
-              const isSelected = selectedMood === mKey;
+          <div className="grid grid-cols-5 gap-1.5">
+            {moodKeys.map((key) => {
+              const item = MOODS[key];
+              const isSelected = selectedMood === key;
               return (
                 <button
-                  key={mKey}
-                  onClick={() => handleMoodClick(mKey)}
-                  className={`relative flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                  key={key}
+                  onClick={() => handleMoodSelect(key)}
+                  className={`py-2 px-1.5 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer border flex flex-col items-center gap-1 ${
                     isSelected
-                      ? 'bg-[#2D2A5C] text-[#F5F2ED] border shadow-glow-sm'
-                      : 'bg-[#1A1836]/60 text-[#B8B4D9] border border-[#B8B4D9]/10 hover:border-[#B8B4D9]/30 hover:text-[#F5F2ED]'
+                      ? 'bg-white/[0.08] text-white border-white/[0.18] shadow-sm'
+                      : 'bg-transparent text-[#94A3B8] border-transparent hover:text-white hover:bg-white/[0.03]'
                   }`}
-                  style={{
-                    borderColor: isSelected ? mood.color : undefined,
-                  }}
                 >
                   <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: mood.color }}
+                    className="w-1.5 h-1.5 rounded-full"
+                    style={{ backgroundColor: item.color }}
                   />
-                  <span>{mood.label.split(' ')[0]}</span>
-                  <span className="text-[10px] opacity-70">({mood.sublabel})</span>
+                  <span className="truncate w-full text-center text-[11px] sm:text-xs">
+                    {item.label.replace(/Deep |Radiant |High /g, '')}
+                  </span>
                 </button>
               );
             })}
           </div>
 
-          {/* Selected Mood Reactive Card Output */}
-          <motion.div
-            key={selectedMood}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25, ease: [0.34, 1.56, 0.64, 1] }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left pt-1"
-          >
-            <div className="p-3 rounded-xl bg-[#1A1836]/70 border border-[#B8B4D9]/10">
-              <div className="flex items-center gap-1.5 text-xs text-[#FFC978] font-medium mb-1">
-                <Heart className="w-3.5 h-3.5" />
-                <span>Emotional Reading</span>
-              </div>
-              <p className="text-xs text-[#F5F2ED] italic leading-relaxed">
-                "{currentMood.quote}"
-              </p>
+          {/* Quick Real-Time Shift Telemetry */}
+          <div className="px-3 py-2 rounded-xl bg-[#090A0F]/60 border border-white/[0.04] flex items-center justify-between text-xs text-[#94A3B8]">
+            <div className="flex items-center gap-2">
+              <span className="text-white font-medium">{currentMood.label}</span>
+              <span className="text-[#64748B]">·</span>
+              <span className="text-[11px] text-[#64748B]">{currentMood.sublabel}</span>
             </div>
-
-            <div className="p-3 rounded-xl bg-[#1A1836]/70 border border-[#B8B4D9]/10">
-              <div className="flex items-center gap-1.5 text-xs text-[#6FBFC4] font-medium mb-1">
-                <Wind className="w-3.5 h-3.5" />
-                <span>Recommended Shift</span>
-              </div>
-              <p className="text-xs text-[#F5F2ED] font-semibold leading-relaxed">
-                {currentMood.shiftAction}
-              </p>
+            <div className="text-[11px] text-white/80 font-mono">
+              Suggested: <span className="text-white font-medium">{currentMood.shiftAction}</span>
             </div>
-
-            <div className="p-3 rounded-xl bg-[#1A1836]/70 border border-[#B8B4D9]/10">
-              <div className="flex items-center gap-1.5 text-xs text-[#FF9E7D] font-medium mb-1">
-                <Music className="w-3.5 h-3.5" />
-                <span>Adaptive Soundscape</span>
-              </div>
-              <p className="text-xs text-[#F5F2ED] font-medium leading-relaxed">
-                {currentMood.soundscape}
-              </p>
-            </div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>

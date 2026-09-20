@@ -1,238 +1,127 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ScanFace, Activity, Wind, Music, Sparkles, ShieldCheck } from 'lucide-react';
-import { GlowingCard } from '../common/GlowingCard';
+import { Cpu, Activity, Zap } from 'lucide-react';
 
 export const ConceptSection: React.FC = () => {
-  return (
-    <section id="concept" className="relative py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
-        >
-          <div className="flex items-center gap-2 text-[#FFC978] text-xs font-semibold uppercase tracking-widest mb-2">
-            <span>01 / ARCHITECTURE</span>
-            <span className="w-1 h-1 rounded-full bg-[#FFC978]" />
-            <span>The Concept & Workflow</span>
-          </div>
-          <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight">
-            How Vynura shifts your state
-          </h2>
-        </motion.div>
+  const steps = [
+    {
+      step: '01',
+      title: 'Transient In-Memory Ingestion',
+      desc: 'Raw video frames are evaluated locally within browser memory and discarded immediately after inference. Zero bytes ever leave the client sandbox.',
+      icon: <Cpu className="w-4 h-4 text-sky-400" />,
+    },
+    {
+      step: '02',
+      title: '68-Point Landmark Geometry',
+      desc: 'Local neural models compute normalized distance ratios across lip elevation, ocular narrowing, and eyebrow tension vectors at 60 FPS.',
+      icon: <Activity className="w-4 h-4 text-amber-400" />,
+    },
+    {
+      step: '03',
+      title: 'Real-Time State Regulation',
+      desc: 'Confidence-weighted valence maps trigger targeted somatic breath pacers, binaural soundscapes, or cognitive capture cards instantaneously.',
+      icon: <Zap className="w-4 h-4 text-purple-400" />,
+    },
+  ];
 
-        <motion.p
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.35, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
-          className="text-sm sm:text-base text-[#B8B4D9] max-w-md leading-relaxed"
-        >
-          Not an arbitrary survey. Vynura utilizes high-precision facial landmark geometry processed locally on your hardware to offer immediate sensory grounding.
-        </motion.p>
+  return (
+    <section id="concept" className="py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto border-t border-white/[0.06]">
+      {/* Section Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div>
+          <div className="text-xs font-mono uppercase tracking-widest text-[#94A3B8] mb-2">
+            System Architecture
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+            How Vynura evaluates state
+          </h2>
+        </div>
+        <p className="text-sm sm:text-base text-[#94A3B8] max-w-md">
+          A deterministic client-side pipeline. Facial landmark geometry converted into physiological regulation in sub-16ms frames.
+        </p>
       </div>
 
-      {/* Asymmetric Composition */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        {/* Panel 1: The Vision Gaze (Large Left Panel - Span 7 cols) */}
-        <div className="lg:col-span-7 flex flex-col">
-          <GlowingCard
-            accentColor="#FFC978"
-            className="flex-1 p-6 sm:p-8 flex flex-col justify-between"
-            delay={0.1}
-          >
+      {/* Asymmetric Split Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        {/* Left: Interactive Simulated Geometry Visual (Span 7) */}
+        <div className="lg:col-span-7 rounded-2xl bg-[#11131A] border border-white/[0.08] p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden shadow-[0_16px_36px_-10px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.06)]">
+          {/* Top 1px sheen */}
+          <div className="absolute top-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="font-mono text-xs text-white">LOCAL_NEURAL_PIPELINE</span>
+            </div>
+            <span className="font-mono text-[11px] text-[#94A3B8]">LATENCY &lt; 16ms</span>
+          </div>
+
+          {/* Abstract Wireframe Face Mesh Geometry Graphic */}
+          <div className="my-8 py-6 flex items-center justify-center relative">
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-full border border-white/10 flex items-center justify-center">
+              {/* Concentric Calibration Rings */}
+              <div className="absolute inset-4 rounded-full border border-dashed border-white/15" />
+              <div className="absolute inset-10 rounded-full border border-white/[0.08]" />
+
+              {/* Landmark Nodes */}
+              <div className="absolute top-12 left-14 w-2 h-2 rounded-full bg-sky-400/80 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+              <div className="absolute top-12 right-14 w-2 h-2 rounded-full bg-sky-400/80 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+              <div className="absolute top-20 left-16 w-1.5 h-1.5 rounded-full bg-white/70" />
+              <div className="absolute top-20 right-16 w-1.5 h-1.5 rounded-full bg-white/70" />
+              <div className="absolute top-28 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-amber-400/90 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
+              <div className="absolute bottom-12 left-16 right-16 h-4 border-b-2 border-amber-400/80 rounded-full" />
+
+              {/* Central Vector Crosshair */}
+              <div className="text-xs font-mono text-white/40 tracking-wider">
+                68 PTS
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Telemetry Footer */}
+          <div className="grid grid-cols-3 gap-3 pt-4 border-t border-white/[0.06] text-xs">
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#FFC978]/15 border border-[#FFC978]/40 flex items-center justify-center text-[#FFC978]">
-                    <ScanFace className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="text-[11px] font-mono uppercase text-[#FFC978] tracking-widest block font-bold">
-                      PHASE 01 · STEP 01
-                    </span>
-                    <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
-                      The Look — In-Browser Micro-Expressions
-                    </h3>
-                  </div>
-                </div>
-                <span className="px-2.5 py-1 rounded-full bg-[#2D2A5C] text-[11px] font-mono text-[#6FBFC4] border border-[#6FBFC4]/30">
-                  0ms Latency
-                </span>
-              </div>
-
-              <p className="text-sm text-[#B8B4D9] leading-relaxed mb-6">
-                Position your face within the celestial aperture. The neural model maps 68 distinct biometric coordinate nodes across eye openness, brow tension, and mouth curvature.
-              </p>
-
-              {/* Simulated Face-Mesh HUD Visualizer */}
-              <div className="relative h-48 rounded-xl bg-[#121029] border border-[#B8B4D9]/20 overflow-hidden flex items-center justify-center p-4">
-                {/* Background grid lines */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#2D2A5C_1px,transparent_1px),linear-gradient(to_bottom,#2D2A5C_1px,transparent_1px)] bg-[size:24px_24px] opacity-30" />
-
-                {/* Reticle Focus Rings */}
-                <div className="absolute w-36 h-36 rounded-full border border-dashed border-[#FFC978]/40 animate-spin" style={{ animationDuration: '30s' }} />
-                <div className="absolute w-28 h-28 rounded-full border border-[#6FBFC4]/40" />
-
-                {/* Simulated Landmark Nodes */}
-                <div className="relative z-10 flex flex-col items-center gap-2">
-                  <div className="flex items-center gap-6">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#6FBFC4] shadow-[0_0_8px_#6FBFC4]" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#6FBFC4] shadow-[0_0_8px_#6FBFC4]" />
-                  </div>
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#FFC978] shadow-[0_0_6px_#FFC978]" />
-                  <div className="w-12 h-3 rounded-full border-b-2 border-[#FF9E7D] shadow-[0_0_8px_#FF9E7D]" />
-                </div>
-
-                {/* Live Floating HUD Telemetry Badges */}
-                <div className="absolute top-3 left-3 px-2 py-1 rounded bg-[#1A1836]/90 border border-[#FFC978]/30 text-[10px] font-mono text-[#FFC978]">
-                  EYE_ASPECT_RATIO: 0.842
-                </div>
-                <div className="absolute top-3 right-3 px-2 py-1 rounded bg-[#1A1836]/90 border border-[#6FBFC4]/30 text-[10px] font-mono text-[#6FBFC4]">
-                  TENSION_INDEX: 0.12 (LOW)
-                </div>
-                <div className="absolute bottom-3 left-3 px-2 py-1 rounded bg-[#1A1836]/90 border border-[#B8B4D9]/30 text-[10px] font-mono text-[#B8B4D9]">
-                  CONFIDENCE: 99.4%
-                </div>
-                <div className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded bg-[#FF9E7D]/20 border border-[#FF9E7D]/40 text-[10px] font-semibold text-[#FF9E7D]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF9E7D] animate-ping" />
-                  STATE: JOY_RESONANT
-                </div>
-              </div>
+              <div className="text-[#64748B] text-[11px]">Inference</div>
+              <div className="font-mono text-white font-medium">On-Device</div>
             </div>
-
-            <div className="mt-6 pt-4 border-t border-[#B8B4D9]/15 flex items-center justify-between text-xs text-[#B8B4D9]">
-              <span className="flex items-center gap-1.5 text-[#6FBFC4]">
-                <ShieldCheck className="w-4 h-4" /> 100% Client-Side WebAssembly
-              </span>
-              <span className="font-mono text-[#FFC978]">Privacy Secured</span>
+            <div>
+              <div className="text-[#64748B] text-[11px]">Frame Rate</div>
+              <div className="font-mono text-white font-medium">60 FPS</div>
             </div>
-          </GlowingCard>
+            <div>
+              <div className="text-[#64748B] text-[11px]">Storage</div>
+              <div className="font-mono text-emerald-400 font-medium">0 KB Retained</div>
+            </div>
+          </div>
         </div>
 
-        {/* Panel 2: The Emotional Alchemy (Tall Right Panel - Span 5 cols) */}
-        <div className="lg:col-span-5 flex flex-col">
-          <GlowingCard
-            accentColor="#6FBFC4"
-            className="flex-1 p-6 sm:p-8 flex flex-col justify-between"
-            delay={0.2}
-          >
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#6FBFC4]/15 border border-[#6FBFC4]/40 flex items-center justify-center text-[#6FBFC4]">
-                  <Activity className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-[11px] font-mono uppercase text-[#6FBFC4] tracking-widest block font-bold">
-                    PHASE 02 · STEP 02
-                  </span>
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
-                    The Translation — Cosmic Alchemy
-                  </h3>
-                </div>
-              </div>
-
-              <p className="text-sm text-[#B8B4D9] leading-relaxed mb-6">
-                Facial vectors are translated into emotional frequencies across 5 primary harmonic states, mapping your mental weather.
-              </p>
-
-              {/* Harmonic State Frequency Bars */}
-              <div className="space-y-3 bg-[#121029]/80 p-4 rounded-xl border border-[#B8B4D9]/15">
-                {[
-                  { label: 'Radiance / Joy', value: 88, color: '#FF9E7D' },
-                  { label: 'Serenity / Calm', value: 72, color: '#6FBFC4' },
-                  { label: 'Energy / Drive', value: 64, color: '#C25AE0' },
-                  { label: 'Introspection / Neutral', value: 30, color: '#8B87B0' },
-                ].map((item) => (
-                  <div key={item.label}>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-[#F5F2ED] font-medium">{item.label}</span>
-                      <span className="font-mono text-[#B8B4D9]">{item.value}%</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full bg-[#1A1836] overflow-hidden p-0.5 border border-[#B8B4D9]/15">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${item.value}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: 'easeOut' }}
-                        className="h-full rounded-full"
-                        style={{ backgroundColor: item.color }}
-                      />
-                    </div>
+        {/* Right: Architectural Workflow Steps (Span 5) */}
+        <div className="lg:col-span-5 flex flex-col justify-between gap-4">
+          {steps.map((item, idx) => (
+            <motion.div
+              key={item.step}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: idx * 0.08 }}
+              className="p-5 sm:p-6 rounded-2xl bg-[#11131A] border border-white/[0.08] shadow-[0_8px_24px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] hover:border-white/[0.14] transition-all"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08]">
+                    {item.icon}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-[#B8B4D9]/15 flex items-center justify-between text-xs text-[#B8B4D9]">
-              <span>Dynamic Harmonic Mapping</span>
-              <span className="font-mono text-[#6FBFC4]">Harmonic Waves</span>
-            </div>
-          </GlowingCard>
-        </div>
-
-        {/* Panel 3: The Shift Actions (Wide Full-Span Bottom Panel - Span 12 cols) */}
-        <div className="lg:col-span-12">
-          <GlowingCard
-            accentColor="#FF9E7D"
-            className="p-6 sm:p-8"
-            delay={0.3}
-          >
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#FF9E7D]/15 border border-[#FF9E7D]/40 flex items-center justify-center text-[#FF9E7D]">
-                  <Wind className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-[11px] font-mono uppercase text-[#FF9E7D] tracking-widest block font-bold">
-                    PHASE 03 · STEP 03
-                  </span>
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
-                    The Shift — Sensory & Somatic Intervention
+                  <h3 className="text-sm sm:text-base font-semibold text-white">
+                    {item.title}
                   </h3>
                 </div>
+                <span className="font-mono text-xs text-[#64748B]">{item.step}</span>
               </div>
-              <p className="text-xs text-[#B8B4D9] max-w-sm">
-                Targeted actions designed to amplify positive resonance or soothe overstimulated nervous systems.
+              <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
+                {item.desc}
               </p>
-            </div>
-
-            {/* 3 Modality Sub-Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 rounded-xl bg-[#1A1836]/90 border border-[#B8B4D9]/15 hover:border-[#FFC978]/40 transition-colors">
-                <div className="flex items-center gap-2 text-[#FFC978] text-xs font-bold mb-2">
-                  <Music className="w-4 h-4" />
-                  <span>Sonic Frequency Shifts</span>
-                </div>
-                <p className="text-xs text-[#B8B4D9] leading-relaxed">
-                  Binaural audio, ambient lofi piano, or 432Hz calming chimes matched to your emotional resonance.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-[#1A1836]/90 border border-[#B8B4D9]/15 hover:border-[#6FBFC4]/40 transition-colors">
-                <div className="flex items-center gap-2 text-[#6FBFC4] text-xs font-bold mb-2">
-                  <Wind className="w-4 h-4" />
-                  <span>Rhythmic Breath Guides</span>
-                </div>
-                <p className="text-xs text-[#B8B4D9] leading-relaxed">
-                  Firefly particle lung animations guiding 4-7-8 parasympathetic down-regulation in under 90 seconds.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-[#1A1836]/90 border border-[#B8B4D9]/15 hover:border-[#C25AE0]/40 transition-colors">
-                <div className="flex items-center gap-2 text-[#C25AE0] text-xs font-bold mb-2">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Constellation Inscriptions</span>
-                </div>
-                <p className="text-xs text-[#B8B4D9] leading-relaxed">
-                  One-sentence cognitive reframing prompts that turn transient feelings into permanent celestial stars.
-                </p>
-              </div>
-            </div>
-          </GlowingCard>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

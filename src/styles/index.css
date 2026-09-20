@@ -3,122 +3,97 @@
 @tailwind utilities;
 
 :root {
-  --bg-sky-deep: #1A1836;
-  --bg-sky-mid: #2D2A5C;
-  --accent-glow: #FFC978;
-  --text-primary: #F5F2ED;
-  --text-secondary: #B8B4D9;
+  --bg-base: #090A0F;
+  --bg-surface-1: #11131A;
+  --bg-surface-2: #181B24;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(255, 255, 255, 0.16);
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --accent: #F59E0B;
 
-  /* Mood tones */
-  --mood-happy: #FF9E7D;
-  --mood-calm: #6FBFC4;
-  --mood-sad: #4A5B8C;
-  --mood-energetic: #C25AE0;
-  --mood-neutral: #8B87B0;
+  /* Mood indicator accents */
+  --mood-happy: #F59E0B;
+  --mood-calm: #38BDF8;
+  --mood-sad: #64748B;
+  --mood-energetic: #A855F7;
+  --mood-neutral: #94A3B8;
 }
 
-/* Base Night-Sky Canvas & Ambient Feel */
+/* Base Canvas & Typography */
 html, body {
-  background-color: var(--bg-sky-deep);
+  background-color: var(--bg-base);
   color: var(--text-primary);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
+  letter-spacing: -0.011em;
 }
 
 h1, h2, h3, h4, .font-heading {
-  font-family: 'Klee One', cursive, serif;
-}
-
-/* Subtle Film Grain / Noise Overlay (SVG Data-URI) */
-.bg-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
-}
-
-/* Anime Sky Gradient Depth */
-.bg-sky-gradient {
-  background: linear-gradient(180deg, #1A1836 0%, #201D45 40%, #2D2A5C 80%, #1A1836 100%);
-}
-
-/* Shinkai Horizon Glow */
-.horizon-glow {
-  background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(255, 201, 120, 0.12) 0%, rgba(111, 191, 196, 0.08) 40%, rgba(26, 24, 54, 0) 100%);
-}
-
-/* Luminous Anime Rim Light & Edge Card */
-.anime-edge-card {
-  position: relative;
-  background: linear-gradient(145deg, rgba(45, 42, 92, 0.55) 0%, rgba(26, 24, 54, 0.75) 100%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(184, 180, 217, 0.15);
-  box-shadow: 
-    0 0 0 1px rgba(255, 201, 120, 0.08),
-    0 12px 36px -8px rgba(10, 8, 28, 0.75),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.anime-edge-card:hover {
-  border-color: rgba(255, 201, 120, 0.35);
-  box-shadow: 
-    0 0 20px -3px rgba(255, 201, 120, 0.25),
-    0 16px 44px -8px rgba(10, 8, 28, 0.85),
-    inset 0 1px 2px 0 rgba(255, 201, 120, 0.25);
-  transform: translateY(-3px);
-}
-
-/* Specific glowing top-edge highlight */
-.anime-rim-top {
-  position: relative;
-}
-.anime-rim-top::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 15%;
-  right: 15%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 201, 120, 0.6), transparent);
-  pointer-events: none;
-}
-
-/* Punchy CTA Button with Overshoot Pop */
-.btn-vynura-primary {
-  position: relative;
-  background: linear-gradient(135deg, #FFC978 0%, #FFA843 100%);
-  color: #1A1836;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: -0.025em;
   font-weight: 700;
+}
+
+/* Micro Grid Background (Linear / Vercel style) */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Layered Surface Card with Directional 1px Top Bevel */
+.surface-card {
+  position: relative;
+  background: #11131A;
+  border: 1px solid rgba(255, 255, 255, 0.07);
   box-shadow: 
-    0 0 20px 2px rgba(255, 201, 120, 0.4),
-    inset 0 1px 1px rgba(255, 255, 255, 0.6);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    0 12px 30px -10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease;
 }
 
-.btn-vynura-primary:hover {
-  transform: scale(1.03) translateY(-1px);
+.surface-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
   box-shadow: 
-    0 0 30px 6px rgba(255, 201, 120, 0.6),
-    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    0 20px 40px -12px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
-.btn-vynura-primary:active {
-  transform: scale(0.96) translateY(1px);
-  box-shadow: 0 0 10px rgba(255, 201, 120, 0.3);
+/* Elevated Floating Panel */
+.surface-elevated {
+  background: #181B24;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 
+    0 24px 48px -12px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
 }
 
-/* Custom Sleek Celestial Scrollbar */
+/* Tactile Interactive States */
+.tactile-press {
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
+}
+.tactile-press:active {
+  transform: scale(0.98) translateY(1px);
+}
+
+/* Crisp Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #1A1836;
+  background: #090A0F;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2D2A5C;
-  border-radius: 4px;
-  border: 1px solid rgba(184, 180, 217, 0.2);
+  background: #202430;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 201, 120, 0.4);
+  background: #333847;
 }

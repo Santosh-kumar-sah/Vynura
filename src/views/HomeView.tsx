@@ -28,9 +28,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
           onSelectMood={onSelectMood}
           onStartJourney={() => navigate('/mood')}
         />
-        <PairedMoodWidget />
         <ConceptSection />
         <FeaturesSection />
+        <PairedMoodWidget />
         <PrivacySection />
       </main>
       <Footer />

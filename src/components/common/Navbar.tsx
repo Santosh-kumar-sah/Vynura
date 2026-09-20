@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Sparkles, 
   Menu, 
   X, 
-  ShieldCheck, 
-  Compass, 
-  Sparkle, 
   Camera, 
-  Wind,
-  Radio,
   ArrowRight,
-  HeartHandshake,
-  Bell,
+  Sliders,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from './Button';
@@ -28,23 +21,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 25);
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navLinks = [
-    { label: 'Concept', to: '/', hash: '#concept', icon: <Compass className="w-3.5 h-3.5" /> },
-    { label: 'Shift Engine', to: '/mood', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { label: 'Constellation', to: '/constellation', icon: <Sparkle className="w-3.5 h-3.5" /> },
-    { label: 'Sanctuary Hub', to: '/wellness', icon: <Wind className="w-3.5 h-3.5" /> },
-    { label: 'Journal', to: '/journal', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { label: 'Privacy', to: '/', hash: '#privacy', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+    { label: 'Overview', to: '/', hash: '#concept' },
+    { label: 'Shift Engine', to: '/mood' },
+    { label: 'Constellation', to: '/constellation' },
+    { label: 'Sanctuary', to: '/wellness' },
+    { label: 'Privacy', to: '/', hash: '#privacy' },
   ];
 
   const handleNavClick = (link: { to: string; hash?: string }) => {
@@ -62,132 +53,70 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out px-3 sm:px-6 ${
-        scrolled ? 'pt-2 sm:pt-3 pb-2' : 'pt-4 sm:pt-6 pb-4'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 sm:px-6 ${
+        scrolled ? 'py-3' : 'py-5'
       }`}
     >
       <div
-        className={`max-w-7xl mx-auto rounded-2xl sm:rounded-3xl transition-all duration-500 ease-out relative ${
+        className={`max-w-6xl mx-auto rounded-2xl transition-all duration-300 relative ${
           scrolled
-            ? 'bg-[#100D28]/85 backdrop-blur-2xl border border-[#FFC978]/25 shadow-[0_20px_50px_rgba(5,3,15,0.85)] px-4 sm:px-6 py-2.5 sm:py-3'
-            : 'bg-[#1A1836]/40 backdrop-blur-md border border-[#B8B4D9]/15 shadow-[0_10px_30px_rgba(5,3,15,0.4)] px-4 sm:px-6 py-3 sm:py-3.5'
+            ? 'bg-[#090A0F]/85 backdrop-blur-xl border border-white/[0.09] shadow-[0_12px_32px_rgba(0,0,0,0.6)] px-5 py-2.5'
+            : 'bg-[#090A0F]/50 backdrop-blur-md border border-white/[0.06] px-5 py-3'
         }`}
       >
-        {/* Top Rim Luminous Prism Highlight */}
-        <div className="absolute top-0 left-8 right-8 h-[1.5px] bg-gradient-to-r from-transparent via-[#FFC978]/60 to-transparent pointer-events-none" />
-
         <div className="flex items-center justify-between gap-4">
-          {/* Brand Logo & Emblem */}
+          {/* Brand Logo */}
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-3 group focus:outline-none select-none shrink-0 cursor-pointer text-left bg-transparent border-none p-0"
+            className="flex items-center gap-2.5 focus:outline-none select-none shrink-0 cursor-pointer text-left bg-transparent border-none p-0 group"
           >
-            <div className="relative">
-              {/* Outer soft ambient pulse aura */}
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-[#FFC978]/30 via-[#6FBFC4]/20 to-[#C25AE0]/30 opacity-70 blur-sm group-hover:opacity-100 transition-opacity duration-300" />
-
-              {/* Emblem icon container */}
-              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#2D2A5C] via-[#1E1B3E] to-[#120F2A] border border-[#FFC978]/50 flex items-center justify-center shadow-glow-sm group-hover:shadow-glow-md transition-all duration-300 group-hover:scale-105">
-                <span className="text-[#FFC978] text-base sm:text-lg font-bold font-heading group-hover:rotate-12 transition-transform duration-300">
-                  ✦
-                </span>
-                <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#6FBFC4] animate-ping opacity-75" />
-              </div>
+            <div className="w-8 h-8 rounded-lg bg-white/[0.06] border border-white/[0.12] flex items-center justify-center text-white transition-all group-hover:border-white/30">
+              <span className="text-amber-400 text-sm font-semibold">✦</span>
             </div>
-
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="font-heading font-bold text-xl sm:text-2xl tracking-wide text-[#F5F2ED] group-hover:text-[#FFC978] transition-colors drop-shadow-sm">
-                  Vynura
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-[#FFC978]/15 border border-[#FFC978]/40 text-[9px] font-mono uppercase tracking-widest text-[#FFC978] font-bold shadow-sm hidden sm:inline-block">
-                  Sanctuary
-                </span>
-              </div>
-              <span className="text-[9px] uppercase tracking-widest text-[#B8B4D9]/80 font-mono -mt-0.5 hidden sm:inline">
-                Emotion Companion · v2.0
-              </span>
-            </div>
+            <span className="font-semibold text-base sm:text-lg tracking-tight text-white group-hover:text-white/90 transition-colors">
+              Vynura
+            </span>
           </button>
 
-          {/* Centered Floating Capsule Navigation */}
-          <nav
-            onMouseLeave={() => setHoveredNav(null)}
-            className="hidden lg:flex items-center gap-1 bg-[#0E0C24]/60 backdrop-blur-xl px-2.5 py-1.5 rounded-full border border-[#B8B4D9]/15 shadow-inner relative"
-          >
+          {/* Clean Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
-              const isHovered = hoveredNav === link.label;
+              const isActive = location.pathname === link.to && !link.hash;
               return (
                 <button
                   key={link.label}
                   onClick={() => handleNavClick(link)}
-                  onMouseEnter={() => setHoveredNav(link.label)}
-                  className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 z-10 cursor-pointer bg-transparent border-none ${
-                    isHovered ? 'text-[#F5F2ED]' : 'text-[#B8B4D9] hover:text-[#F5F2ED]'
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer bg-transparent border-none ${
+                    isActive
+                      ? 'text-white bg-white/[0.08]'
+                      : 'text-[#94A3B8] hover:text-white hover:bg-white/[0.04]'
                   }`}
                 >
-                  {/* Sliding Pill Background Indicator */}
-                  {isHovered && (
-                    <motion.div
-                      layoutId="navHoverPill"
-                      transition={{ type: 'spring', stiffness: 450, damping: 30 }}
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-[#2D2A5C] via-[#383372] to-[#2D2A5C] border border-[#FFC978]/35 shadow-sm -z-10"
-                    />
-                  )}
-
-                  <span
-                    className={`transition-colors ${
-                      isHovered ? 'text-[#FFC978]' : 'text-[#B8B4D9]/70'
-                    }`}
-                  >
-                    {link.icon}
-                  </span>
-                  <span>{link.label}</span>
+                  {link.label}
                 </button>
               );
             })}
           </nav>
 
-          {/* Right Group: Live Resonance Status & Primary Action CTA */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Persistent Support Helplines Link */}
-            <button
-              onClick={() => {
-                if (location.pathname === '/mood') {
-                  const el = document.getElementById('support-helplines');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                  navigate('/mood');
-                  setTimeout(() => {
-                    const el = document.getElementById('support-helplines');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }, 400);
-                }
-              }}
-              className="px-2.5 py-1.5 rounded-full bg-[#FF9EAA]/15 hover:bg-[#FF9EAA]/25 border border-[#FF9EAA]/30 hover:border-[#FF9EAA]/50 text-xs font-mono text-[#FF9EAA] transition-all flex items-center gap-1.5 cursor-pointer"
-              title="Need someone to talk to? Verified 24/7 Helplines"
-            >
-              <HeartHandshake className="w-3.5 h-3.5 text-[#FF9EAA]" />
-              <span className="hidden md:inline">Need to talk?</span>
-            </button>
-
-            {/* Live System Status Pill */}
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#120F2A]/90 border border-[#6FBFC4]/30 text-xs font-mono text-[#B8B4D9] shadow-inner">
-              <Radio className="w-3.5 h-3.5 text-[#6FBFC4] animate-pulse" />
-              <span className="text-[11px] text-[#6FBFC4] font-semibold">Resonance Active</span>
+          {/* Right Actions: Telemetry + Preferences + Primary CTA */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Minimal Live Core Pill */}
+            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-[11px] text-[#94A3B8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span>Local Engine</span>
             </div>
 
-            {/* Celestial Preferences & Starlight Reminders Bell Button */}
+            {/* Quick Preferences Trigger */}
             <button
               onClick={() => setIsPreferencesOpen(true)}
-              className="p-2 sm:p-2.5 rounded-full bg-[#1A1836]/80 hover:bg-[#2D2A5C] text-[#FFC978] hover:text-[#FFF2D6] border border-[#FFC978]/30 hover:border-[#FFC978]/60 transition-all cursor-pointer shadow-glow-sm"
-              title="Celestial Preferences & Starlight Reminders"
-              aria-label="Celestial Preferences"
+              className="p-2 rounded-lg bg-transparent hover:bg-white/[0.06] text-[#94A3B8] hover:text-white transition-colors cursor-pointer border-none"
+              title="System Preferences"
+              aria-label="System Preferences"
             >
-              <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Sliders className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
 
-            {/* Primary Action Button: Looking Glass */}
+            {/* Primary Action Button */}
             <div className="hidden sm:block">
               <Button
                 size="sm"
@@ -200,51 +129,40 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
                     navigate('/mood');
                   }
                 }}
-                className="shadow-glow-sm hover:shadow-glow-md px-4 py-2 text-xs"
               >
-                Looking Glass
+                Launch Vision
               </Button>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 sm:p-2.5 rounded-2xl bg-[#1A1836]/80 hover:bg-[#2D2A5C] text-[#F5F2ED] border border-[#B8B4D9]/20 hover:border-[#FFC978]/40 transition-all cursor-pointer shadow-sm"
-              aria-label="Toggle navigation menu"
+              className="md:hidden p-2 rounded-lg bg-white/[0.04] text-white border border-white/[0.08] hover:bg-white/[0.08] transition-colors cursor-pointer"
+              aria-label="Toggle navigation"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Celestial Preferences Modal */}
+      {/* Preferences Modal */}
       <PreferencesModal
         isOpen={isPreferencesOpen}
         onClose={() => setIsPreferencesOpen(false)}
       />
 
-      {/* Mobile Glassmorphic Drawer Sheet */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -15, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -15, scale: 0.98 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden max-w-7xl mx-auto mt-2 rounded-3xl bg-[#0F0D24]/95 backdrop-blur-2xl border border-[#FFC978]/25 shadow-2xl p-5 overflow-hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden max-w-6xl mx-auto mt-2 rounded-2xl bg-[#090A0F]/95 backdrop-blur-2xl border border-white/[0.1] shadow-2xl p-4 space-y-3"
           >
-            {/* Header info in drawer */}
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#B8B4D9]/15 text-xs text-[#B8B4D9]">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#6FBFC4] animate-pulse" />
-                <span className="font-mono text-[11px] text-[#6FBFC4]">Sanctuary Companion Active</span>
-              </div>
-              <span className="font-mono text-[10px] text-[#FFC978]">8 Meditation Realms</span>
-            </div>
-
-            {/* Navigation Grid */}
-            <div className="grid grid-cols-2 gap-2 mb-4">
+            <div className="flex flex-col space-y-1">
               {navLinks.map((link) => (
                 <button
                   key={link.label}
@@ -252,21 +170,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
                     setMobileMenuOpen(false);
                     handleNavClick(link);
                   }}
-                  className="flex items-center gap-2.5 p-3 rounded-2xl bg-[#181538]/70 hover:bg-[#2D2A5C] border border-[#B8B4D9]/10 hover:border-[#FFC978]/40 text-xs font-semibold text-[#F5F2ED] transition-all cursor-pointer text-left"
+                  className="px-3 py-2.5 rounded-lg text-left text-xs font-medium text-[#94A3B8] hover:text-white hover:bg-white/[0.05] transition-colors"
                 >
-                  <span className="text-[#FFC978]">{link.icon}</span>
-                  <span>{link.label}</span>
+                  {link.label}
                 </button>
               ))}
             </div>
 
-            {/* Primary Action Button inside Drawer */}
-            <div className="pt-2 border-t border-[#B8B4D9]/15 flex flex-col gap-2">
+            <div className="pt-2 border-t border-white/[0.08]">
               <Button
                 size="md"
                 variant="primary"
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold"
-                icon={<ArrowRight className="w-4 h-4" />}
+                className="w-full text-xs"
+                icon={<ArrowRight className="w-3.5 h-3.5" />}
                 onClick={() => {
                   setMobileMenuOpen(false);
                   if (onOpenFaceDetection) {
@@ -276,8 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
                   }
                 }}
               >
-                <Camera className="w-4 h-4 mr-1" />
-                <span>Launch Looking Glass Calibration</span>
+                Launch Vision Calibration
               </Button>
             </div>
           </motion.div>

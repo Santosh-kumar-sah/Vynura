@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
-import { StarfieldBackdrop } from './components/background/StarfieldBackdrop';
-import { FireflyCanvas } from './components/background/FireflyCanvas';
-import { ShootingStar } from './components/background/ShootingStar';
+import { Sparkles, ArrowRight } from 'lucide-react';
 import { Navbar } from './components/common/Navbar';
 import { HomeView } from './views/HomeView';
 import { MoodView } from './views/MoodView';
@@ -95,66 +92,43 @@ const AppContent: React.FC = () => {
 
   return (
     <div
-      className="relative min-h-screen bg-[#1A1836] text-[#F5F2ED] selection:bg-[#FFC978]/30 selection:text-[#FFF2D6] overflow-x-hidden font-body transition-colors duration-700"
+      className="relative min-h-screen bg-[#090A0F] text-[#F8FAFC] selection:bg-amber-400/20 selection:text-amber-200 overflow-x-hidden font-sans transition-colors duration-500"
     >
-      {/* Dynamic Sky Atmospheric Tint Filter */}
+      {/* Dynamic Ambient Radial Light Filter */}
       <div
-        className="fixed inset-0 pointer-events-none transition-colors duration-700 z-0 opacity-20"
+        className="fixed inset-0 pointer-events-none transition-opacity duration-700 z-0 opacity-15"
         style={{
-          background: `radial-gradient(ellipse at 50% 15%, ${currentMoodData.color} 0%, transparent 70%)`,
+          background: `radial-gradient(circle at 50% 10%, ${currentMoodData.color} 0%, transparent 60%)`,
         }}
       />
 
-      {/* 1. Starfield Layer (Persistent Stars, Twinkles & Ambient Horizon) */}
-      <StarfieldBackdrop />
+      {/* Subtle Micro-Grid Pattern */}
+      <div className="fixed inset-0 pointer-events-none z-0 bg-grid-pattern opacity-60" />
 
-      {/* 2. Signature Firefly Particle System with Cursor Parallax (Persists smoothly across routes) */}
-      <FireflyCanvas />
-
-      {/* 3. Signature Load-In & Ambient Shooting Star Streaks */}
-      <ShootingStar />
-
-      {/* 4. Top Navigation Bar */}
+      {/* Top Navigation Bar */}
       <Navbar onOpenFaceDetection={() => setIsFaceDetectionOpen(true)} />
 
       {/* Real-time Mood Shift Notification Toast */}
       <AnimatePresence>
         {confirmationToast && (
           <motion.div
-            initial={{ opacity: 0, y: -40, scale: 0.9 }}
+            initial={{ opacity: 0, y: -20, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl bg-[#1A1836]/95 border shadow-[0_15px_40px_rgba(10,8,28,0.9)] backdrop-blur-xl flex flex-col sm:flex-row items-center gap-3 text-sm text-[#F5F2ED]"
-            style={{
-              borderColor: MOODS[confirmationToast.mood].color,
-              boxShadow: `0 0 25px -4px ${MOODS[confirmationToast.mood].color}50`,
-            }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl bg-[#11131A] border border-white/[0.12] shadow-[0_12px_32px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.08)] flex items-center gap-3 text-xs text-white"
           >
-            <div className="flex items-center gap-3">
-              <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center border shrink-0"
-                style={{
-                  backgroundColor: `${MOODS[confirmationToast.mood].color}25`,
-                  borderColor: `${MOODS[confirmationToast.mood].color}60`,
-                  color: MOODS[confirmationToast.mood].color,
-                }}
-              >
-                <CheckCircle2 className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5 text-xs font-semibold">
-                  <span style={{ color: MOODS[confirmationToast.mood].color }}>
-                    Calibrated: {MOODS[confirmationToast.mood].label}
-                  </span>
-                  <span className="text-[10px] text-[#B8B4D9]">
-                    ({Math.round(confirmationToast.confidence * 100)}% Match)
-                  </span>
-                </div>
-                <p className="text-[11px] text-[#B8B4D9]">
-                  Suggestions updated for your emotional frequency.
-                </p>
-              </div>
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: MOODS[confirmationToast.mood].color }}
+            />
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-white">
+                {MOODS[confirmationToast.mood].label} Calibrated
+              </span>
+              <span className="text-[#64748B] text-[11px]">
+                ({Math.round(confirmationToast.confidence * 100)}% match)
+              </span>
             </div>
 
             <button
@@ -168,46 +142,38 @@ const AppContent: React.FC = () => {
                 }, 300);
                 setConfirmationToast(null);
               }}
-              className="px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-glow-sm"
-              style={{
-                backgroundColor: MOODS[confirmationToast.mood].color,
-                color: '#1A1836',
-              }}
+              className="px-2.5 py-1 rounded-lg bg-white text-[#090A0F] font-semibold text-xs hover:bg-[#F1F5F9] transition-colors flex items-center gap-1 cursor-pointer"
             >
-              <span>View Shift Suggestions</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>View Shift</span>
+              <ArrowRight className="w-3 h-3" />
             </button>
-            <Sparkles
-              className="w-4 h-4 animate-spin hidden sm:block"
-              style={{ color: MOODS[confirmationToast.mood].color, animationDuration: '6s' }}
-            />
           </motion.div>
         )}
 
-        {/* Monthly Recap Available Floating Notification */}
+        {/* Monthly Recap Floating Capsule */}
         {recapPromptAvailable && !isRecapModalOpen && recapData && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 left-6 z-40 p-4 rounded-2xl bg-[#1A1836]/95 border border-[#FFC978]/40 shadow-[0_10px_35px_rgba(10,8,28,0.9)] backdrop-blur-xl flex items-center gap-3 text-xs text-[#F5F2ED] max-w-sm"
+            exit={{ opacity: 0, y: 10 }}
+            className="fixed bottom-6 left-6 z-40 p-3.5 rounded-xl bg-[#11131A] border border-white/[0.1] shadow-[0_12px_32px_rgba(0,0,0,0.7)] flex items-center gap-3 text-xs text-white max-w-sm"
           >
-            <div className="w-8 h-8 rounded-xl bg-[#FFC978]/20 border border-[#FFC978]/50 flex items-center justify-center text-[#FFC978] shrink-0">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-7 h-7 rounded-lg bg-white/[0.06] border border-white/[0.1] flex items-center justify-center text-amber-400 shrink-0">
+              <Sparkles className="w-3.5 h-3.5" />
             </div>
             <div className="space-y-0.5">
-              <div className="font-semibold text-[#FFC978]">
-                {recapData.monthName} Brightest Nights
+              <div className="font-medium text-white">
+                {recapData.monthName} Highlights
               </div>
-              <p className="text-[11px] text-[#B8B4D9]">
-                Your monthly constellation highlights are ready.
+              <p className="text-[11px] text-[#94A3B8]">
+                Monthly pattern summary ready.
               </p>
             </div>
             <button
               onClick={() => setIsRecapModalOpen(true)}
-              className="px-3 py-1.5 rounded-xl bg-[#FFC978] hover:bg-[#FFD88A] text-[#1A1836] font-bold text-xs transition-all shrink-0 cursor-pointer shadow-glow-sm"
+              className="px-2.5 py-1 rounded-lg bg-white text-[#090A0F] font-semibold text-xs transition-colors shrink-0 cursor-pointer"
             >
-              View Reel ✨
+              View
             </button>
           </motion.div>
         )}
