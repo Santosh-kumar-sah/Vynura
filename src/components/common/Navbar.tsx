@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, 
@@ -18,17 +18,8 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const navLinks = [
     { label: 'Overview', to: '/', hash: '#concept' },
@@ -52,97 +43,79 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenFaceDetection }) => {
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 sm:px-6 ${
-        scrolled ? 'py-3' : 'py-5'
-      }`}
-    >
-      <div
-        className={`max-w-6xl mx-auto rounded-2xl transition-all duration-300 relative ${
-          scrolled
-            ? 'bg-[#0B0A10]/85 backdrop-blur-xl border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.6)] px-5 py-2.5'
-            : 'bg-[#0B0A10]/50 backdrop-blur-md border border-white/[0.06] px-5 py-3'
-        }`}
-      >
-        <div className="flex items-center justify-between gap-4">
-          {/* Brand Logo */}
+    <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-[#08090A]/80 backdrop-blur-md border-b border-white/[0.06]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4">
+        {/* Brand Logo & Wordmark (Left) */}
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2.5 focus:outline-none select-none shrink-0 cursor-pointer text-left bg-transparent border-none p-0 group"
+        >
+          <div className="w-7 h-7 rounded-lg bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-white transition-all group-hover:border-white/30">
+            <span className="text-[#F59E0B] text-xs font-semibold">✦</span>
+          </div>
+          <span className="font-semibold text-base tracking-tight text-white group-hover:text-white/90 transition-colors">
+            Vynura
+          </span>
+        </button>
+
+        {/* Center-Aligned Nav Links (plain text, 14px, gray-400, hover to white — no background pill) */}
+        <nav className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.to && !link.hash;
+            return (
+              <button
+                key={link.label}
+                onClick={() => handleNavClick(link)}
+                className={`text-[14px] font-normal transition-colors cursor-pointer bg-transparent border-none p-0 ${
+                  isActive
+                    ? 'text-white font-medium'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                {link.label}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Right Side: Settings icon + Exactly ONE solid white button */}
+        <div className="flex items-center gap-3">
+          {/* Quick Preferences Trigger (Max 1 icon) */}
           <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2.5 focus:outline-none select-none shrink-0 cursor-pointer text-left bg-transparent border-none p-0 group"
+            onClick={() => setIsPreferencesOpen(true)}
+            className="p-2 rounded-lg bg-transparent hover:bg-white/[0.05] text-white/60 hover:text-white transition-colors cursor-pointer border-none"
+            title="System Preferences"
+            aria-label="System Preferences"
           >
-            <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-white transition-all group-hover:border-white/30">
-              <span className="text-[#F59E0B] text-sm font-semibold">✦</span>
-            </div>
-            <span className="font-semibold text-base sm:text-lg tracking-tight text-white group-hover:text-white/90 transition-colors">
-              Vynura
-            </span>
+            <Sliders className="w-4 h-4" />
           </button>
 
-          {/* Clean Desktop Navigation (Linear style plain text links with opacity hover) */}
-          <nav className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => {
-              const isActive = location.pathname === link.to && !link.hash;
-              return (
-                <button
-                  key={link.label}
-                  onClick={() => handleNavClick(link)}
-                  className={`text-xs font-medium transition-opacity cursor-pointer bg-transparent border-none p-0 ${
-                    isActive
-                      ? 'text-white opacity-100 font-semibold'
-                      : 'text-white opacity-70 hover:opacity-100'
-                  }`}
-                >
-                  {link.label}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right Actions: Telemetry + Preferences + Primary CTA */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Minimal Live Core Pill */}
-            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-[11px] text-[#94A3B8]">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>Local Engine</span>
-            </div>
-
-            {/* Quick Preferences Trigger */}
-            <button
-              onClick={() => setIsPreferencesOpen(true)}
-              className="p-2 rounded-lg bg-transparent hover:bg-white/[0.06] text-[#94A3B8] hover:text-white transition-colors cursor-pointer border-none"
-              title="System Preferences"
-              aria-label="System Preferences"
+          {/* Exactly One Solid White Button */}
+          <div className="hidden sm:block">
+            <Button
+              size="sm"
+              variant="primary"
+              icon={<Camera className="w-3.5 h-3.5" />}
+              onClick={() => {
+                if (onOpenFaceDetection) {
+                  onOpenFaceDetection();
+                } else {
+                  navigate('/mood');
+                }
+              }}
             >
-              <Sliders className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            </button>
-
-            {/* Primary Action Button */}
-            <div className="hidden sm:block">
-              <Button
-                size="sm"
-                variant="primary"
-                icon={<Camera className="w-3.5 h-3.5" />}
-                onClick={() => {
-                  if (onOpenFaceDetection) {
-                    onOpenFaceDetection();
-                  } else {
-                    navigate('/mood');
-                  }
-                }}
-              >
-                Launch Vision
-              </Button>
-            </div>
-
-            {/* Mobile Hamburger */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-white/[0.04] text-white border border-white/[0.08] hover:bg-white/[0.08] transition-colors cursor-pointer"
-              aria-label="Toggle navigation"
-            >
-              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-            </button>
+              Launch Vision
+            </Button>
           </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg bg-transparent text-white/70 border border-white/[0.1] hover:text-white transition-colors cursor-pointer"
+            aria-label="Toggle navigation"
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
       </div>
 

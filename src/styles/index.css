@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #0B0A10;
-  --bg-surface-1: #131219;
-  --bg-surface-2: #1A1922;
+  --bg-base: #08090A;
+  --bg-surface-1: #121316;
+  --bg-surface-2: #1A1B20;
   --border-subtle: rgba(255, 255, 255, 0.07);
   --border-highlight: rgba(255, 255, 255, 0.12);
   --text-primary: #FFFFFF;
@@ -55,7 +55,7 @@ h1, h2, h3, h4, .font-heading {
 
 /* Elevated Floating Panel (Reserved for max 1 interactive widget per viewport) */
 .surface-elevated {
-  background: #131219;
+  background: #121316;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 
     0 24px 48px -12px rgba(0, 0, 0, 0.6),
@@ -76,7 +76,7 @@ h1, h2, h3, h4, .font-heading {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0A10;
+  background: #08090A;
 }
 ::-webkit-scrollbar-thumb {
   background: #1E1D27;

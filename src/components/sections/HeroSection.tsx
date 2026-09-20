@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Terminal } from 'lucide-react';
-import { Button } from '../common/Button';
-import { HeroCore3D } from '../3d/HeroCore3D';
 import type { MoodType, MoodConfig } from '../../types';
 
 export const MOODS: Record<MoodType, MoodConfig> = {
@@ -65,18 +63,9 @@ export const MOODS: Record<MoodType, MoodConfig> = {
 
 interface HeroSectionProps {
   onStartJourney?: () => void;
-  activeMood?: MoodType;
-  onSelectMood?: (mood: MoodType) => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({
-  onStartJourney,
-  activeMood = 'calm',
-  onSelectMood,
-}) => {
-  const [internalMood, setInternalMood] = useState<MoodType>(activeMood);
-  const selectedMood = activeMood || internalMood;
-  const currentMood = MOODS[selectedMood];
+export const HeroSection: React.FC<HeroSectionProps> = ({ onStartJourney }) => {
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -87,142 +76,100 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleMoodSelect = (mKey: MoodType) => {
-    setInternalMood(mKey);
-    if (onSelectMood) onSelectMood(mKey);
-  };
-
-  const moodKeys: MoodType[] = ['calm', 'happy', 'energetic', 'neutral', 'sad'];
-
   return (
-    <section className="relative min-h-[88vh] pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col justify-center overflow-hidden">
-      {/* LAYER 1: Deep Near-Black Base Canvas */}
-      <div className="absolute inset-0 bg-[#0B0A10] pointer-events-none -z-30" />
+    <section className="relative min-h-[85vh] pt-36 sm:pt-44 pb-36 sm:pb-40 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col items-center justify-center overflow-hidden">
+      {/* 1. SOLID NEAR-BLACK BASE BACKGROUND */}
+      <div className="absolute inset-0 bg-[#08090A] pointer-events-none -z-30" />
 
-      {/* Subtle Warm Amber Atmospheric Ambient Glow */}
-      <div className="absolute inset-0 pointer-events-none -z-25 opacity-60">
-        <div className="absolute -top-24 right-0 w-[600px] h-[500px] bg-gradient-to-bl from-amber-500/10 to-transparent rounded-full blur-[100px]" />
-      </div>
-
-      {/* LAYER 2: Asymmetric 4-7-8 Breathing Light Source (Ambient Room Light, Parallax Drift) */}
+      {/* 2. AMBIENT CORNER LIGHTING ONLY: ONE soft radial mesh gradient blob in upper-right quadrant
+          - NOT centered, NOT behind headline
+          - Bleeds off the top-right edge partially like light spilling from outside the frame
+          - Max 2 colors (warm amber into transparent), 120px blur radius, ~30-35% opacity */}
       <div
-        className="absolute -top-10 -right-16 sm:right-2 md:right-8 w-[520px] sm:w-[620px] md:w-[700px] h-[520px] sm:h-[620px] md:h-[700px] pointer-events-none -z-20 transition-transform duration-100 ease-out opacity-80"
+        className="absolute -top-32 -right-32 sm:-top-40 sm:-right-40 w-[550px] sm:w-[650px] h-[550px] sm:h-[650px] rounded-full pointer-events-none -z-20 opacity-35"
         style={{
-          transform: `translateY(${scrollY * 0.18}px)`,
+          background: 'radial-gradient(circle at 60% 40%, rgba(245, 158, 11, 0.45) 0%, rgba(180, 83, 9, 0.12) 45%, transparent 70%)',
+          filter: 'blur(120px)',
+          transform: `translateY(${scrollY * 0.12}px)`,
         }}
-      >
-        <HeroCore3D activeMoodColor="#F59E0B" />
-      </div>
+      />
 
-      {/* LAYER 3: Directional Scrim Buffer & Fine Film-Grain Noise */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0B0A10] via-[#0B0A10]/80 to-transparent pointer-events-none -z-10" />
+      {/* Subtle fine film-grain overlay for physical dark texture */}
       <div className="absolute inset-0 grain-overlay pointer-events-none -z-10 opacity-70" />
 
-      {/* LAYER 4: Content Layer (Crisp, High Contrast, Fully Readable) */}
-      <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
-        {/* Top Meta Label — Letter-spaced uppercase with warm accent dot */}
+      {/* HERO CONTENT: ONLY EYEBROW TAG, HEADLINE, SUBTEXT, CTA ROW */}
+      <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
+        {/* 4. EYEBROW TAG: Small pill ONLY if single colored dot + short text
+            - Background barely different (5-8% white overlay: bg-white/[0.06])
+            - Border 1px at 10% opacity (border-white/10)
+            - This is the ONLY pill-shaped element allowed on the page */}
         <motion.div
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] text-white/60 mb-6 flex items-center gap-2.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08]"
+          className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-xs font-normal text-white/70 mb-7"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
-          <span>4-7-8 Somatic Engine · Client-Side Vision</span>
+          <span>Vynura 2.0 · On-device vision intelligence</span>
         </motion.div>
 
-        {/* Headline — Solid #FFFFFF, 56-72px, weight 600, tight tracking -2.5%, line-height 1.07 */}
+        {/* 5. HEADLINE: Centered, max-width ~900-1000px, wraps to 2-3 lines naturally
+            - Font-weight 600 (NOT 700+, NOT 900)
+            - Font-size clamp(40px, 6vw, 64px)
+            - Color solid white, NO gradient fill, NO accent-colored words */}
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05 }}
-          className="font-heading font-semibold text-4xl sm:text-6xl lg:text-7xl tracking-[-0.025em] text-white max-w-4xl leading-[1.07] mb-5 text-balance"
+          className="max-w-[920px] mx-auto text-center font-semibold text-[clamp(2.5rem,5.5vw,4rem)] leading-[1.08] tracking-[-0.025em] text-white text-balance"
         >
-          Real-time emotional tracking powered by on-device vision.
+          Real-time emotional tracking powered by private on-device vision.
         </motion.h1>
 
-        {/* Subtext Below Headline — 70% opacity, weight 400, strictly one sentence */}
+        {/* 6. SUBTEXT: Centered, max-width ~600px, 18px, color gray-400 (60% white), font-weight 400
+            - Margin-top 24px from headline */}
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="text-base sm:text-lg text-white/70 max-w-xl leading-relaxed mb-10 font-normal"
+          className="max-w-[600px] mx-auto text-center text-[18px] text-white/60 font-normal leading-relaxed mt-6"
         >
           Private facial landmark analysis paired with instantaneous somatic pacing and acoustic frequency shifts.
         </motion.p>
 
-        {/* Primary & Secondary CTAs */}
+        {/* 7. CTA ROW: Margin-top 40px, two buttons side by side with 12px gap
+            - Primary: solid white, black text, 14px py / 24px px, rounded-lg (8px), arrow trailing
+            - Secondary: transparent, no border, gray-400 text, icon leading, hover text to white only (no background) */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15 }}
-          className="flex items-center justify-center gap-3.5 mb-16"
+          className="flex items-center justify-center gap-3 mt-10"
         >
-          <Button
-            size="lg"
-            variant="primary"
-            icon={<ArrowRight className="w-4 h-4" />}
+          <button
             onClick={() => {
               if (onStartJourney) onStartJourney();
             }}
+            className="inline-flex items-center justify-center py-3.5 px-6 rounded-lg bg-white text-[#08090A] font-medium text-sm tracking-tight hover:bg-neutral-100 transition-all duration-150 cursor-pointer active:scale-[0.97]"
           >
-            Start Calibration
-          </Button>
+            <span>Start Calibration</span>
+            <ArrowRight className="w-4 h-4 ml-1.5 shrink-0" />
+          </button>
 
-          <Button
-            size="lg"
-            variant="ghost"
-            icon={<Terminal className="w-4 h-4 text-white/60" />}
-            iconPosition="left"
+          <button
             onClick={() => {
               const el = document.getElementById('concept');
               el?.scrollIntoView({ behavior: 'smooth' });
             }}
+            className="inline-flex items-center justify-center py-3.5 px-4 bg-transparent border-none text-white/60 hover:text-white transition-colors duration-150 text-sm font-normal cursor-pointer"
           >
-            System Architecture
-          </Button>
-        </motion.div>
-
-        {/* Unboxed State Selector — Sits directly on canvas with hairline divider */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="w-full max-w-xl pt-6 border-t border-white/[0.08]"
-        >
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 mb-3">
-            {moodKeys.map((key) => {
-              const item = MOODS[key];
-              const isSelected = selectedMood === key;
-              return (
-                <button
-                  key={key}
-                  onClick={() => handleMoodSelect(key)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs transition-all duration-150 cursor-pointer border flex items-center gap-2 ${
-                    isSelected
-                      ? 'bg-white/[0.08] text-white font-medium border-white/20'
-                      : 'bg-transparent text-white/60 border-transparent hover:text-white hover:bg-white/[0.03]'
-                  }`}
-                >
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full transition-all ${
-                      isSelected ? 'scale-125' : 'opacity-60'
-                    }`}
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Supporting Microcopy */}
-          <div className="text-xs text-white/60 flex items-center justify-center gap-2">
-            <span className="text-white font-medium">{currentMood.label}:</span>
-            <span className="text-[#F59E0B] font-mono text-[11px]">{currentMood.shiftAction}</span>
-          </div>
+            <Terminal className="w-4 h-4 mr-1.5 shrink-0" />
+            <span>Architecture</span>
+          </button>
         </motion.div>
       </div>
+
+      {/* 8. Vertical empty space: 140px+ before next section (enforced by pb-36 sm:pb-40, no footer/status widgets inside hero) */}
     </section>
   );
 };

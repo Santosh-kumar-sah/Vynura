@@ -7,16 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: "#0B0A10",
-        panel: "#131219",
+        canvas: "#08090A",
+        panel: "#121316",
         brand: {
           DEFAULT: "#F59E0B",
           hover: "#D97706",
           subtle: "rgba(245, 158, 11, 0.12)",
         },
         surface: {
-          base: "#0B0A10",
-          1: "#131219",
+          base: "#08090A",
+          1: "#121316",
           border: "rgba(255, 255, 255, 0.08)",
         },
         accent: {

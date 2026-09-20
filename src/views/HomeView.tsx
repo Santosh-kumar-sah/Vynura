@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HeroSection } from '../components/sections/HeroSection';
-import { PairedMoodWidget } from '../components/social/PairedMoodWidget';
 import { ConceptSection } from '../components/sections/ConceptSection';
 import { FeaturesSection } from '../components/sections/FeaturesSection';
+import { MoodStateSection } from '../components/sections/MoodStateSection';
+import { PairedMoodWidget } from '../components/social/PairedMoodWidget';
 import { PrivacySection } from '../components/sections/PrivacySection';
 import { Footer } from '../components/sections/Footer';
 import { RouteTransition } from '../components/common/RouteTransition';
@@ -23,13 +24,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <RouteTransition isHome>
       <main className="relative z-10">
-        <HeroSection
-          activeMood={activeMood}
-          onSelectMood={onSelectMood}
-          onStartJourney={() => navigate('/mood')}
-        />
+        <HeroSection onStartJourney={() => navigate('/mood')} />
         <ConceptSection />
         <FeaturesSection />
+        <MoodStateSection
+          activeMood={activeMood}
+          onSelectMood={onSelectMood}
+        />
         <PairedMoodWidget />
         <PrivacySection />
       </main>
