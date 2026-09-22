@@ -8,7 +8,6 @@ import {
   Volume2, 
   VolumeX, 
   CheckCircle2, 
-  Sparkles,
   Maximize2,
   Minimize2,
   ChevronDown
@@ -283,41 +282,31 @@ export const ImmersiveMeditationModal: React.FC<ImmersiveMeditationModalProps> =
                   e.stopPropagation();
                   setShowRealmPicker(!showRealmPicker);
                 }}
-                className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-[#121029]/80 hover:bg-[#1C1838] border transition-all cursor-pointer shadow-lg backdrop-blur-xl group"
-                style={{
-                  borderColor: `${category.colors.primary}40`,
-                }}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#121316] hover:bg-[#18191c] border border-white/[0.08] transition-colors cursor-pointer group"
               >
-                <div
-                  className="w-6 h-6 rounded-lg flex items-center justify-center border"
-                  style={{
-                    backgroundColor: `${category.colors.primary}20`,
-                    borderColor: `${category.colors.primary}50`,
-                    color: category.colors.primary,
-                  }}
-                >
+                <span className="text-amber-400 shrink-0">
                   {CATEGORY_ICONS[category.id]}
-                </div>
+                </span>
                 <div className="text-left hidden sm:block">
-                  <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#B8B4D9]">
-                    Realm
+                  <div className="text-[10px] font-mono font-medium uppercase tracking-wider text-neutral-400">
+                    Mode
                   </div>
-                  <div className="font-heading text-xs font-bold text-[#F5F2ED]">
+                  <div className="text-xs font-semibold text-white">
                     {category.name}
                   </div>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-[#B8B4D9] group-hover:text-[#F5F2ED] transition-transform ml-1" />
+                <ChevronDown className="w-3.5 h-3.5 text-neutral-400 group-hover:text-white transition-transform ml-1" />
               </button>
 
               {/* Fast Realm Switcher Dropdown */}
               <AnimatePresence>
                 {showRealmPicker && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.92, y: 10 }}
+                    initial={{ opacity: 0, scale: 0.95, y: 8 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.92, y: 10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 mt-2 w-72 sm:w-80 rounded-2xl bg-[#0D0B21]/95 border border-[#B8B4D9]/20 p-2 shadow-2xl backdrop-blur-2xl z-50 grid grid-cols-2 gap-1.5"
+                    exit={{ opacity: 0, scale: 0.95, y: 8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full left-0 mt-2 w-72 sm:w-80 rounded-xl bg-[#121316] border border-white/[0.08] p-2 shadow-2xl backdrop-blur-2xl z-50 grid grid-cols-2 gap-1.5"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {MEDITATION_CATEGORIES_LIST.map((cat) => (
@@ -327,23 +316,20 @@ export const ImmersiveMeditationModal: React.FC<ImmersiveMeditationModalProps> =
                           setSelectedCategory(cat.id);
                           setShowRealmPicker(false);
                         }}
-                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center gap-2.5 ${
+                        className={`p-2.5 rounded-lg border text-left transition-colors cursor-pointer flex items-center gap-2.5 ${
                           selectedCategory === cat.id
-                            ? 'bg-[#2D2A5C] border-[#FFC978] text-[#F5F2ED]'
-                            : 'bg-[#15122E]/60 border-transparent hover:bg-[#1E1B3D] text-[#B8B4D9]'
+                            ? 'bg-white/[0.08] border-white/[0.15] text-white'
+                            : 'bg-white/[0.02] border-transparent hover:bg-white/[0.05] text-neutral-400 hover:text-white'
                         }`}
                       >
-                        <div
-                          className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0"
-                          style={{ color: cat.colors.primary }}
-                        >
+                        <span className="shrink-0 text-amber-400">
                           {CATEGORY_ICONS[cat.id]}
-                        </div>
+                        </span>
                         <div className="truncate">
-                          <div className="text-[11px] font-bold text-[#F5F2ED] truncate">
+                          <div className="text-[11px] font-medium text-white truncate">
                             {cat.name}
                           </div>
-                          <div className="text-[9px] font-mono text-[#B8B4D9] opacity-70 truncate">
+                          <div className="text-[9px] font-mono text-neutral-400 truncate">
                             {cat.subtitle}
                           </div>
                         </div>
@@ -567,54 +553,40 @@ export const ImmersiveMeditationModal: React.FC<ImmersiveMeditationModalProps> =
             className="max-w-lg space-y-6"
           >
             {/* Icon */}
-            <div
-              className="w-16 h-16 rounded-3xl mx-auto flex items-center justify-center border shadow-glow-md"
-              style={{
-                backgroundColor: `${category.colors.primary}20`,
-                borderColor: `${category.colors.primary}60`,
-                color: category.colors.primary,
-              }}
-            >
-              <CheckCircle2 className="w-8 h-8" />
-            </div>
+            <CheckCircle2 className="w-12 h-12 mx-auto text-amber-400" strokeWidth={1.5} />
 
             <div>
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Sparkles className="w-4 h-4" style={{ color: category.colors.primary }} />
-                <span
-                  className="text-xs font-mono font-bold uppercase tracking-widest"
-                  style={{ color: category.colors.primary }}
-                >
+                <span className="text-xs font-mono font-medium uppercase tracking-wider text-neutral-400">
                   {category.name} Complete
                 </span>
-                <Sparkles className="w-4 h-4" style={{ color: category.colors.primary }} />
               </div>
 
-              <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-3">
+              <h2 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight mb-3">
                 {category.completionMessage}
               </h2>
 
-              <p className="font-heading text-sm sm:text-base text-[#FFF2D6] italic leading-relaxed max-w-md mx-auto">
+              <p className="text-xs sm:text-sm text-neutral-400 italic leading-relaxed max-w-md mx-auto">
                 "{category.completionSubtitle}"
               </p>
             </div>
 
             {/* Session Stats */}
-            <div className="p-4 rounded-2xl bg-[#121029]/80 border border-[#B8B4D9]/15 grid grid-cols-2 gap-4 text-center">
+            <div className="p-4 rounded-xl bg-[#121316] border border-white/[0.08] grid grid-cols-2 gap-4 text-center">
               <div>
-                <div className="text-[10px] font-mono text-[#B8B4D9] uppercase tracking-wider">
+                <div className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider">
                   Session Duration
                 </div>
-                <div className="font-heading text-lg font-bold text-[#F5F2ED] mt-0.5">
+                <div className="text-base font-semibold text-white mt-0.5">
                   {Math.floor(selectedDuration / 60)} Minutes
                 </div>
               </div>
               <div>
-                <div className="text-[10px] font-mono text-[#B8B4D9] uppercase tracking-wider">
-                  Resonance Mode
+                <div className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider">
+                  Mode
                 </div>
-                <div className="font-heading text-lg font-bold" style={{ color: category.colors.primary }}>
-                  {category.subtitle}
+                <div className="text-base font-semibold text-white mt-0.5">
+                  {category.name}
                 </div>
               </div>
             </div>
@@ -627,18 +599,14 @@ export const ImmersiveMeditationModal: React.FC<ImmersiveMeditationModalProps> =
                   setIsRunning(true);
                   setIsCompleted(false);
                 }}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-2xl font-heading text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-glow-sm"
-                style={{
-                  background: `linear-gradient(135deg, ${category.colors.primary} 0%, ${category.colors.secondary} 100%)`,
-                  color: '#0A081C',
-                }}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-white hover:bg-neutral-200 text-neutral-950 font-medium text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
                 <span>Meditate Again</span>
               </button>
 
               <button
                 onClick={handleExitMeditation}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#1A1836] hover:bg-[#24214A] border border-[#B8B4D9]/20 text-xs font-semibold text-[#B8B4D9] hover:text-[#F5F2ED] transition-colors cursor-pointer"
+                className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-neutral-300 hover:text-white transition-colors cursor-pointer"
               >
                 Return to Sanctuary
               </button>

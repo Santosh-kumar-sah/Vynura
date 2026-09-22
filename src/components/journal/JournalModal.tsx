@@ -75,100 +75,73 @@ export const JournalModal: React.FC<JournalModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#0B091C]/85 backdrop-blur-lg">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
       <motion.div
-        initial={{ opacity: 0, scale: 0.93, y: 15 }}
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative w-full max-w-lg rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border p-6 sm:p-8 shadow-[0_25px_70px_rgba(10,8,28,0.95)] overflow-hidden"
-        style={{
-          borderColor: `${currentMoodData.color}50`,
-          boxShadow: `0 0 35px -5px ${currentMoodData.color}35`,
-        }}
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-lg rounded-2xl bg-[#121316] border border-white/[0.08] p-6 sm:p-8 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.8)] overflow-hidden"
       >
-        {/* Top Rim Glow */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${currentMoodData.color}, transparent)`,
-          }}
-        />
-
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl text-[#B8B4D9] hover:text-[#F5F2ED] hover:bg-[#2D2A5C]/60 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
           aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
         {/* Header */}
-        <div className="flex items-center gap-3 mb-5">
-          <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center border shadow-glow-sm"
-            style={{
-              backgroundColor: `${currentMoodData.color}20`,
-              borderColor: `${currentMoodData.color}60`,
-              color: currentMoodData.color,
-            }}
-          >
-            <BookOpen className="w-5 h-5" />
-          </div>
+        <div className="flex items-start gap-3 mb-5">
+          <BookOpen className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" strokeWidth={1.5} />
           <div>
             <div className="flex items-center gap-2">
-              <span
-                className="text-[10px] font-mono font-bold uppercase tracking-widest"
-                style={{ color: currentMoodData.color }}
-              >
-                Constellation Inscription
+              <span className="text-[11px] font-mono font-medium uppercase tracking-wider text-neutral-400">
+                Reflection Log
               </span>
-              <span className="text-xs text-[#FFC978] font-mono">
+              <span className="text-xs text-neutral-400 font-mono">
                 {currentMoodData.sublabel}
               </span>
             </div>
-            <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
-              Inscribe This Starlight Moment
+            <h3 className="text-xl font-semibold text-white tracking-tight mt-0.5">
+              Capture reflection notes
             </h3>
           </div>
         </div>
 
         {/* Mood Affirmation Quote Card */}
-        <div className="p-3.5 rounded-xl bg-[#121029]/80 border border-[#B8B4D9]/15 mb-4">
-          <div className="flex items-center gap-1.5 text-xs text-[#FFC978] font-medium mb-1">
-            <Heart className="w-3.5 h-3.5" />
-            <span>Harmonic Resonance: {currentMoodData.label}</span>
+        <div className="p-3.5 rounded-xl bg-[#18191c] border border-white/[0.06] mb-4">
+          <div className="flex items-center gap-1.5 text-xs text-neutral-300 font-medium mb-1">
+            <Heart className="w-3.5 h-3.5 text-amber-400" />
+            <span>State: {currentMoodData.label}</span>
           </div>
-          <p className="text-xs text-[#F5F2ED] italic font-heading leading-relaxed">
+          <p className="text-xs text-neutral-300 italic leading-relaxed">
             "{currentMoodData.quote}"
           </p>
         </div>
 
-        {/* Soft-Glow Textarea */}
+        {/* Textarea */}
         <div className="space-y-2 mb-6">
-          <label className="block text-xs font-semibold text-[#B8B4D9] flex items-center justify-between">
-            <span>Reflective Journal Notes (Optional)</span>
-            <span className="text-[10px] text-[#FFC978]/80 font-mono">Inner Voice</span>
+          <label className="block text-xs font-medium text-neutral-300 flex items-center justify-between">
+            <span>Notes (Optional)</span>
+            <span className="text-[10px] text-neutral-400 font-mono">Journal</span>
           </label>
           <textarea
             rows={5}
             value={journalText}
             onChange={(e) => setJournalText(e.target.value)}
-            placeholder="What is present in your awareness right now? Capture the nuance before it floats away like a comet..."
-            className="w-full rounded-2xl bg-[#121029]/90 border border-[#B8B4D9]/25 p-4 text-xs text-[#F5F2ED] placeholder:text-[#B8B4D9]/40 focus:outline-none transition-all duration-300 resize-none font-body leading-relaxed"
-            style={{
-              boxShadow: 'inset 0 2px 8px rgba(10,8,28,0.8)',
-            }}
+            placeholder="Record any thoughts, triggers, or somatic sensations present right now..."
+            className="w-full rounded-xl bg-[#18191c] border border-white/[0.08] p-3.5 text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:border-amber-400/60 transition-colors resize-none font-sans leading-relaxed"
           />
         </div>
 
         {/* Footer Actions */}
         <div className="flex items-center gap-3">
           {isSaved ? (
-            <div className="w-full py-3 rounded-xl bg-[#6FBFC4]/20 border border-[#6FBFC4]/50 text-xs text-[#6FBFC4] flex items-center justify-center gap-2 font-bold">
+            <div className="w-full py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 flex items-center justify-center gap-2 font-medium">
               <CheckCircle2 className="w-4 h-4" />
-              <span>Inscribed into Personal Constellation ✦</span>
+              <span>Saved to reflection history</span>
             </div>
           ) : (
             <>
@@ -180,13 +153,13 @@ export const JournalModal: React.FC<JournalModalProps> = ({
                 icon={<Sparkles className="w-4 h-4" />}
                 onClick={handleSave}
               >
-                {isSaving ? 'Inscribing Star...' : 'Save into Sky Constellation'}
+                {isSaving ? 'Saving note...' : 'Save Reflection'}
               </Button>
               <button
                 onClick={onClose}
-                className="px-4 py-3 rounded-xl bg-[#2D2A5C]/60 hover:bg-[#2D2A5C] text-xs text-[#B8B4D9] hover:text-[#F5F2ED] border border-[#B8B4D9]/20 font-semibold transition-colors cursor-pointer"
+                className="px-4 py-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs text-neutral-300 hover:text-white border border-white/[0.08] font-medium transition-colors cursor-pointer"
               >
-                Skip Journal
+                Skip
               </button>
             </>
           )}

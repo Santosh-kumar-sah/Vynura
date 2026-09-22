@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ArrowRight, Star, BookmarkCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, BookmarkCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import type { MoodType } from '../../types';
 import type { RecommendationEngineOutput } from '../../types/recommendations';
@@ -22,7 +22,6 @@ export const CaptureCard: React.FC<CaptureCardProps> = ({
 }) => {
   const [reflectionText, setReflectionText] = useState<string>('');
   const [isSaved, setIsSaved] = useState<boolean>(false);
-  const [savedType, setSavedType] = useState<'freeze' | 'skipped' | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const moodInfo = MOODS[mood] || MOODS.neutral;
@@ -58,7 +57,6 @@ export const CaptureCard: React.FC<CaptureCardProps> = ({
     });
 
     setIsSaved(true);
-    setSavedType('freeze');
     setIsSubmitting(false);
 
     if (onCaptured) {
@@ -83,7 +81,6 @@ export const CaptureCard: React.FC<CaptureCardProps> = ({
     });
 
     setIsSaved(true);
-    setSavedType('skipped');
     setIsSubmitting(false);
 
     if (onCaptured) {
@@ -93,57 +90,38 @@ export const CaptureCard: React.FC<CaptureCardProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 25, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
-      className="relative rounded-3xl p-6 sm:p-8 overflow-hidden border border-[#FFC978]/40 shadow-[0_15px_50px_rgba(255,201,120,0.18)] backdrop-blur-2xl space-y-6"
-      style={{
-        background:
-          'linear-gradient(135deg, rgba(36, 33, 74, 0.95) 0%, rgba(26, 24, 54, 0.98) 50%, rgba(18, 16, 41, 0.95) 100%)',
-      }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="rounded-2xl p-6 sm:p-8 bg-[#121316] border border-white/[0.08] space-y-6 relative overflow-hidden"
     >
-      {/* Ambient Starlight Radial Glow */}
-      <div
-        className="absolute top-0 right-1/4 w-80 h-80 rounded-full blur-[110px] pointer-events-none -z-10 opacity-30"
-        style={{ backgroundColor: moodInfo.color }}
-      />
-
       {/* Header Pill & Mode Badge */}
       <div className="flex flex-wrap items-center justify-between gap-3 relative z-10">
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#FFC978]/20 border border-[#FFC978]/50 text-[#FFC978] flex items-center gap-1.5 shadow-glow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-[#FFC978]" />
-            <span>High Resonance Calibration · Freeze Flow</span>
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-mono uppercase bg-white/[0.04] border border-white/[0.08] text-amber-400 flex items-center gap-1.5">
+            <Sparkles className="w-3 h-3 stroke-[1.5]" />
+            <span>Optimal Equilibrium State</span>
           </span>
 
-          <span
-            className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold border flex items-center gap-1"
-            style={{
-              backgroundColor: `${prescription.accentColor}18`,
-              borderColor: `${prescription.accentColor}40`,
-              color: prescription.accentColor,
-            }}
-          >
-            <span>{prescription.mode.toUpperCase()}</span>
-            <span className="opacity-60">•</span>
-            <span>HIGH TIER</span>
+          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono text-neutral-400 bg-white/[0.02] border border-white/[0.06]">
+            {prescription.mode.toUpperCase()} · HIGH TIER
           </span>
         </div>
 
-        <div className="flex items-center gap-1 text-xs font-mono text-[#B8B4D9]">
-          <Star className="w-3.5 h-3.5 text-[#FFC978] fill-current" />
-          <span>Optimal State: Zero Intervention Needed</span>
+        <div className="flex items-center gap-1.5 text-xs font-mono text-neutral-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span>Zero Intervention Required</span>
         </div>
       </div>
 
       {/* Prompt Headline */}
-      <div className="space-y-2 relative z-10">
-        <h3 className="font-heading text-2xl sm:text-3xl font-bold text-[#F5F2ED] tracking-tight">
-          What's making this moment shine?
+      <div className="space-y-1.5 relative z-10">
+        <h3 className="text-xl sm:text-2xl font-medium text-white tracking-tight">
+          What is supporting this equilibrium?
         </h3>
-        <p className="text-sm text-[#B8B4D9] leading-relaxed max-w-2xl">
-          Your resonance is in radiant alignment ({moodInfo.label} at {Math.round(confidence * 100)}% clarity). 
-          No shift or exercise needed right now — simply anchor this feeling.
+        <p className="text-sm text-neutral-400 leading-relaxed max-w-2xl">
+          Your system is in high coherence ({moodInfo.label} at {Math.round(confidence * 100)}% clarity).
+          No regulation exercise is required right now — simply record the present state.
         </p>
       </div>
 
@@ -152,34 +130,30 @@ export const CaptureCard: React.FC<CaptureCardProps> = ({
         {isSaved ? (
           <motion.div
             key="saved-confirmation"
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-            className="p-5 rounded-2xl bg-[#121029]/80 border border-[#78FFD6]/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-[#F5F2ED]"
+            transition={{ duration: 0.2 }}
+            className="p-5 rounded-xl bg-white/[0.02] border border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-white"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#78FFD6]/15 border border-[#78FFD6]/40 flex items-center justify-center text-[#78FFD6] shrink-0">
-                <BookmarkCheck className="w-5 h-5" />
-              </div>
+              <BookmarkCheck className="w-5 h-5 text-emerald-400 stroke-[1.5] shrink-0" />
               <div>
-                <div className="text-sm font-bold text-[#78FFD6]">
-                  {savedType === 'freeze'
-                    ? '✨ Moment Frozen in Your Constellation!'
-                    : '✦ Starlight Resonance Recorded'}
+                <div className="text-sm font-medium text-white">
+                  State recorded in local archive
                 </div>
                 {reflectionText.trim() && (
-                  <p className="text-xs text-[#FFF2D6] italic mt-0.5">
+                  <p className="text-xs text-neutral-300 mt-0.5">
                     "{reflectionText.trim()}"
                   </p>
                 )}
-                <p className="text-[11px] text-[#B8B4D9]">
-                  Saved to your personal starlight memory.
+                <p className="text-[11px] text-neutral-500">
+                  Stored on-device in local telemetry index.
                 </p>
               </div>
             </div>
 
-            <div className="px-4 py-1.5 rounded-xl bg-[#24214A] border border-[#B8B4D9]/20 text-xs font-mono text-[#FFC978]">
-              Saved to Constellation
+            <div className="px-3 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
+              Preserved
             </div>
           </motion.div>
         ) : (
@@ -193,13 +167,13 @@ export const CaptureCard: React.FC<CaptureCardProps> = ({
               <textarea
                 value={reflectionText}
                 onChange={(e) => setReflectionText(e.target.value.slice(0, maxChars))}
-                placeholder="A warm conversation, feeling centered, sunlight through the window, finished a big milestone..."
+                placeholder="Log a quick reflection, trigger, or sensation..."
                 rows={3}
                 maxLength={maxChars}
-                className="w-full rounded-2xl p-4 bg-[#121029]/85 border border-[#B8B4D9]/25 focus:border-[#FFC978]/70 focus:outline-none focus:ring-1 focus:ring-[#FFC978]/50 text-sm text-[#F5F2ED] placeholder:text-[#B8B4D9]/40 resize-none font-body transition-all"
+                className="w-full rounded-xl p-3.5 bg-[#18191c] border border-white/[0.08] focus:border-amber-400/60 focus:outline-none text-xs text-white placeholder:text-neutral-500 resize-none font-sans transition-colors"
               />
 
-              <div className="absolute bottom-3 right-3 text-[11px] font-mono text-[#B8B4D9]/60">
+              <div className="absolute bottom-3 right-3 text-[11px] font-mono text-neutral-500">
                 {reflectionText.length}/{maxChars}
               </div>
             </div>
@@ -209,19 +183,19 @@ export const CaptureCard: React.FC<CaptureCardProps> = ({
               <button
                 onClick={handleSkip}
                 disabled={isSubmitting}
-                className="text-xs text-[#B8B4D9] hover:text-[#F5F2ED] transition-colors py-2 px-3 cursor-pointer"
+                className="text-xs text-neutral-400 hover:text-white transition-colors py-2 px-3 cursor-pointer"
               >
-                Skip note · Just save resonance
+                Skip note · Just save telemetry
               </button>
 
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <button
                   onClick={handleFreeze}
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#FFC978] to-[#FFAE68] hover:from-[#FFD88A] hover:to-[#FFBF78] text-[#1A1836] font-bold text-xs tracking-wide transition-all shadow-[0_4px_20px_rgba(255,201,120,0.4)] flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto px-5 py-2 rounded-lg bg-white hover:bg-neutral-200 text-neutral-950 font-medium text-xs tracking-wide transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                 >
-                  <Sparkles className="w-4 h-4 fill-current" />
-                  <span>{isSubmitting ? 'Freezing...' : 'Freeze it ✨'}</span>
+                  <Sparkles className="w-3.5 h-3.5 fill-current" />
+                  <span>{isSubmitting ? 'Saving...' : 'Save Check-in'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

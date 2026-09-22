@@ -326,49 +326,43 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
   // Consent Banner
   if (!hasConsented) {
     return (
-      <div className="w-full rounded-3xl bg-gradient-to-b from-[#24214A]/90 via-[#1A1836] to-[#14122C] border border-[#FFC978]/35 p-6 sm:p-8 shadow-[0_20px_60px_-15px_rgba(10,8,28,0.95)] overflow-hidden text-center relative">
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#FFC978] to-transparent" />
-
+      <div className="w-full rounded-2xl bg-[#121316] border border-white/[0.08] p-6 sm:p-8 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] overflow-hidden text-center relative">
         <div className="max-w-2xl mx-auto space-y-6">
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-[#FFC978]/15 border border-[#FFC978]/40 flex items-center justify-center text-[#FFC978] shadow-glow-sm">
-            <Camera className="w-7 h-7" />
-          </div>
+          <Camera className="w-8 h-8 mx-auto text-amber-400" strokeWidth={1.5} />
 
           <div>
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#FFC978] font-bold">
-                Private Looking Glass Sanctuary
-              </span>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-400 mb-1">
+              Private Sensor Telemetry
             </div>
-            <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#F5F2ED]">
-              Mirror of the Celestial Sky
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+              On-Device Expression Calibrator
             </h2>
           </div>
 
-          <p className="text-sm text-[#B8B4D9] leading-relaxed max-w-lg mx-auto">
-            Vynura uses real-time facial micro-landmark detection to reflect your emotional frequency and guide personalized sensory shifts.
+          <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed max-w-lg mx-auto">
+            Vynura uses real-time facial micro-landmark detection to calibrate your current state and adapt auditory and visual paces.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left bg-[#121029]/80 p-4 rounded-2xl border border-[#B8B4D9]/15">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left bg-[#18191c] p-4 rounded-xl border border-white/[0.06]">
             <div className="flex items-start gap-2.5">
-              <EyeOff className="w-4 h-4 text-[#6FBFC4] mt-0.5 shrink-0" />
+              <EyeOff className="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" />
               <div>
-                <div className="text-xs font-bold text-[#F5F2ED]">Zero Uploads</div>
-                <div className="text-[11px] text-[#B8B4D9]">Never stored or transmitted</div>
+                <div className="text-xs font-medium text-white">Zero Uploads</div>
+                <div className="text-[11px] text-neutral-400">Frames never leave your local RAM</div>
               </div>
             </div>
             <div className="flex items-start gap-2.5">
-              <Cpu className="w-4 h-4 text-[#FFC978] mt-0.5 shrink-0" />
+              <Cpu className="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" />
               <div>
-                <div className="text-xs font-bold text-[#F5F2ED]">On-Device Neural</div>
-                <div className="text-[11px] text-[#B8B4D9]">Runs in local browser memory</div>
+                <div className="text-xs font-medium text-white">Local Neural</div>
+                <div className="text-[11px] text-neutral-400">WebGL/Wasm in-browser inference</div>
               </div>
             </div>
             <div className="flex items-start gap-2.5">
-              <ShieldCheck className="w-4 h-4 text-[#FF9E7D] mt-0.5 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" />
               <div>
-                <div className="text-xs font-bold text-[#F5F2ED]">Auto-Turns Off</div>
-                <div className="text-[11px] text-[#B8B4D9]">Camera stops right after capture</div>
+                <div className="text-xs font-medium text-white">Auto Hardware Stop</div>
+                <div className="text-[11px] text-neutral-400">Stream cuts right after confirmation</div>
               </div>
             </div>
           </div>
@@ -383,7 +377,7 @@ export const WebcamLookingGlass: React.FC<WebcamLookingGlassProps> = ({
                 setHasConsented(true);
               }}
             >
-              Allow Camera & Enter Mirror
+              Enable Sensor Telemetry
             </Button>
           </div>
         </div>

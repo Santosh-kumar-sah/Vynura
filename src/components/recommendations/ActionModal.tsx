@@ -82,58 +82,34 @@ export const ActionModal: React.FC<ActionModalProps> = ({
         initial={{ opacity: 0, scale: 0.93, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative w-full max-w-lg rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border p-6 sm:p-8 shadow-[0_25px_70px_rgba(10,8,28,0.95)] overflow-hidden"
-        style={{
-          borderColor: `${item.accentColor}50`,
-          boxShadow: `0 0 35px -5px ${item.accentColor}30`,
-        }}
+        transition={{ duration: 0.25 }}
+        className="relative w-full max-w-lg rounded-2xl bg-[#121316] border border-white/[0.08] p-6 sm:p-8 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.7)] overflow-hidden"
       >
-        {/* Top Rim Glow */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${item.accentColor}, transparent)`,
-          }}
-        />
-
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl text-[#B8B4D9] hover:text-[#F5F2ED] hover:bg-[#2D2A5C]/60 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-neutral-400 hover:text-white transition-colors cursor-pointer"
           aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center border shadow-glow-sm"
-            style={{
-              backgroundColor: `${item.accentColor}20`,
-              borderColor: `${item.accentColor}60`,
-              color: item.accentColor,
-            }}
-          >
-            {item.category === 'somatic' ? (
-              <Wind className="w-5 h-5" />
-            ) : item.category === 'cognitive' ? (
-              <BookOpen className="w-5 h-5" />
-            ) : (
-              <Music className="w-5 h-5" />
-            )}
-          </div>
+          {item.category === 'somatic' ? (
+            <Wind className="w-5 h-5 text-amber-400 stroke-[1.5] shrink-0" />
+          ) : item.category === 'cognitive' ? (
+            <BookOpen className="w-5 h-5 text-amber-400 stroke-[1.5] shrink-0" />
+          ) : (
+            <Music className="w-5 h-5 text-amber-400 stroke-[1.5] shrink-0" />
+          )}
           <div>
             <div className="flex items-center gap-2">
-              <span
-                className="text-[10px] font-mono font-bold uppercase tracking-widest"
-                style={{ color: item.accentColor }}
-              >
+              <span className="text-[10px] font-mono font-medium uppercase tracking-wider text-amber-400">
                 {item.tag} · {item.durationText}
               </span>
             </div>
-            <h3 className="font-heading text-xl font-bold text-[#F5F2ED]">
+            <h3 className="text-lg sm:text-xl font-medium text-white">
               {item.title}
             </h3>
           </div>

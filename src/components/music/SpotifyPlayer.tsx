@@ -52,54 +52,28 @@ export const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ mood }) => {
   const moodData = MOODS[mood] || MOODS.neutral;
 
   return (
-    <div
-      className="p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#24214A]/90 via-[#1A1836]/95 to-[#121029]/95 border backdrop-blur-xl relative overflow-hidden transition-all duration-500 shadow-xl"
-      style={{
-        borderColor: `${currentPlaylist.themeColor}50`,
-        boxShadow: `0 15px 45px -10px ${currentPlaylist.themeColor}30`,
-      }}
-    >
-      {/* Top Luminous Neon Strip */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[2.5px] transition-colors duration-500"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${currentPlaylist.themeColor}, transparent)`,
-        }}
-      />
-
+    <div className="p-6 sm:p-7 rounded-xl bg-[#121316] border border-white/[0.08]">
       {/* Header Container */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-[#B8B4D9]/15">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 pb-4 border-b border-white/[0.06]">
         <div className="flex items-center gap-3.5">
-          <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center border shadow-glow-sm transition-transform duration-300 group-hover:scale-105"
-            style={{
-              backgroundColor: `${currentPlaylist.themeColor}20`,
-              borderColor: `${currentPlaylist.themeColor}60`,
-              color: currentPlaylist.themeColor,
-            }}
-          >
-            <Music className="w-5 h-5" />
-          </div>
+          <Music className="w-5 h-5 text-amber-400 stroke-[1.5] shrink-0" />
           <div>
             <div className="flex items-center gap-2">
-              <span
-                className="text-[10px] font-mono font-bold uppercase tracking-widest"
-                style={{ color: currentPlaylist.themeColor }}
-              >
-                Adaptive Sonic Frequency
+              <span className="text-[10px] font-mono font-medium uppercase tracking-wider text-amber-400">
+                Adaptive Audio Frequency
               </span>
-              <span className="text-xs text-[#FFC978] font-mono font-semibold">
-                {currentPlaylist.tag}
+              <span className="text-xs text-neutral-400 font-mono">
+                · {currentPlaylist.tag}
               </span>
             </div>
-            <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
+            <h3 className="text-base sm:text-lg font-medium text-white">
               {currentPlaylist.title}
             </h3>
           </div>
         </div>
 
         {/* Live Audio Telemetry Badge */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#121029]/80 border border-[#B8B4D9]/20 text-xs text-[#F5F2ED]">
+        <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
           {/* Animated Equalizer Waveform Bars */}
           <div className="flex items-end gap-0.5 h-3.5 w-4">
             <motion.div

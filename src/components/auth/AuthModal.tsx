@@ -96,49 +96,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#0B091C]/85 backdrop-blur-lg">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
       <motion.div
-        initial={{ opacity: 0, scale: 0.94, y: 15 }}
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative w-full max-w-md rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border border-[#FFC978]/35 p-6 sm:p-8 shadow-[0_25px_70px_rgba(10,8,28,0.95)] overflow-hidden"
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-md rounded-2xl bg-[#121316] border border-white/[0.08] p-6 sm:p-8 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.8)] overflow-hidden"
       >
-        {/* Top Rim Glow */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#FFC978] to-transparent" />
-
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-xl text-[#B8B4D9] hover:text-[#F5F2ED] hover:bg-[#2D2A5C]/60 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
           aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-11 h-11 rounded-2xl bg-[#FFC978]/15 border border-[#FFC978]/40 flex items-center justify-center text-[#FFC978] shadow-glow-sm">
-            <Sparkles className="w-5 h-5" />
-          </div>
+        <div className="flex items-start gap-3 mb-6">
+          <Sparkles className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" strokeWidth={1.5} />
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
-                {isSignUp ? 'New Sanctuary' : 'Celestial Login'}
-              </span>
-              <span className="text-xs text-[#FFC978]/80 font-mono">Star Key</span>
+            <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-medium">
+              {isSignUp ? 'Account Creation' : 'Sign In'}
             </div>
-            <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED]">
-              {isSignUp ? 'Awaken Your Star Key' : 'Enter Your Sanctuary'}
+            <h3 className="text-xl font-semibold text-white tracking-tight mt-0.5">
+              {isSignUp ? 'Create your account' : 'Welcome back to Vynura'}
             </h3>
+            <p className="text-xs text-neutral-400 mt-1">
+              {isSignUp ? 'Persist your mood patterns and notes across sessions.' : 'Enter your credentials or proceed instantly as guest.'}
+            </p>
           </div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleAuth} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#B8B4D9] mb-1.5 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-[#6FBFC4]" />
+            <label className="block text-xs font-medium text-neutral-300 mb-1.5 flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-neutral-400" />
               <span>Email Address</span>
             </label>
             <input
@@ -146,15 +141,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="explorer@nightsky.app"
-              className="w-full rounded-xl bg-[#121029]/90 border border-[#B8B4D9]/25 px-4 py-2.5 text-xs text-[#F5F2ED] placeholder:text-[#B8B4D9]/40 focus:outline-none focus:border-[#FFC978] transition-colors font-body"
+              placeholder="you@domain.com"
+              className="w-full rounded-lg bg-[#18191c] border border-white/[0.08] px-3.5 py-2.5 text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:border-amber-400/60 transition-colors font-sans"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#B8B4D9] mb-1.5 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-[#FF9E7D]" />
-              <span>Secret Star Key (Password)</span>
+            <label className="block text-xs font-medium text-neutral-300 mb-1.5 flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-neutral-400" />
+              <span>Password</span>
             </label>
             <input
               type="password"
@@ -163,19 +158,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-xl bg-[#121029]/90 border border-[#B8B4D9]/25 px-4 py-2.5 text-xs text-[#F5F2ED] placeholder:text-[#B8B4D9]/40 focus:outline-none focus:border-[#FFC978] transition-colors font-body"
+              className="w-full rounded-lg bg-[#18191c] border border-white/[0.08] px-3.5 py-2.5 text-xs text-white placeholder:text-neutral-500 focus:outline-none focus:border-amber-400/60 transition-colors font-sans"
             />
           </div>
 
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-[#FF9E7D]/15 border border-[#FF9E7D]/35 text-xs text-[#FF9E7D] flex items-center gap-2">
+            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-xs text-red-400 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {successMessage && (
-            <div className="p-3 rounded-xl bg-[#6FBFC4]/15 border border-[#6FBFC4]/35 text-xs text-[#6FBFC4] flex items-center gap-2">
+            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400 flex items-center gap-2">
               <UserCheck className="w-4 h-4 shrink-0" />
               <span>{successMessage}</span>
             </div>
@@ -188,19 +183,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             disabled={loading}
             icon={<ArrowRight className="w-4 h-4" />}
           >
-            {loading ? 'Aligning Starlight...' : isSignUp ? 'Create Constellation Key' : 'Enter Looking Glass'}
+            {loading ? 'Authenticating...' : isSignUp ? 'Create Account' : 'Sign In'}
           </Button>
         </form>
 
         {/* Quick Guest Access */}
-        <div className="mt-4 pt-4 border-t border-[#B8B4D9]/15">
+        <div className="mt-4 pt-4 border-t border-white/[0.06]">
           <button
             type="button"
             onClick={handleGuestQuickLogin}
-            className="w-full py-2.5 px-4 rounded-xl bg-[#2D2A5C]/60 hover:bg-[#2D2A5C] text-[#B8B4D9] hover:text-[#F5F2ED] border border-[#B8B4D9]/20 text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-neutral-300 hover:text-white border border-white/[0.08] text-xs font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Compass className="w-4 h-4 text-[#FFC978]" />
-            <span>Continue as Guest Explorer (Instant)</span>
+            <Compass className="w-4 h-4 text-neutral-400" />
+            <span>Continue as Guest</span>
           </button>
         </div>
 
@@ -213,11 +208,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               setErrorMessage(null);
               setSuccessMessage(null);
             }}
-            className="text-xs text-[#B8B4D9] hover:text-[#FFC978] transition-colors cursor-pointer font-medium"
+            className="text-xs text-neutral-400 hover:text-white transition-colors cursor-pointer"
           >
             {isSignUp
-              ? 'Already possess a star key? Enter Sanctuary'
-              : "New to Vynura? Awaken a Constellation Account"}
+              ? 'Already have an account? Sign In'
+              : "Don't have an account? Create one"}
           </button>
         </div>
       </motion.div>

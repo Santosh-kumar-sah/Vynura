@@ -251,40 +251,30 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 bg-[#090818]/95 backdrop-blur-xl overflow-y-auto">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xl overflow-y-auto">
       <motion.div
-        initial={{ opacity: 0, scale: 0.93, y: 20 }}
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative w-full max-w-xl rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border border-[#6FBFC4]/40 p-5 sm:p-7 shadow-[0_25px_80px_rgba(10,8,28,0.95)] overflow-hidden my-auto text-center"
+        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-xl rounded-2xl bg-[#121316] border border-white/[0.08] p-5 sm:p-7 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.8)] overflow-hidden my-auto text-center"
       >
-        {/* Top Rim Glow */}
-        <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-transparent via-[#6FBFC4] to-transparent" />
-
-        {/* Header with Properly Aligned Cycle Badge and Close Button */}
-        <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-[#B8B4D9]/15">
+        {/* Header */}
+        <div className="flex items-center justify-between gap-3 mb-5 pb-3 border-b border-white/[0.06]">
           <div className="flex items-center gap-3 text-left min-w-0">
-            <div className="w-10 h-10 rounded-xl bg-[#6FBFC4]/15 border border-[#6FBFC4]/40 flex items-center justify-center text-[#6FBFC4] shadow-glow-sm shrink-0">
-              <Wind className="w-5 h-5" />
-            </div>
+            <Wind className="w-5 h-5 text-amber-400 shrink-0" strokeWidth={1.5} />
             <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#6FBFC4]">
-                  Somatic Particle Pacer
-                </span>
-                <span className="text-xs text-[#FFC978] font-mono font-semibold">
-                  {activeTechniqueData.tag}
-                </span>
+              <div className="text-[11px] font-mono uppercase tracking-wider text-neutral-400">
+                Pacer · {activeTechniqueData.tag}
               </div>
-              <h3 className="font-heading text-base sm:text-xl font-bold text-[#F5F2ED] truncate">
+              <h3 className="text-base sm:text-xl font-semibold text-white tracking-tight truncate">
                 {activeTechniqueData.label}
               </h3>
             </div>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <div className="px-3 py-1.5 rounded-full bg-[#121029]/80 border border-[#FFC978]/30 text-xs font-mono text-[#FFC978] whitespace-nowrap">
+            <div className="px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.08] text-xs font-mono text-neutral-300 whitespace-nowrap">
               Cycle {currentCycle} / {activeTechniqueData.totalCycles}
             </div>
             <button
@@ -292,11 +282,11 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
                 handleReset();
                 onClose();
               }}
-              className="p-2 rounded-xl text-[#B8B4D9] hover:text-[#F5F2ED] hover:bg-[#2D2A5C]/60 border border-[#B8B4D9]/15 hover:border-[#B8B4D9]/35 transition-colors cursor-pointer"
+              className="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
               aria-label="Close"
               title="Close Breathing Guide"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -317,13 +307,13 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
                   setCurrentCycle(1);
                   setIsCompleted(false);
                 }}
-                className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all duration-200 border cursor-pointer ${
+                className={`py-2 px-2.5 rounded-xl text-xs transition-all duration-150 border cursor-pointer ${
                   isSelected
-                    ? 'bg-[#2D2A5C] text-[#F5F2ED] border-[#6FBFC4] shadow-glow-sm'
-                    : 'bg-[#1A1836]/60 text-[#B8B4D9] border-[#B8B4D9]/15 hover:border-[#B8B4D9]/30'
+                    ? 'bg-white text-neutral-950 font-medium border-white'
+                    : 'bg-[#18191c] text-neutral-400 border-white/[0.06] hover:text-white hover:border-white/[0.12]'
                 }`}
               >
-                <div>{key === '478' ? '4-7-8 Downshift' : key === 'box' ? 'Box Breathing' : '4-6 Calm'}</div>
+                <div className="font-medium">{key === '478' ? '4-7-8 Downshift' : key === 'box' ? 'Box Breathing' : '4-6 Calm'}</div>
                 <div className="text-[10px] font-mono opacity-70">{tech.tag}</div>
               </button>
             );
@@ -364,10 +354,10 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="p-3.5 rounded-2xl bg-[#6FBFC4]/20 border border-[#6FBFC4]/50 mb-6 text-xs text-[#F5F2ED] flex items-center justify-center gap-2 font-semibold"
+              className="p-3.5 rounded-xl bg-[#18191c] border border-white/[0.08] mb-6 text-xs text-white flex items-center justify-center gap-2 font-medium"
             >
-              <CheckCircle2 className="w-5 h-5 text-[#6FBFC4]" />
-              <span>Breath Circuit Complete. Parasympathetic Tone Restored ✦</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>Breathing Circuit Complete</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -381,7 +371,7 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
             icon={isActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             onClick={() => setIsActive(!isActive)}
           >
-            {isActive ? 'Pause Pacer' : isCompleted ? 'Restart Circuit' : 'Begin Starlight Breath'}
+            {isActive ? 'Pause Pacer' : isCompleted ? 'Restart Circuit' : 'Begin Paced Rhythm'}
           </Button>
 
           <Button
@@ -394,11 +384,11 @@ export const BreathingGuide: React.FC<BreathingGuideProps> = ({
           </Button>
         </div>
 
-        <div className="mt-5 pt-3 border-t border-[#B8B4D9]/15 flex items-center justify-between text-[11px] text-[#B8B4D9]">
-          <span className="flex items-center gap-1 text-[#6FBFC4]">
-            <Sparkles className="w-3.5 h-3.5" /> Firefly particles pulse organically with your lungs
+        <div className="mt-5 pt-3 border-t border-white/[0.06] flex items-center justify-between text-[11px] text-neutral-400">
+          <span className="flex items-center gap-1.5 text-neutral-400">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Organic pacing simulation
           </span>
-          <span className="font-mono text-[#FFC978]">Vagus Nerve Reset</span>
+          <span className="font-mono text-neutral-400">Vagus Regulation</span>
         </div>
       </motion.div>
     </div>

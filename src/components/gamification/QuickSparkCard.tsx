@@ -103,82 +103,63 @@ export const QuickSparkCard: React.FC<QuickSparkCardProps> = ({
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 25, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative rounded-3xl p-6 sm:p-7 overflow-hidden border border-[#FFC978]/40 shadow-[0_12px_45px_rgba(255,201,120,0.18)] backdrop-blur-xl group transition-all duration-500"
-        style={{
-          background: 'linear-gradient(135deg, rgba(36, 33, 74, 0.95) 0%, rgba(26, 24, 54, 0.98) 50%, rgba(18, 16, 41, 0.95) 100%)',
-        }}
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="relative rounded-2xl p-6 sm:p-7 overflow-hidden border border-white/[0.08] bg-[#121316] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.5)] group transition-colors"
       >
-        {/* Radiant Starlight Shimmer Animation Layer */}
-        <motion.div
-          className="absolute -inset-[100%] bg-gradient-to-r from-transparent via-[#FFC978]/10 to-transparent pointer-events-none"
-          animate={{
-            x: ['-100%', '200%'],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 4.5,
-            ease: 'easeInOut',
-            repeatDelay: 2,
-          }}
-        />
-
         {/* Top Header Badge & Micro-Timer */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4 relative z-10">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-5 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-[#FFC978]/20 border border-[#FFC978]/50 text-[#FFC978] flex items-center gap-1.5 shadow-glow-sm">
-              <Flame className="w-3.5 h-3.5 animate-pulse text-[#FFC978]" />
-              <span>Daily Quick Spark · Amplify Surge</span>
+            <span className="px-2.5 py-1 rounded-md text-xs font-mono font-medium uppercase tracking-wider bg-white/[0.04] border border-white/[0.08] text-neutral-300 flex items-center gap-1.5">
+              <Flame className="w-3.5 h-3.5 text-amber-400" />
+              <span>Micro-Shift Prompt</span>
             </span>
 
-            <span className="px-2.5 py-1 rounded-full text-[11px] font-mono capitalize border border-[#B8B4D9]/25 text-[#B8B4D9] bg-[#121029]/60">
+            <span className="px-2.5 py-1 rounded-md text-[11px] font-mono capitalize border border-white/[0.06] text-neutral-400 bg-white/[0.02]">
               {activity.category}
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#121029]/80 border border-[#FFC978]/30 text-xs font-mono text-[#FFC978]">
-            <Clock className="w-3.5 h-3.5 text-[#FFC978]" />
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-neutral-400">
+            <Clock className="w-3.5 h-3.5 text-neutral-400" />
             <span>{activity.durationSeconds}s Micro-Burst</span>
           </div>
         </div>
 
         {/* Activity Core Details */}
         <div className="space-y-3 mb-6 relative z-10">
-          <div className="flex items-start gap-4">
-            <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#FFC978]/25 to-[#FFAE68]/15 border border-[#FFC978]/40 text-[#FFC978] shadow-inner shrink-0 group-hover:scale-105 transition-transform duration-300">
-              <IconComponent className="w-6 h-6 text-[#FFC978]" />
-            </div>
+          <div className="flex items-start gap-3.5">
+            <IconComponent className="w-5 h-5 text-amber-400 mt-1 shrink-0" strokeWidth={1.5} />
 
             <div className="space-y-1">
-              <h3 className="font-heading text-xl sm:text-2xl font-bold text-[#F5F2ED] tracking-tight group-hover:text-[#FFF2D6] transition-colors">
+              <h3 className="text-lg sm:text-xl font-semibold text-white tracking-tight">
                 {activity.title}
               </h3>
-              <p className="text-sm text-[#B8B4D9] leading-relaxed">
+              <p className="text-xs text-neutral-400 leading-relaxed">
                 {activity.instructions}
               </p>
             </div>
           </div>
 
           {activity.promptExample && (
-            <div className="p-3 rounded-xl bg-[#121029]/70 border border-[#FFC978]/20 text-xs text-[#FFC978]/90 italic font-mono flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 shrink-0 text-[#FFC978]" />
-              <span>Spark idea: {activity.promptExample}</span>
+            <div className="p-3 rounded-lg bg-[#18191c] border border-white/[0.06] text-xs text-neutral-300 font-mono flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+              <span>Example: {activity.promptExample}</span>
             </div>
           )}
         </div>
 
         {/* Action / Completion Status Bar */}
-        <div className="relative z-10 pt-2 border-t border-[#B8B4D9]/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="relative z-10 pt-4 border-t border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           {/* Streak Counter Chip */}
-          <div className="flex items-center gap-2.5 text-xs text-[#B8B4D9] font-mono">
-            <div className="flex items-center gap-1 text-[#FFC978]">
-              <Trophy className="w-4 h-4 text-[#FFC978]" />
-              <span className="font-bold">{streak?.current_streak || 0}</span>
-              <span>day streak</span>
+          <div className="flex items-center gap-2.5 text-xs text-neutral-400 font-mono">
+            <div className="flex items-center gap-1.5 text-amber-400 font-medium">
+              <Trophy className="w-4 h-4 text-amber-400" />
+              <span className="font-semibold text-white">{streak?.current_streak || 0}</span>
+              <span className="text-neutral-400">day streak</span>
             </div>
-            <span className="text-[#B8B4D9]/40">•</span>
+            <span className="text-white/20">•</span>
             <span>Best: {streak?.longest_streak || 0}</span>
           </div>
 
@@ -188,21 +169,21 @@ export const QuickSparkCard: React.FC<QuickSparkCardProps> = ({
               <div className="flex items-center gap-2">
                 <motion.div
                   key="completed"
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
-                  className="flex items-center gap-2 text-xs font-bold text-[#78FFD6] bg-[#78FFD6]/15 border border-[#78FFD6]/40 px-3.5 py-2 rounded-xl"
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-2 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-[#78FFD6]" />
-                  <span>Spark Ignited! ✦</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>Action Logged</span>
                 </motion.div>
 
                 <button
                   onClick={() => setIsShareModalOpen(true)}
-                  className="px-3.5 py-2 rounded-xl bg-[#FFC978]/20 hover:bg-[#FFC978]/30 border border-[#FFC978]/50 text-xs font-bold text-[#FFC978] transition-all flex items-center gap-1.5 cursor-pointer shadow-glow-sm"
+                  className="px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-medium text-white transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <Share2 className="w-3.5 h-3.5" />
-                  <span>Share Card</span>
+                  <span>Share Summary</span>
                 </button>
               </div>
             ) : (
@@ -210,12 +191,11 @@ export const QuickSparkCard: React.FC<QuickSparkCardProps> = ({
                 key="ignite-btn"
                 onClick={handleIgnite}
                 disabled={isSubmitting}
-                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FFC978] to-[#FFAE68] text-[#1A1836] font-bold text-xs tracking-wide transition-all shadow-[0_4px_20px_rgba(255,201,120,0.4)] hover:shadow-[0_6px_25px_rgba(255,201,120,0.6)] flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                className="px-4 py-2 rounded-lg bg-white hover:bg-neutral-200 text-neutral-950 font-medium text-xs tracking-wide transition-colors flex items-center justify-center gap-2 cursor-pointer shrink-0 shadow-sm"
               >
-                <Zap className="w-4 h-4 fill-current" />
-                <span>{isSubmitting ? 'Igniting...' : 'I Did This! Stoke the Spark ✦'}</span>
+                <Zap className="w-3.5 h-3.5 fill-current" />
+                <span>{isSubmitting ? 'Logging...' : 'Mark Completed'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </motion.button>
             )}
@@ -227,9 +207,9 @@ export const QuickSparkCard: React.FC<QuickSparkCardProps> = ({
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="mt-4 pt-3 border-t border-[#FFC978]/20 text-xs text-[#FFF2D6] font-mono flex items-center gap-2"
+            className="mt-4 pt-3 border-t border-white/[0.06] text-xs text-neutral-400 font-mono flex items-center gap-2"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#FFC978] shrink-0" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <span>{completionResult.message}</span>
           </motion.div>
         )}

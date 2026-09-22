@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Trophy } from 'lucide-react';
 import { WeeklyWellnessScore } from './WeeklyWellnessScore';
 import { StarBadgeGrid } from './StarBadgeGrid';
 import { fetchMoodEntries, calculateStreak, type MoodEntry } from '../../lib/supabase';
@@ -33,33 +32,32 @@ export const GamificationSection: React.FC = () => {
       {/* Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
+          transition={{ duration: 0.3 }}
         >
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FFC978] mb-2">
-            <Trophy className="w-4 h-4 text-[#FFC978]" />
-            <span>05 / MILESTONES · Gamification & Wellness Index</span>
+          <div className="text-xs font-mono uppercase tracking-wider text-amber-400 mb-2">
+            Longitudinal Telemetry
           </div>
 
-          <h2 className="font-heading text-3xl sm:text-5xl font-bold text-[#F5F2ED] tracking-tight mb-2">
-            Milestones & Harmonic Rank
+          <h2 className="font-heading text-3xl sm:text-4xl font-normal tracking-tight text-white mb-2">
+            Autonomic milestones & metrics
           </h2>
 
-          <p className="text-sm sm:text-base text-[#B8B4D9] max-w-xl leading-relaxed">
-            Unlock new celestial star clusters and track your longitudinal emotional resonance without punitive counters.
+          <p className="text-sm text-neutral-400 max-w-xl leading-relaxed">
+            Continuity metrics and progress benchmarks tracked without punitive counters or gamified distractions.
           </p>
         </motion.div>
 
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#121029]/80 border border-[#FFC978]/30 text-xs font-semibold text-[#FFC978]">
-          <Sparkles className="w-3.5 h-3.5" />
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-300">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
           <span>
             {streakDays >= 7
-              ? 'Milestone Level: Cassiopeia Master ✦'
+              ? 'Status: Advanced Consistency'
               : streakDays >= 3
-              ? 'Milestone Level: Orion Weaver ✦'
-              : 'Milestone Level: First Light ✦'}
+              ? 'Status: Developing Routine'
+              : 'Status: Baseline Calibration'}
           </span>
         </div>
       </div>

@@ -314,67 +314,46 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
   const currentMoodData = MOODS[detectedMood];
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 bg-[#0B091C]/90 backdrop-blur-xl overflow-y-auto">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xl overflow-y-auto">
       <motion.div
-        initial={{ opacity: 0, scale: 0.94, y: 20 }}
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.94, y: 15 }}
-        transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#24214A] via-[#1A1836] to-[#121029] border p-5 sm:p-7 shadow-[0_25px_80px_rgba(10,8,28,0.95)] overflow-hidden my-auto"
-        style={{
-          borderColor: `${currentMoodData.color}45`,
-          boxShadow: `0 20px 60px -15px ${currentMoodData.color}25, 0 0 0 1px ${currentMoodData.color}30`,
-        }}
+        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-2xl rounded-2xl bg-[#121316] border border-white/[0.08] p-5 sm:p-7 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.8)] overflow-hidden my-auto"
       >
-        {/* Dynamic Glowing Mood Halo Top Rim */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2.5px] transition-colors duration-500"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${currentMoodData.color}, transparent)`,
-          }}
-        />
-
         {/* Modal Close Button */}
         <button
           onClick={handleCloseModal}
-          className="absolute top-4 right-4 p-2 rounded-xl text-[#B8B4D9] hover:text-[#F5F2ED] hover:bg-[#2D2A5C]/60 transition-colors z-20 cursor-pointer"
+          className="absolute top-4 right-4 p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.06] transition-colors z-20 cursor-pointer"
           aria-label="Close"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
         {/* Header */}
-        <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-[#B8B4D9]/15">
+        <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-white/[0.06]">
           <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center border shadow-glow-sm transition-colors duration-300"
-              style={{
-                backgroundColor: `${currentMoodData.color}20`,
-                borderColor: `${currentMoodData.color}60`,
-                color: currentMoodData.color,
-              }}
-            >
-              <Camera className="w-5 h-5" />
-            </div>
+            <Camera className="w-5 h-5 text-amber-400 shrink-0" strokeWidth={1.5} />
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#FFC978] font-bold">
-                  Biometric Looking Glass
+                <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-medium">
+                  Biometric Sensor
                 </span>
-                <span className="text-xs text-[#FFC978]/90 font-mono">
+                <span className="text-xs text-neutral-400 font-mono">
                   {currentMoodData.sublabel}
                 </span>
               </div>
-              <h3 className="font-heading text-lg sm:text-xl font-bold text-[#F5F2ED]">
+              <h3 className="text-lg sm:text-xl font-semibold text-white tracking-tight">
                 Real-Time Expression Calibration
               </h3>
             </div>
           </div>
 
           <div className="hidden sm:flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#121029]/80 border border-[#6FBFC4]/30 text-[11px] text-[#6FBFC4]">
-              <Shield className="w-3.5 h-3.5" />
-              <span>100% Private On-Device</span>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.08] text-[11px] font-mono text-neutral-400">
+              <Shield className="w-3.5 h-3.5 text-neutral-400" />
+              <span>100% On-Device</span>
             </div>
           </div>
         </div>
@@ -392,14 +371,8 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
           </div>
         ) : (
           <div className="space-y-4">
-            {/* Webcam Live Feed Container with Glowing Organic Aperture */}
-            <div
-              className="relative mx-auto w-full max-w-md aspect-[4/3] rounded-2xl bg-[#0F0D24] border-2 overflow-hidden flex items-center justify-center transition-all duration-500 shadow-lg"
-              style={{
-                borderColor: currentMoodData.color,
-                boxShadow: `0 0 30px -5px ${currentMoodData.color}35`,
-              }}
-            >
+            {/* Webcam Live Feed Container */}
+            <div className="relative mx-auto w-full max-w-md aspect-[4/3] rounded-xl bg-[#08090A] border border-white/[0.12] overflow-hidden flex items-center justify-center transition-all duration-300">
               {/* Video Element */}
               <video
                 ref={videoRef}
@@ -504,28 +477,25 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
             </div>
 
             {/* Real-time Mood Resonance Badge & Confirmation Action */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#1A1836]/90 border border-[#B8B4D9]/20">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-xl bg-[#18191c] border border-white/[0.08]">
               <div className="flex items-center gap-3 text-left w-full sm:w-auto">
                 <div
-                  className="w-3.5 h-3.5 rounded-full animate-pulse shrink-0"
-                  style={{
-                    backgroundColor: currentMoodData.color,
-                    boxShadow: `0 0 10px ${currentMoodData.color}`,
-                  }}
+                  className="w-2.5 h-2.5 rounded-full animate-pulse shrink-0"
+                  style={{ backgroundColor: currentMoodData.color }}
                 />
                 <div>
-                  <div className="text-xs text-[#B8B4D9] flex items-center gap-1.5">
-                    <Activity className="w-3 h-3 text-[#FFC978]" />
+                  <div className="text-xs text-neutral-400 flex items-center gap-1.5">
+                    <Activity className="w-3 h-3 text-neutral-400" />
                     <span>Dominant State:</span>
-                    <span className="font-mono font-bold text-[#F5F2ED]">
+                    <span className="font-mono font-medium text-white">
                       {Math.round(confidence * 100)}% Match
                     </span>
                   </div>
-                  <div className="font-heading text-base font-bold text-[#F5F2ED] flex items-center gap-2">
+                  <div className="text-sm font-semibold text-white flex items-center gap-2">
                     <span style={{ color: currentMoodData.color }}>
                       {currentMoodData.label}
                     </span>
-                    <span className="text-xs text-[#B8B4D9] font-normal">
+                    <span className="text-xs text-neutral-400 font-normal">
                       ({currentMoodData.sublabel})
                     </span>
                   </div>
@@ -536,11 +506,11 @@ export const FaceDetectionModal: React.FC<FaceDetectionModalProps> = ({
               <Button
                 size="md"
                 variant="primary"
-                className="w-full sm:w-auto shadow-glow-sm"
+                className="w-full sm:w-auto"
                 icon={<CheckCircle2 className="w-4 h-4" />}
                 onClick={handleConfirm}
               >
-                Capture & View Mood Shifts
+                Capture & Apply Shift
               </Button>
             </div>
 

@@ -275,22 +275,20 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
 
       {/* Interactive Recommendation Feedback Attunement */}
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.35, delay: 0.15 }}
-        className="p-5 rounded-2xl bg-gradient-to-r from-[#24214A]/80 via-[#1A1836]/90 to-[#121029]/80 border border-[#B8B4D9]/20 flex flex-col sm:flex-row items-center justify-between gap-4"
+        transition={{ duration: 0.25, delay: 0.1 }}
+        className="p-5 rounded-xl bg-[#121316] border border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4"
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-[#FFC978]/15 border border-[#FFC978]/30 flex items-center justify-center text-[#FFC978] shrink-0">
-            <Sparkles className="w-4 h-4" />
-          </div>
+          <Sparkles className="w-4 h-4 text-amber-400 stroke-[1.5] shrink-0" />
           <div>
-            <div className="text-xs font-semibold text-[#F5F2ED]">
-              Did this shift prescription feel aligned with your energy?
+            <div className="text-xs font-medium text-white">
+              Did this shift prescription feel aligned with your state?
             </div>
-            <p className="text-[11px] text-[#B8B4D9]">
-              Your response fine-tunes your future valence-arousal prescriptions.
+            <p className="text-[11px] text-neutral-400">
+              Your response calibrates future somatic and cognitive recommendations.
             </p>
           </div>
         </div>
@@ -299,35 +297,31 @@ export const RecommendationSection: React.FC<RecommendationSectionProps> = ({
           <button
             onClick={() => handleFeedback(true)}
             disabled={feedbackSubmitted}
-            className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer border ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer border ${
               userFeedback === true
-                ? 'bg-[#6FBFC4]/25 border-[#6FBFC4] text-[#6FBFC4] shadow-glow-sm'
-                : 'bg-[#121029]/80 border-[#B8B4D9]/20 text-[#F5F2ED] hover:border-[#6FBFC4]/60 hover:text-[#6FBFC4]'
+                ? 'bg-amber-400/10 border-amber-400/40 text-amber-300'
+                : 'bg-white/[0.04] border-white/[0.08] text-neutral-300 hover:text-white hover:bg-white/[0.08]'
             }`}
           >
             {userFeedback === true ? (
               <Check className="w-3.5 h-3.5" />
             ) : (
-              <ThumbsUp className="w-3.5 h-3.5" />
+              <ThumbsUp className="w-3.5 h-3.5 stroke-[1.5]" />
             )}
-            <span>Resonated</span>
+            <span>Accurate</span>
           </button>
 
           <button
             onClick={() => handleFeedback(false)}
             disabled={feedbackSubmitted}
-            className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer border ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer border ${
               userFeedback === false
-                ? 'bg-[#FF9EAA]/25 border-[#FF9EAA] text-[#FF9EAA] shadow-glow-sm'
-                : 'bg-[#121029]/80 border-[#B8B4D9]/20 text-[#F5F2ED] hover:border-[#FF9EAA]/60 hover:text-[#FF9EAA]'
+                ? 'bg-red-500/10 border-red-500/40 text-red-300'
+                : 'bg-white/[0.04] border-white/[0.08] text-neutral-300 hover:text-white hover:bg-white/[0.08]'
             }`}
           >
-            {userFeedback === false ? (
-              <Check className="w-3.5 h-3.5" />
-            ) : (
-              <ThumbsDown className="w-3.5 h-3.5" />
-            )}
-            <span>Needs Adjustment</span>
+            <ThumbsDown className="w-3.5 h-3.5 stroke-[1.5]" />
+            <span>Recalibrate</span>
           </button>
         </div>
       </motion.div>
