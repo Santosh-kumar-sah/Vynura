@@ -22,7 +22,7 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
 - [Overview & Design Philosophy](#-overview--design-philosophy)
 - [Key Pillars & Features](#-key-pillars--features)
